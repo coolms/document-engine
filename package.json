@@ -1,0 +1,50 @@
+{
+  "name": "@coolms/document-engine",
+  "version": "0.1.0-alpha.1",
+  "description": "Framework-agnostic vanilla TypeScript document layout engine: OOXML model, deterministic text measurement from font files, and pagination with reflow. Zero runtime dependencies — the arithmetic is ours, so the browser and the server agree by construction.",
+  "license": "MIT",
+  "author": {
+    "name": "Dmitry Popov",
+    "email": "d.popov@coolms.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./assets/fonts/*": "./assets/fonts/*"
+  },
+  "files": [
+    "dist",
+    "assets/fonts",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "audit:claims": "node tools/audit-claims.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "ooxml",
+    "docx",
+    "layout",
+    "pagination",
+    "typography",
+    "coolms"
+  ]
+}

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding="UTF-8" standalone='yes'?>
+<!-- Valid XML that no Microsoft product writes, but LibreOffice, Google Docs
+     and hand-edited parts do. Everything here is legal and must survive a round
+     trip untouched: the engine has to be safe on files it did not produce. -->
+<w:document
+    xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:xml='http://www.w3.org/XML/1998/namespace'
+>
+  <w:body>
+    <w:p w:rsidR='00A1B2C3'   w:rsidRDefault = "00A1B2C3" >
+      <w:r><w:t xml:space="preserve">  leading and trailing spaces  </w:t></w:r>
+      <w:r><w:t>&#1055;&#1088;&#1080;&#1074;&#1077;&#1090; as numeric references</w:t></w:r>
+      <w:r><w:t>literal UTF-8 Привет, and &amp; &lt; &gt; &quot; &apos;</w:t></w:r>
+    </w:p>
+    <w:p><w:r><w:t><![CDATA[a <fake tag> & an ampersand, raw]]></w:t></w:r></w:p>
+    <w:p>
+      <!-- an empty run written both ways -->
+      <w:r><w:rPr><w:b/><w:i></w:i></w:rPr><w:t/></w:r>
+    </w:p>
+    <?some-processing-instruction with data?>
+    <w:sectPr><w:pgSz w:w="11906" w:h="16838"/></w:sectPr>
+  </w:body>
+</w:document>

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  # Weekly, so a break from a toolchain update shows up on a Monday rather than
+  # inside someone's pull request.
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # package.json claims engines.node >=20. A claim nothing installs
+        # against is not a claim, so 20 is in the matrix rather than only the
+        # versions the rest of the fleet happens to run.
+        node: ['20', '22', '24']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # The suite is the whole argument for this package: the layout arithmetic
+      # is asserted against measured expectations, so a regression shows up as a
+      # failing number rather than as a document that looks slightly wrong.
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # package.json publishes `dist`, so a build that produces no entry point
+      # would ship an installable package that cannot be imported.
+      - name: Assert the published entry points exist
+        run: |
+          for f in dist/index.js dist/index.d.ts; do
+            if [ ! -s "$f" ]; then
+              echo "::error::$f is missing or empty after build"
+              exit 1
+            fi
+          done
+          echo "confirmed: dist/index.js and dist/index.d.ts exist"
