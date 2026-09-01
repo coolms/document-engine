@@ -108,7 +108,7 @@ something relative to one engine.
   rule — which the engine already implemented, to a fiftieth of a point.
   "Not built" had been inferred from a diagnostic saying the box was DROPPED,
   which was true of its text and false about its geometry. Run the fixture
-  through `openWordFile` → `layoutSections` → `renderPage` and dump the ops
+  through `openWordFile` -> `layoutSections` -> `renderPage` and dump the ops
   first; it takes seconds and says whether you are measuring a gap or a
   conformance.
 - **An unexplained constant is an unasked question.** An 18.0 that "nothing in

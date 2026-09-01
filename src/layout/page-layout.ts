@@ -604,7 +604,7 @@ export interface LayoutOptions {
      * disagree with the .docx for any paragraph that straddles a boundary,
      * which is most of them in a long document.
      *
-     * ⚠️ THE REFERENCE DISAGREES, and only here. LibreOffice honours
+     *  THE REFERENCE DISAGREES, and only here. LibreOffice honours
      * `w:widowControl` when a document states it — asked for outright, both a
      * stranded first line and a stranded last one moved the whole paragraph on
      * — but with the element ABSENT it allows both: a printed page ended with
@@ -2598,7 +2598,7 @@ interface BoxItem {
  * line taller — a line whose height came from its first run would overlap the
  * line below wherever a bigger font appears mid-sentence.
  *
- * ## ⚠️ Each SIDE of the baseline is maxed on its own
+ * ##  Each SIDE of the baseline is maxed on its own
  *
  * The two sides used to be one number: the tallest whole line among the runs,
  * with the deepest descender taken separately beside it. Where every run shares

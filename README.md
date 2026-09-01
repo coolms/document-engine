@@ -45,5 +45,4 @@ Node >=20. No runtime dependencies; TypeScript and vitest are dev-only.
 
 ## Branches
 
-`develop` is the default and where work lands; `main` carries releases. The
-package is at `0.1.0-alpha.1` and is not published to npm yet.
+`develop` is the default and where work lands; `main` carries releases. The package is a pre-release and carries no compatibility promise.

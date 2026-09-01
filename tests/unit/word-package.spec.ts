@@ -1616,8 +1616,8 @@ describe('paragraph borders, end to end', () => {
         const steps = page!.lines.slice(1).map(
             (line, index) => pt(line.yPx - page!.lines[index]!.yPx));
 
-        // above→boxed, boxed→below, below→padded, padded→after, after→first,
-        // first→second, second→end.
+        // above->boxed, boxed->below, below->padded, padded->after, after->first,
+        // first->second, second->end.
         [12.5, 12.5, 18.5, 18.5, 12.5, 11.5, 12.5].forEach((printedStep, index) => {
             expect(Math.abs(steps[index]! - printedStep)).toBeLessThan(TOLERANCE_PT);
         });
@@ -4415,8 +4415,8 @@ describe('the height an inline VML box gives its line', () => {
     // 11.55 at 10pt text and a plain 23.00 at 20pt.
     //
     // Measured, Liberation Serif, box height + extra:
-    //   10pt text: natural 11.55, extra 2.25   (12 → 14.25, 36 → 38.25, 72 → 74.25)
-    //   20pt text: natural 23.00, extra 4.35   (36 → 40.35, 72 → 76.35)
+    //   10pt text: natural 11.55, extra 2.25   (12 -> 14.25, 36 -> 38.25, 72 -> 74.25)
+    //   20pt text: natural 23.00, extra 4.35   (36 -> 40.35, 72 -> 76.35)
     //   40pt text: natural 46.00, extra 8.70   (60/90/120/150 all + 8.70)
     //
     // **Descent ALONE, not descent + line gap, and it took two fonts to say
@@ -4764,7 +4764,7 @@ describe('atLeast in a gridded section, and in a gridded CELL', () => {
         expect(bodyOver).toBe(24);
     });
 
-    // ⚠️ Read this beside the print that measured a cell OFF the grid: its
+    //  Read this beside the print that measured a cell OFF the grid: its
     // paragraphs stepped the font's own 11.50 under an 18.00 pitch, and one
     // asking for 1.5 lines took 17.25 — one and a half of the FONT. The two
     // prints split the question rather than contradicting each other: a cell

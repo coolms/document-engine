@@ -312,7 +312,7 @@ describe('paginateFlow', () => {
         });
 
         /**
-         * ⚠️ The derivation above is a GUESS, and it was wrong in one
+         *  The derivation above is a GUESS, and it was wrong in one
          * direction for as long as it was the only rule: an editor's `<th>` row
          * repeated on the canvas while the `.docx` never did, because nothing
          * wrote `w:tblHeader`. A caller that knows the answer states it.
