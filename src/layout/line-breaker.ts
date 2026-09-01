@@ -499,7 +499,7 @@ export interface Line {
  * to set better type than it. An optimal breaker would look nicer on screen and
  * be WRONG about where the page ends.
  *
- * ⚠️ Kerning is applied within a run but not across a run boundary. The pair
+ *  Kerning is applied within a run but not across a run boundary. The pair
  * straddling a style change is one glyph from each font, and the fonts disagree
  * about what to do with it; renderers differ here too. The error is at most one
  * pair per style change and is documented rather than silently absorbed.

@@ -156,7 +156,7 @@ export class FontCatalogue {
 /**
  * Where the app's asset pipeline publishes this manifest for the browser.
  *
- * ⚠️ An app-layout detail in an engine that never fetches anything, and it is
+ *  An app-layout detail in an engine that never fetches anything, and it is
  * here on purpose: TWO browser packages read the manifest to build their font
  * select, and a path spelled out in each is a string that drifts the day the
  * pipeline changes. The engine owns the manifest, so it owns its published
@@ -175,7 +175,7 @@ export const FONT_MANIFEST_ASSET = 'assets/document-fonts/fonts.manifest.json';
  * canvas paints whatever the author's machine has, the engine measures the
  * base face because nothing resolved, and LibreOffice prints a third font.
  * That was true for Georgia, Verdana and Tahoma for as long as the list was a
- * literal (#2311 named it, #2312 removed the literal).
+ * literal (one change named it, a later one removed the literal).
  *
  * So: installing a family is adding files and a manifest entry. Nothing in
  * either editor knows the names.

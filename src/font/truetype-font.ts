@@ -12,7 +12,7 @@ import { FontReader, readTableDirectory, requireTable, type TableRecord, type Ta
  * shape complex scripts, or apply substitutions — those change what is DRAWN,
  * not (for Latin and Cyrillic) how far the pen moves.
  *
- * ⚠️ **Kerning is not applied yet.** See {@link measureAdvance}. That is a
+ *  **Kerning is not applied yet.** See {@link measureAdvance}. That is a
  * named gap with a test asserting it, not an oversight — pretending otherwise
  * would put a number in the engine that quietly disagrees with the renderer.
  */
@@ -65,7 +65,7 @@ const SAME_SHAPE = new Map<number, number>([
  * point outright — rather than substituting a zero — is also what lets a kern
  * pair span one, which is what being ignorable in processing means.
  *
- * ⚠️ MEASUREMENT only. These characters stay in the text handed to a renderer,
+ *  MEASUREMENT only. These characters stay in the text handed to a renderer,
  * because U+200D joins an emoji sequence and U+FE0F picks its presentation:
  * both belong to the host that shapes, and both are destroyed by dropping them
  * here. This engine does not shape, so it must not decide they are redundant.
@@ -236,7 +236,7 @@ export class TrueTypeFont {
      * The position is NEGATIVE: it is below the baseline, and is kept that way
      * so a caller adds it rather than having to know which direction it means.
      *
-     * ⚠️ LibreOffice does not use these. Measured at 10pt it draws Liberation
+     *  LibreOffice does not use these. Measured at 10pt it draws Liberation
      * Sans at −1.1/0.5 where the font says −0.33/0.73, Serif at −1.2/0.6
      * against −0.60/0.49, and Mono at −1.6/0.7 against −1.92/0.41 — the
      * thickness ordering is even inverted. Its source could not be identified

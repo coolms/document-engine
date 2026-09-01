@@ -438,7 +438,7 @@ describe('layoutPages', () => {
         }
 
         it('reaches as far above as one face asks and as far below as the other', () => {
-            // ⚠️ MEASURED against LibreOffice at 22pt: a line holding Carlito
+            //  MEASURED against LibreOffice at 22pt: a line holding Carlito
             // and Liberation Mono stepped **27.60**. Carlito reaches
             // 20.947 above the baseline and Liberation Mono 6.606 below it,
             // and neither face asks for both.

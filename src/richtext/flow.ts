@@ -130,7 +130,7 @@ export interface FlowTableRow {
     /**
      * `w:tblHeader` — "repeat this row at the top of every page", stated.
      *
-     * ⚠️ Absent falls back to the old rule: a row of header CELLS repeats. That
+     *  Absent falls back to the old rule: a row of header CELLS repeats. That
      * rule is a guess, and it was wrong in one direction for as long as it was
      * the only one — the canvas repeated a `<th>` row that the `.docx` never
      * did, because nothing wrote `w:tblHeader`. A document whose editor states
@@ -355,7 +355,7 @@ function toTable(table: FlowTable, base: FlowStyle, fonts: FontCatalogue): Table
 
         return {
             cells,
-            // ⚠️ The STATED fact first. `??` and not `||`, because an explicit
+            //  The STATED fact first. `??` and not `||`, because an explicit
             // `false` is an author saying "these are header cells and this row
             // does not repeat" — which is exactly the case the fallback below
             // gets wrong.

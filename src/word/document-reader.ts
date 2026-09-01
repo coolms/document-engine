@@ -3609,7 +3609,7 @@ function onGrid(
         // line, while the body paragraph above the table stepped 18.00 — and a
         // cell asking for 1.5 lines took 17.25, one and a half of the FONT,
         // where the same request on the body takes one and a half pitches.
-        // ⚠️ AND YET a cell sees the pitch for `atLeast`: under the
+        //  AND YET a cell sees the pitch for `atLeast`: under the
         // same 18.00 grid, a cell paragraph stating a floor of 12.00 printed
         // an 18.00 step — the section's pitch — where this engine gives it the
         // 12.00 it asked for. The two prints do not contradict each other so
@@ -3617,7 +3617,7 @@ function onGrid(
         // takes (11.50, and 17.25 for one and a half) and on it for the FLOOR
         // a paragraph may not fall below.
         //
-        // ⚠️ TWO PRINTS DISAGREE, and neither is wrong. Asked at
+        //  TWO PRINTS DISAGREE, and neither is wrong. Asked at
         // four floors and two pitches, a cell's `atLeast` step looked exactly
         // like `max(floor, PITCH)`: floors of 8 and 12 printed 18.00 under an
         // 18.00 grid, 20 and 24 printed themselves, and under a 24.00 grid
@@ -3633,7 +3633,7 @@ function onGrid(
         // So the rule is not `max(floor, pitch)`, and what it is has to
         // account for a print that goes UNDER the floor. A cell stays off the
         // grid until it does.
-        // ⚠️ SETTLED, and the two prints never disagreed. Asked at
+        //  SETTLED, and the two prints never disagreed. Asked at
         // four floors, in the body AND in a cell, with the grid and without
         // it: no grid honours the floor everywhere, cells included; a grid
         // gives the BODY `max(floor, pitch)` and gives a CELL the font's own
@@ -3680,7 +3680,7 @@ function onGrid(
         // exactly — it is what turned the font's line into this number — so
         // dividing recovers it rather than guessing at it.
         //
-        // ⚠️ `atLeast` was thought to need nothing here — "its floor is the
+        //  `atLeast` was thought to need nothing here — "its floor is the
         // pitch, a gridded line already takes whole pitches, and a mutation
         // taking max(stated, pitch) as well survived, which is what dead code
         // looks like". MEASURED, and it is not dead code, it is a blind

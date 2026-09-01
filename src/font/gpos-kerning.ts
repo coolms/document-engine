@@ -278,7 +278,7 @@ function readPairFormat2(
     };
 }
 
-/** Coverage table → the glyphs it covers, in coverage-index order. */
+/** Coverage table -> the glyphs it covers, in coverage-index order. */
 function readCoverage(reader: FontReader, offset: number): number[] {
     const format = reader.uint16(offset);
     const glyphs: number[] = [];
@@ -311,7 +311,7 @@ function readCoverage(reader: FontReader, offset: number): number[] {
     throw new Error(`Unknown coverage format ${format} in GPOS.`);
 }
 
-/** ClassDef table → a function giving a glyph's class (0 when unlisted). */
+/** ClassDef table -> a function giving a glyph's class (0 when unlisted). */
 function readClassDef(reader: FontReader, offset: number): (glyph: number) => number {
     const format = reader.uint16(offset);
 

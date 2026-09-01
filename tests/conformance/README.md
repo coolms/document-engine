@@ -43,7 +43,7 @@ Before GPOS kerning was built the fifth row read **92.4375 vs 78, a
 had to hit, and hitting it exactly is the evidence the implementation is right
 rather than merely closer.
 
-⚠️ **A lesson from building this.** The Liberation Mono row was briefly reported
+ **A lesson from building this.** The Liberation Mono row was briefly reported
 as a −19.2px disagreement, which sent me looking for a parser bug that did not
 exist. The cause was a hand-typed expectation: the ten-character value pasted
 into an eight-character case. The engine and the browser had agreed all along.
