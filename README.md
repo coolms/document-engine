@@ -9,6 +9,8 @@
 > PHP, this is not one.
 
 [![CI](https://github.com/coolms/document-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/coolms/document-engine/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@coolms/document-engine?label=npm%20%40coolms%2Fdocument-engine)](https://www.npmjs.com/package/@coolms/document-engine)
+[![Packagist](https://img.shields.io/packagist/v/coolms/document-fonts?label=composer%20coolms%2Fdocument-fonts)](https://packagist.org/packages/coolms/document-fonts)
 [![Node](https://img.shields.io/badge/node-%E2%89%A5%2020-339933)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -29,9 +31,21 @@ from them.
 
 ## Install
 
+**The engine, from npm:**
+
 ```bash
 npm install @coolms/document-engine
 ```
+
+**The fonts, from Packagist:**
+
+```bash
+composer require coolms/document-fonts
+```
+
+That gives you `vendor/coolms/document-fonts/assets/fonts/` -- the 24 faces
+and `fonts.manifest.json`. Serve them at whatever URL your application uses;
+CoolMS serves them under the admin at `assets/document-fonts/`.
 
 ```ts
 import { ... } from '@coolms/document-engine';
@@ -49,7 +63,12 @@ import { ... } from '@coolms/document-engine';
 
 ## Requirements
 
-Node >=20. No runtime dependencies; TypeScript and vitest are dev-only.
+**npm:** Node >=20. No runtime dependencies; TypeScript and vitest are
+dev-only.
+
+**Composer:** none. The package declares no PHP constraint because it
+contains no PHP -- it is font files and a JSON manifest, and constraining a
+runtime it never invokes would refuse installations for no reason.
 
 ## Branches
 
