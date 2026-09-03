@@ -1,5 +1,13 @@
 # @coolms/document-engine
 
+> **Reading this from Packagist?** This repository publishes twice. The
+> TypeScript engine below is the npm package. What Composer installs is
+> `coolms/document-fonts`: the 24 font files in `assets/fonts` and the
+> manifest that names them, with no PHP and no autoloader. It exists so a
+> PHP application can reach the same fonts, from the same version, without
+> a Node toolchain. If you are looking for a document layout library for
+> PHP, this is not one.
+
 [![CI](https://github.com/coolms/document-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/coolms/document-engine/actions/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%E2%89%A5%2020-339933)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
