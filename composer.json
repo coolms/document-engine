@@ -1,0 +1,14 @@
+{
+    "name": "coolms/document-engine",
+    "description": "The document font set CoolMS ships. The layout engine itself is TypeScript and published on npm; this package exists so a PHP installation can reach the same font files, from the same version, without a Node toolchain.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.1.x-dev"
+        }
+    }
+}

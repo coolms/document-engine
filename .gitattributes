@@ -1,0 +1,18 @@
+# This repository publishes to BOTH registries from one tree: the layout
+# engine to npm as @coolms/document-engine, and the font set to Packagist as
+# coolms/document-engine. A PHP application needs the fonts and can do
+# nothing with the TypeScript, so the composer archive carries assets/fonts
+# and the metadata, and nothing else.
+#
+# ⚠️ export-ignore affects the ARCHIVE ONLY. Everything below stays in git and
+# stays in the npm package, which has its own `files` list in package.json.
+src/              export-ignore
+dist/             export-ignore
+tests/            export-ignore
+test/             export-ignore
+.github/          export-ignore
+package.json      export-ignore
+package-lock.json export-ignore
+tsconfig.json     export-ignore
+vitest.config.ts  export-ignore
+.gitattributes    export-ignore
