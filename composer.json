@@ -3,9 +3,6 @@
     "description": "The document font set CoolMS ships: 24 metric-compatible faces and the manifest that names them. Fonts only -- no PHP, no autoloader. The layout engine that reads them is TypeScript and lives on npm as @coolms/document-engine, from this same repository.",
     "type": "library",
     "license": "MIT",
-    "require": {
-        "php": ">=8.5"
-    },
     "extra": {
         "branch-alias": {
             "dev-develop": "0.1.x-dev"
