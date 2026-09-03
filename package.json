@@ -1,7 +1,7 @@
 {
   "name": "@coolms/document-engine",
-  "version": "0.1.0-alpha.2",
-  "description": "Framework-agnostic vanilla TypeScript document layout engine: OOXML model, deterministic text measurement from font files, and pagination with reflow. Zero runtime dependencies — the arithmetic is ours, so the browser and the server agree by construction.",
+  "version": "0.1.0-alpha.3",
+  "description": "Framework-agnostic vanilla TypeScript document layout engine: OOXML model, deterministic text measurement from font files, and pagination with reflow. Zero runtime dependencies \u2014 the arithmetic is ours, so the browser and the server agree by construction.",
   "license": "MIT",
   "author": {
     "name": "Dmitry Popov",

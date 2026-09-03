@@ -9,6 +9,41 @@ currently serves. Earlier alphas are deliberately not reconstructed: entries are
 in the same commit as the work they describe, and inventing the ones that
 predate this file would be a worse record than not having them.
 
+## 0.1.0-alpha.3 — 2026-09-04
+
+### Added
+
+**This repository now publishes to Packagist as well as npm.** The engine
+stays `@coolms/document-engine` on npm; the font set is `coolms/document-fonts`
+on Packagist. Two registries, two names, each true where it appears -- the
+composer archive contains no engine, so calling it one would have been a
+promise the package could not keep.
+
+```bash
+composer require coolms/document-fonts
+```
+
+That installs `assets/fonts/` -- the 24 faces and `fonts.manifest.json` --
+and nothing else. No PHP, no autoloader, and **no PHP version constraint**,
+because there is no PHP in it to run: constraining a runtime the package
+never invokes would refuse installations for no reason.
+
+⚠️ **Why it exists.** The CoolMS application read the manifest from a path
+that only exists in a development checkout, so no installed application
+could ever have found it. A PHP application needs these files and cannot
+fetch them from a registry it does not use.
+
+### Changed
+
+- The composer archive is `assets/fonts` plus the documents that explain it.
+  It had been carrying `tools/` -- developer probes in JavaScript and Python
+  -- along with the TypeScript config; a PHP project has no use for any of
+  it.
+- The README opens by saying which of the two packages you installed. Anyone
+  arriving from Packagist previously met a Node badge, `npm install` as the
+  only install line, and "Requirements: Node >=20".
+
+The npm package is unchanged in content.
 ## 0.1.0-alpha.2 — 2026-09-03
 
 **A pre-release, carrying no compatibility promise.** Published under the
