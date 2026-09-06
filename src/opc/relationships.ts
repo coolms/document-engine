@@ -1,7 +1,7 @@
 import { XmlDocument } from '../ooxml/xml.js';
 
 /**
- * OPC relationships — how a package says which part is which.
+ * OPC relationships -- how a package says which part is which.
  *
  * `word/document.xml` is a convention, not a rule. The main part is whatever
  * the package relationship of type `.../officeDocument` points at, and styles
@@ -17,7 +17,7 @@ export interface Relationship {
     readonly id: string;
     readonly type: string;
     readonly target: string;
-    /** "External" targets are URLs, not parts — a hyperlink, not a file. */
+    /** "External" targets are URLs, not parts -- a hyperlink, not a file. */
     readonly external: boolean;
 }
 
@@ -46,7 +46,7 @@ export function relationshipPartFor(part: string): string {
 /**
  * Resolve a relationship target against the part that declared it.
  *
- * Targets are relative to the source part's FOLDER, not to the package root —
+ * Targets are relative to the source part's FOLDER, not to the package root --
  * `styles.xml` declared by `word/document.xml` means `word/styles.xml`. A
  * leading slash makes it absolute from the root instead.
  */
@@ -77,7 +77,7 @@ export function resolveTarget(sourcePart: string, target: string): string {
  * Find a relationship by the LAST segment of its type.
  *
  * Matching on the tail rather than the whole URI because the namespace differs
- * between the strict and transitional flavours of the format — the same
+ * between the strict and transitional flavours of the format -- the same
  * relationship, two URIs, and a full-string match silently finds neither on a
  * strict document.
  */

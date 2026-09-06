@@ -9,7 +9,7 @@ currently serves. Earlier alphas are deliberately not reconstructed: entries are
 in the same commit as the work they describe, and inventing the ones that
 predate this file would be a worse record than not having them.
 
-## 0.1.0-alpha.3 — 2026-09-04
+## 0.1.0-alpha.3 -- 2026-09-04
 
 ### Added
 
@@ -28,7 +28,7 @@ and nothing else. No PHP, no autoloader, and **no PHP version constraint**,
 because there is no PHP in it to run: constraining a runtime the package
 never invokes would refuse installations for no reason.
 
-⚠️ **Why it exists.** The CoolMS application read the manifest from a path
+!! **Why it exists.** The CoolMS application read the manifest from a path
 that only exists in a development checkout, so no installed application
 could ever have found it. A PHP application needs these files and cannot
 fetch them from a registry it does not use.
@@ -44,7 +44,7 @@ fetch them from a registry it does not use.
   only install line, and "Requirements: Node >=20".
 
 The npm package is unchanged in content.
-## 0.1.0-alpha.2 — 2026-09-03
+## 0.1.0-alpha.2 -- 2026-09-03
 
 **A pre-release, carrying no compatibility promise.** Published under the
 `alpha` dist-tag.
@@ -53,7 +53,7 @@ A framework-agnostic document layout engine in vanilla TypeScript: the OOXML
 model, deterministic text measurement read from the font files themselves, and
 pagination with reflow.
 
-**Zero runtime dependencies**, deliberately — the arithmetic is ours, so the
+**Zero runtime dependencies**, deliberately -- the arithmetic is ours, so the
 browser and the server agree by construction rather than by both happening to
 call the same library. The fonts are vendored rather than installed for the
 same reason: if the browser and the renderer do not shape text from the same

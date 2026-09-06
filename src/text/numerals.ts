@@ -31,7 +31,7 @@ export function formatNumeral(value: number, style: NumeralStyle): string {
 }
 
 /**
- * Word's letter sequence: a…z, then aa, bb, cc — the letter REPEATED, not the
+ * Word's letter sequence: a...z, then aa, bb, cc -- the letter REPEATED, not the
  * spreadsheet's aa, ab, ac.
  */
 export function letters(value: number, upper: boolean): string {

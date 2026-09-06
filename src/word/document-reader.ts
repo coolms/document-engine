@@ -101,7 +101,7 @@ export interface WordDocument {
     /**
      * The document's blocks: paragraphs and tables, in reading order.
      *
-     * Named `paragraphs` before it could hold tables, and kept that way — it
+     * Named `paragraphs` before it could hold tables, and kept that way -- it
      * is what `layoutPages` takes, and the type says what is in it.
      */
     readonly paragraphs: Block[];
@@ -109,7 +109,7 @@ export interface WordDocument {
     /**
      * What could not be honoured. Reported rather than swallowed: a document
      * that silently lost its tables still lays out, and looks correct, and is
-     * wrong — and the page count is the only clue.
+     * wrong -- and the page count is the only clue.
      */
     readonly diagnostics: Diagnostic[];
     readonly headers: ReadonlyMap<FurnitureVariant, PageFurniture>;
@@ -194,7 +194,7 @@ export interface ReadOptions extends FurnitureParts {
     readonly fonts: FontCatalogue;
 }
 
-/** A4 with one-inch margins — what a section that declares nothing gets. */
+/** A4 with one-inch margins -- what a section that declares nothing gets. */
 const DEFAULT_GEOMETRY = {
     widthTwips: 11906,
     heightTwips: 16838,
@@ -250,13 +250,13 @@ export function readWordDocument(options: ReadOptions): WordDocument {
     if (undefined !== options.footnotesXml) {
         const byId = new Map<number, XmlElement>();
         // Every `w:footnote` in the part, including the `separator` and
-        // `continuationSeparator` entries — which no body reference names, so
+        // `continuationSeparator` entries -- which no body reference names, so
         // the loop below never asks for them. They hold the rule Word draws
         // above the block, which this engine draws itself.
         //
         // MEASURED, where this was a claim: the same document with
         // its separator paragraph emptied, and again with both separator
-        // footnotes removed outright, printed the identical rule — 28.350 to
+        // footnotes removed outright, printed the identical rule -- 28.350 to
         // 172.350 at 0.100. The rule is the RENDERER's furniture and a file
         // cannot change it, so leaving these two unread is right rather than
         // merely convenient.
@@ -333,7 +333,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
      * words occupy fewer lines on wider paper, and the body would start too far
      * down for the rest of the document.
      *
-     * Only the height is recomputed — the blocks were parsed once and do not
+     * Only the height is recomputed -- the blocks were parsed once and do not
      * change with the paper.
      */
     const remeasured = (
@@ -354,7 +354,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
     /**
      * A section's own references, resolved through the parts the caller
      * supplied. A variant the section does not name is INHERITED from the
-     * section before it, which is what Word does — only the first section of
+     * section before it, which is what Word does -- only the first section of
      * a document has to declare everything it uses.
      */
     const referenced = (
@@ -376,7 +376,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
     };
 
     /**
-     * `w:evenAndOddHeaders` — OFF by default, and it is a document-wide
+     * `w:evenAndOddHeaders` -- OFF by default, and it is a document-wide
      * setting rather than a section one.
      *
      * Without it Word ignores even-page headers ALTOGETHER, even when a
@@ -390,7 +390,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
      *
      * The two arguments are not interchangeable and both are needed.
      * `w:titlePg` picks out the first page of THIS SECTION, while
-     * `w:evenAndOddHeaders` alternates on the PRINTED page number — so a
+     * `w:evenAndOddHeaders` alternates on the PRINTED page number -- so a
      * section opening on document page four is its own first page and an even
      * page at the same time.
      *
@@ -456,7 +456,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
 
     // A `continuous` break does not start a page, so its blocks belong to the
     // section before it. Folding them keeps the behaviour a document without
-    // sections already had, and only the paper it wanted to change is lost —
+    // sections already had, and only the paper it wanted to change is lost --
     // which is reported rather than quietly applied a page too early.
     const sections: DocumentSection[] = [];
     let firstBlockIndex = 0;
@@ -502,7 +502,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
                     part.blocks,
                     pitchPx,
                     (block) => reader.snapsToGrid(block),
-                    // `null`, not `undefined` — the sentinel above. Written
+                    // `null`, not `undefined` -- the sentinel above. Written
                     // the other way this read TRUE for every document and put
                     // them all on the modern branch, which the no-settings
                     // fixture caught at once.
@@ -514,7 +514,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
             ...(null === pageBorders ? {} : { pageBorders }),
             ...(null === lineNumbering ? {} : { lineNumbering }),
             contentBox: boxFor(partGeometry, partHeaders, partFooters, partVariant),
-            // Anything else — nextColumn, or nothing at all — starts a page,
+            // Anything else -- nextColumn, or nothing at all -- starts a page,
             // which is what a section break does when it says no more.
             startsOn: 'evenPage' === declared || 'oddPage' === declared ? declared : 'nextPage',
             firstBlockIndex,
@@ -556,7 +556,7 @@ export function readWordDocument(options: ReadOptions): WordDocument {
  * capital already in the run was untouched.
  */
 /**
- * `w:sym/@w:char` — a hexadecimal code, and where in Unicode it lands.
+ * `w:sym/@w:char` -- a hexadecimal code, and where in Unicode it lands.
  *
  * Word writes symbol characters in the F000 private-use block: the code is the
  * font's own byte with F000 added, which is a convention rather than a Unicode
@@ -594,7 +594,7 @@ export const SMALL_CAPS_SCALE = 0.8;
  * several: `Abc` is a full-size `A` and a reduced `BC`. Splitting is what makes
  * the WIDTH right, which is why it happens here rather than at drawing time.
  *
- * Case is decided by whether uppercasing the character changes it — which
+ * Case is decided by whether uppercasing the character changes it -- which
  * leaves digits, spaces and punctuation at full size, where they belong.
  */
 function smallCapped(text: string): { text: string; small: boolean }[] {
@@ -617,7 +617,7 @@ function smallCapped(text: string): { text: string; small: boolean }[] {
  * The `\*` switch on a field instruction, if it names a numbering.
  *
  * The same instruction can carry several switches, and most of them are not
- * about numbering at all — `\* MERGEFORMAT` says to keep the field's
+ * about numbering at all -- `\* MERGEFORMAT` says to keep the field's
  * formatting when it updates, and treating it as a numbering would print a
  * digit where the document asked for one anyway but by accident.
  *
@@ -653,7 +653,7 @@ const FIELD_NUMERALS: Record<string, NumeralStyle | undefined> = {
  *
  * Measured out of LibreOffice at ten point: it draws both scripts at 5.8pt,
  * raises a superscript 3.95pt and drops a subscript 0.9pt. Word's own defaults
- * differ — it documents 65% and a third — so a document round-tripped through
+ * differ -- it documents 65% and a third -- so a document round-tripped through
  * both will not agree with either exactly.
  */
 const SCRIPT_SCALE = 0.58;
@@ -664,7 +664,7 @@ const SUBSCRIPT_DROP = 0.09;
  * A list marker that has been rendered but not yet PLACED.
  *
  * Its position needs the paragraph's merged indents and tab stops, which are
- * not known while the numbering is read — see {@link WordDocumentReader.placeMarker}.
+ * not known while the numbering is read -- see {@link WordDocumentReader.placeMarker}.
  */
 interface PendingMarker {
     readonly run: StyledRun;
@@ -681,7 +681,7 @@ interface PendingMarker {
  *
  * A hanging indent is a negative first-line indent in both places, so offering
  * it in that form lets the ordinary style/numbering/direct merge pick a winner
- * — rather than the reader deciding, which is how a paragraph's own indent came
+ * -- rather than the reader deciding, which is how a paragraph's own indent came
  * to be applied ON TOP of the level's.
  */
 function levelIndents(level: NumberingLevel): ParagraphProperties {
@@ -708,7 +708,7 @@ interface FieldState {
 /**
  * Which field an instruction asks for, if it is one this engine answers.
  *
- * The instruction is free text — ` PAGE `, ` NUMPAGES  \* MERGEFORMAT ` — so
+ * The instruction is free text -- ` PAGE `, ` NUMPAGES  \* MERGEFORMAT ` -- so
  * the FIRST word names the field and the rest are switches. Anything else, a
  * `TOC` or a `REF` or a date, returns null and keeps the value Word cached:
  * the best available answer for a field this engine cannot compute.
@@ -728,14 +728,14 @@ function fieldKind(instruction: string | null): FieldKind | null {
  *
  * Returns undefined when nothing is declared, so an absent element and one full
  * of `nil` sides stay distinguishable from a table that asked for no borders at
- * all — both draw nothing, but only the second overrides an inherited style.
+ * all -- both draw nothing, but only the second overrides an inherited style.
  */
 function readBorders(element: XmlElement | null): BoxBorders | undefined {
     return readBordersFrom(null === element ? [] : [element]);
 }
 
 /**
- * The same, merged across a chain of border elements — a table style's, then
+ * The same, merged across a chain of border elements -- a table style's, then
  * the ones it is based on, then the table's own.
  *
  * ## Per SIDE, not per element
@@ -743,7 +743,7 @@ function readBorders(element: XmlElement | null): BoxBorders | undefined {
  * Measured against LibreOffice: a table naming a style that draws
  * 1.5pt all round, and declaring nothing but its own `insideH` at 3pt, printed
  * the middle rule at 3.000 and the four outer ones at 1.500. So the table's
- * element does not replace the style's — each side is answered by the LAST
+ * element does not replace the style's -- each side is answered by the LAST
  * level that names it.
  *
  * A side named as `none` is an answer too, and turns the side off: the same
@@ -777,7 +777,7 @@ function readBordersFrom(
     }
 
     // A paragraph's `w:between` is the rule it shares with the paragraph below
-    // it, which is the same place a table's inside-horizontal rule sits — so
+    // it, which is the same place a table's inside-horizontal rule sits -- so
     // it is read into that side rather than given one of its own.
     for (const element of present) {
         const between = readBorderSide(element.element('w:between') ?? null);
@@ -802,18 +802,18 @@ const BORDER_SIDES: Record<string, string> = {
  * OOXML's thirty-odd border styles, folded onto the four this engine draws.
  *
  * Anything unrecognised becomes `solid`: an unknown style is still a LINE, and
- * drawing nothing would lose a border the document asked for — the width and
+ * drawing nothing would lose a border the document asked for -- the width and
  * the presence are what move the eye, not whether the flourish is right.
  */
 /**
- * `w:shd/@w:fill` — the colour BEHIND the text.
+ * `w:shd/@w:fill` -- the colour BEHIND the text.
  *
  * `w:color` on the same element is the pattern's foreground, which only shows
  * for the hatched `w:val` patterns this engine does not draw; taking it would
  * fill a cell with the wrong colour entirely.
  */
 /**
- * `w:vAlign` — where a cell's content sits in a row taller than it.
+ * `w:vAlign` -- where a cell's content sits in a row taller than it.
  *
  * `both` means vertically JUSTIFIED, spreading the paragraphs out to fill the
  * cell. That is a different operation from moving them as a block, so it is
@@ -826,7 +826,7 @@ function readCellVerticalAlign(element: XmlElement | null): CellVerticalAlign | 
 }
 
 /**
- * `w:tcMar` — the sides this cell pads itself by, and only those.
+ * `w:tcMar` -- the sides this cell pads itself by, and only those.
  *
  * A side left out is not nought: it keeps the table's `w:tblCellMar`, which is
  * why this returns the sides it found rather than four numbers. Measured
@@ -844,7 +844,7 @@ function readCellMargins(element: XmlElement | null): CellMargins | undefined {
         const declared = element.element(`w:${side}`);
         const value = attributeNumber(declared, 'w:w');
 
-        // `w:type` may say `nil`, which is nought rather than absent — the
+        // `w:type` may say `nil`, which is nought rather than absent -- the
         // cell is stating that it pads itself by nothing at all.
         if (null === declared || null === value) {
             continue;
@@ -859,17 +859,17 @@ function readCellMargins(element: XmlElement | null): CellMargins | undefined {
 
 /**
  * `w:tblW`/`w:tcW` percentages count FIFTIETHS of a percent, so 5000 is all
- * of it — defined by the OOXML schema, not measured off a page.
+ * of it -- defined by the OOXML schema, not measured off a page.
  */
 const PERCENT_UNITS = 5000;
 
 /**
- * `w:tblW` — what the table asks to be, in whichever unit it asked.
+ * `w:tblW` -- what the table asks to be, in whichever unit it asked.
  *
  * A fraction cannot be turned into a width here: the reader does not know what
  * the table will land in, and the same table is one width on the page and
  * another inside a cell. Measured against LibreOffice, a fifty-percent table
- * came out at 269.29pt on an A4 text column of 538.58 — half of it, exactly.
+ * came out at 269.29pt on an A4 text column of 538.58 -- half of it, exactly.
  */
 function readPreferredWidth(
     element: XmlElement | null,
@@ -887,7 +887,7 @@ function readPreferredWidth(
 }
 
 /**
- * `w:tblPr/w:jc` — where the table sits in the column it lands in.
+ * `w:tblPr/w:jc` -- where the table sits in the column it lands in.
  *
  * `start` and `end` are the bidirectional spellings of `left` and `right`; in
  * a left-to-right document they mean the same thing, which is the only
@@ -934,7 +934,7 @@ function normaliseVmlColour(colour: string): string | null {
  * `w:sdt` is a WRAPPER and nothing more to a reader: a template's fillable
  * region, a repeating section, a date picker. What it holds are ordinary
  * paragraphs, tables and rows, and they belong exactly where the control sits.
- * A walker that knew only `w:p` and `w:tbl` dropped every one of them — which
+ * A walker that knew only `w:p` and `w:tbl` dropped every one of them -- which
  * in a template is most of the document, since a control is how a template
  * says where its content goes.
  *
@@ -963,13 +963,13 @@ function* blockChildren(parent: XmlElement): Generator<XmlElement> {
  * control beside it: two stub heading styles of the same size, one
  * silent and one stating `w:spacing` of zero on both sides, came out 24.50 and
  * 12.50 apart from the paragraph above, and 17.70 and 11.70 from the one below.
- * The difference is the whole of it — 12.00 and 6.00 — and it is what put every
+ * The difference is the whole of it -- 12.00 and 6.00 -- and it is what put every
  * heading in an under-specified document 12pt high and every paragraph after
  * one 6pt high.
  *
  * ## A LAST resort, which is what makes it safe
  *
- * It fires only where the merged properties state no spacing at all — not the
+ * It fires only where the merged properties state no spacing at all -- not the
  * style, not `docDefaults`, not the paragraph itself. Measured, and this is the
  * half that matters: with a real `Normal` stating spacing of its own, a style
  * named `heading 8` came out at EXACTLY the same distance as a style named
@@ -978,7 +978,7 @@ function* blockChildren(parent: XmlElement): Generator<XmlElement> {
  * this at all.
  *
  * Only the spacing. A real heading style is also bold, larger and kept with the
- * paragraph after it — none of which was measured here, because the stubs in
+ * paragraph after it -- none of which was measured here, because the stubs in
  * the probe stated their own size and weight, so none of it is invented here.
  */
 function headingSpacing(
@@ -1009,18 +1009,18 @@ const HEADING_SPACE_BEFORE_TWIPS = 240;
 const HEADING_SPACE_AFTER_TWIPS = 120;
 
 /**
- * `w:tblLook` — which of a table style's conditional formats are switched on.
+ * `w:tblLook` -- which of a table style's conditional formats are switched on.
  *
  * The HEX MASK is what answers, not the attributes beside it. Measured: a
  * table stating `w:firstRow="0"` alone kept its header dress, and the same
  * table stating `w:val="0000"` lost it. Word writes both and they can
  * disagree; the mask is the one that bites.
  *
- * The two banding bits are NEGATIVE — bands are on unless the mask says no.
+ * The two banding bits are NEGATIVE -- bands are on unless the mask says no.
  *
  * An ABSENT `w:tblLook` turns everything on, which is measured rather than
  * assumed: a table with no such element at all, over a style
- * dressing its first row and its odd bands, came out with BOTH — the header
+ * dressing its first row and its odd bands, came out with BOTH -- the header
  * fill on row one and the band fill on row two. Answering nought here, which
  * is the tempting reading of an absent mask, would have dressed neither.
  */
@@ -1062,7 +1062,7 @@ interface CellPlace {
  * A seventh table put a header, a first column and a band together and shaded
  * each differently. Row one came out the header's colour in EVERY column, and
  * row two came out the column's colour in the first cell and the band's in the
- * rest. So the order is bands, then the column conditions, then the row ones —
+ * rest. So the order is bands, then the column conditions, then the row ones --
  * returned weakest first, for a caller that merges in order.
  *
  * The bands count the BODY, not the table: with a header on, row two was
@@ -1083,9 +1083,9 @@ interface CellPlace {
  * ## What is NOT built: how deep a band is
  *
  * `w:tblStyleRowBandSize` and `w:tblStyleColBandSize` say how many rows or
- * columns a band covers. LibreOffice ignores both — a style stating two banded
+ * columns a band covers. LibreOffice ignores both -- a style stating two banded
  * every OTHER row and every other column, exactly as a style stating nothing
- * does — so following the file here would put the preview out of step with the
+ * does -- so following the file here would put the preview out of step with the
  * renderer that prints it, with no reference to check the result against.
  * Measured and left, which is what this engine does with a number nobody draws.
  */
@@ -1138,7 +1138,7 @@ function conditionsFor(
  * Every walk over a table's rows and a row's cells goes through this, because a
  * table read twice must read the same both times. It was not: `readTable`
  * flattened controls and `columnWidths` did not, so the same table wrapped in a
- * repeating section came out with its rows and its WIDTHS disagreeing — a
+ * repeating section came out with its rows and its WIDTHS disagreeing -- a
  * nominal grid recovered from the cells in one pass and left at 100 twips in
  * the other, six pixels to a column.
  */
@@ -1185,7 +1185,7 @@ function styleValue(style: string, property: string): string | null {
  * A CSS length in the units VML writes, as pixels.
  *
  * Word states a shape's size in POINTS, but a document converted from .doc or
- * written by another producer may say inches or centimetres — and all three
+ * written by another producer may say inches or centimetres -- and all three
  * printed identically through LibreOffice, so all three have to mean the same
  * thing here. A bare number is pixels, which is what CSS says it is.
  */
@@ -1225,7 +1225,7 @@ function readShading(element: XmlElement | null): string | null {
  * A `wp:positionH` or `wp:positionV`.
  *
  * Either a `posOffset` from a named origin or an `align` against it. An origin
- * this engine does not know becomes `column`, which is the writing area — the
+ * this engine does not know becomes `column`, which is the writing area -- the
  * safest place to put a picture whose anchor cannot be honoured, since it is
  * where the text is.
  */
@@ -1262,7 +1262,7 @@ const RELATIVE_TO: Record<string, RelativeTo> = {
  * `wrapTight` and `wrapThrough` follow the picture's OUTLINE rather than its
  * box; both are read as `square`, which keeps the text clear of the picture but
  * further from it than Word would. `wrapTopAndBottom` is read as square too,
- * which leaves text beside a float Word would have pushed below it — stated
+ * which leaves text beside a float Word would have pushed below it -- stated
  * rather than silently approximated.
  */
 function readWrap(anchor: XmlElement): WrapMode {
@@ -1276,8 +1276,8 @@ function readWrap(anchor: XmlElement): WrapMode {
 /**
  * The space between a text box's frame and the words inside it.
  *
- * The defaults are the format's own — a tenth of an inch across, a twentieth
- * down — and they are exactly what LibreOffice printed for a box that stated
+ * The defaults are the format's own -- a tenth of an inch across, a twentieth
+ * down -- and they are exactly what LibreOffice printed for a box that stated
  * nothing: its text started 7.20 in from the frame and its first baseline 3.60
  * below the top, against 0 and 0 for the same box stating `lIns="0" tIns="0"`.
  * So the file is believed, and this is what silence means.
@@ -1295,8 +1295,8 @@ function readBodyInset(bodyPr: XmlElement | null): BoxInset {
 }
 
 /**
- * VML's `inset`, which says all four sides in one attribute as CSS lengths —
- * left, top, right, bottom — any of which may be left empty for the default.
+ * VML's `inset`, which says all four sides in one attribute as CSS lengths --
+ * left, top, right, bottom -- any of which may be left empty for the default.
  *
  * LibreOffice does NOT read this: a box stating `inset="0,0,0,0"` printed its
  * text in exactly the same place as one stating nothing, 4.25 in from the frame
@@ -1372,7 +1372,7 @@ class BodyReader {
      * Floats seen while reading the current paragraph's runs.
      *
      * On the reader because the drawing is found deep inside a run and the
-     * float belongs to the paragraph — the two are several frames apart, and
+     * float belongs to the paragraph -- the two are several frames apart, and
      * threading a collector through every run would put a parameter on the run
      * reader that has nothing to do with runs.
      */
@@ -1394,7 +1394,7 @@ class BodyReader {
 
     /**
      * The style each paragraph came from, and whether it asked for contextual
-     * spacing — remembered only until the blocks around it are known.
+     * spacing -- remembered only until the blocks around it are known.
      *
      * A `WeakMap` because the key is the block itself: nothing downstream needs
      * this, and putting a style id on the layout model to carry it would be a
@@ -1403,7 +1403,7 @@ class BodyReader {
     private readonly paragraphStyleIds = new WeakMap<Block, {
         styleId: string | null;
         contextual: boolean;
-        /** `w:snapToGrid` — false where the paragraph asked to come off it. */
+        /** `w:snapToGrid` -- false where the paragraph asked to come off it. */
         snapToGrid: boolean;
     }>();
 
@@ -1420,7 +1420,7 @@ class BodyReader {
      * What each note is NUMBERED, and the order they were first referenced in.
      *
      * A note's number is its position among the references in the BODY, not its
-     * `w:id` — Word writes ids in whatever order the notes were created, and a
+     * `w:id` -- Word writes ids in whatever order the notes were created, and a
      * document edited more than once has them out of order. Held on the reader
      * because the notes are read after the body, and by then the order the body
      * asked for them in is the only thing that decides it.
@@ -1430,7 +1430,7 @@ class BodyReader {
     /** Set while a note's own blocks are being read, for its `w:footnoteRef`. */
     private footnoteBeingRead: number | null = null;
 
-    /** The same, for endnotes — which are numbered in a series of their own. */
+    /** The same, for endnotes -- which are numbered in a series of their own. */
     private readonly numberedEndnotes = new Map<number, number>();
 
     private endnoteBeingRead: number | null = null;
@@ -1494,7 +1494,7 @@ class BodyReader {
      * Split the body at its section breaks.
      *
      * A `w:sectPr` inside a paragraph's properties ends the section that
-     * paragraph BELONGS TO — the properties describe what came before them,
+     * paragraph BELONGS TO -- the properties describe what came before them,
      * not what follows. The body's own trailing `w:sectPr` describes the last
      * section, which is why a document with no breaks still has one.
      */
@@ -1530,19 +1530,19 @@ class BodyReader {
      * ## The grid is the STRUCTURE; `w:tcW` is often the width
      *
      * `w:tblGrid` says how many columns there are and `w:gridSpan` says how
-     * many of them a cell covers — but the grid's widths are frequently
+     * many of them a cell covers -- but the grid's widths are frequently
      * nominal. The Word-authored fixture here declares `w:w="100"` for both
      * of its columns and puts the real 4680 twips on every `w:tcW`; trusting
      * the grid gives columns a third of a character wide, every cell wraps to
      * one letter per line, and the document gains a page.
      *
      * So the grid supplies the shape and the cells refine it. Word does the
-     * same thing — it recomputes the grid from the cells when it opens a file.
+     * same thing -- it recomputes the grid from the cells when it opens a file.
      */
     private readTable(element: XmlElement): Table {
         const properties = element.element('w:tblPr') ?? null;
         // A table authored in Word names a STYLE and leaves its borders and
-        // cell margins to it — "Table Grid" is the default, and its rules are
+        // cell margins to it -- "Table Grid" is the default, and its rules are
         // the only thing making the table look like a table. Nothing here read
         // `w:tblStyle` at all, so every such table came out bare.
         //
@@ -1604,7 +1604,7 @@ class BodyReader {
                     };
                 }
                 // In document order, because a cell holds paragraphs and
-                // tables interleaved — reading the paragraphs alone lost the
+                // tables interleaved -- reading the paragraphs alone lost the
                 // tables, and reading them separately would put them all at
                 // one end.
                 const paragraphs: Block[] = [];
@@ -1620,7 +1620,7 @@ class BodyReader {
                 paragraphs.splice(0, paragraphs.length, ...this.dropContextualSpacing(paragraphs));
 
                 // `w:textDirection`: read here so the model is whole, and
-                // laid out by nobody yet — see the field's own note.
+                // laid out by nobody yet -- see the field's own note.
                 const turned = cellProperties?.element('w:textDirection')
                     ?.attribute('w:val') ?? null;
                 const textDirection: CellTextDirection | null =
@@ -1629,7 +1629,7 @@ class BodyReader {
                     cellProperties?.element('w:tcMar') ?? null,
                 );
                 this.tableStyleLends = lends;
-                // A conditional format carries borders as well as shading —
+                // A conditional format carries borders as well as shading --
                 // a heavy rule under the header is the commonest table look
                 // there is. Under the cell's OWN, per side, exactly as the
                 // table style sits under the table: measured, a
@@ -1717,7 +1717,7 @@ class BodyReader {
      * Effective column widths in twips.
      *
      * Spanning cells are apportioned FIRST and single-column cells applied
-     * after, so an exact width always beats a share of a span — a row of
+     * after, so an exact width always beats a share of a span -- a row of
      * ordinary cells knows its columns better than a merged one above it.
      */
     private columnWidths(
@@ -1751,7 +1751,7 @@ class BodyReader {
                 if (null !== declared && null !== value && 'dxa' !== type
                     && null === tableTwips) {
                     // Nothing to resolve the percentage against. LibreOffice
-                    // does the same — fifty-percent columns in a table of no
+                    // does the same -- fifty-percent columns in a table of no
                     // declared width printed at their GRID widths, untouched.
                     this.report(
                         'unsupported-block',
@@ -1789,7 +1789,7 @@ class BodyReader {
     }
 
     /**
-     * One `w:p` becomes one paragraph — or SEVERAL, when it contains explicit
+     * One `w:p` becomes one paragraph -- or SEVERAL, when it contains explicit
      * page breaks.
      *
      * `<w:br w:type="page"/>` sits inside a run, part-way through a paragraph.
@@ -1799,16 +1799,16 @@ class BodyReader {
      *
      * ## An EMPTY piece of that split draws nothing
      *
-     * A whole paragraph with no runs is a line — its mark has formatting and
+     * A whole paragraph with no runs is a line -- its mark has formatting and
      * occupies one. A PIECE of a split has no mark of its own, and measured
      * against LibreOffice it takes no room at all. Four arrangements,
      * every following page opening at the same 760.49:
      *
-     *   * `<w:p><w:r><w:br w:type="page"/></w:r></w:p>` — both pieces empty,
+     *   * `<w:p><w:r><w:br w:type="page"/></w:r></w:p>` -- both pieces empty,
      *     and the paragraph draws nothing on either page
-     *   * text then a break — the empty second piece draws nothing
-     *   * a break then text — the empty first piece draws nothing
-     *   * text, break, text — both drawn, which is the control
+     *   * text then a break -- the empty second piece draws nothing
+     *   * a break then text -- the empty first piece draws nothing
+     *   * text, break, text -- both drawn, which is the control
      *
      * That first one is how PHPWord writes `addPageBreak()`, so it is in every
      * document this platform generates: each opened with a blank line at the
@@ -1827,7 +1827,7 @@ class BodyReader {
             this.report('unknown-paragraph-style', `w:pStyle "${styleId}" is not defined in styles.xml`);
         }
         // docDefaults, then the style, then NUMBERING, then direct
-        // formatting — the order WordprocessingML specifies. A list's indent
+        // formatting -- the order WordprocessingML specifies. A list's indent
         // comes from its numbering level and a paragraph may still override
         // it, which is how one bullet gets pushed further in than its
         // neighbours.
@@ -1848,7 +1848,7 @@ class BodyReader {
             : { ...merged, indentFirstLineTwips: placed.firstLineTwips };
 
         // Floats are gathered while the runs are read, because that is where
-        // the drawing is — but they belong to the PARAGRAPH, so they are taken
+        // the drawing is -- but they belong to the PARAGRAPH, so they are taken
         // off the reader once its runs are done.
         this.pendingFloats = [];
         const segments = this.readRuns(element, styleId);
@@ -1904,7 +1904,7 @@ class BodyReader {
      * Measured against LibreOffice: a pair 10pt apart either side
      * printed 21.50 without the flag and 11.50 with it, and the space went
      * against a plain neighbour of the same style as readily as against
-     * another flagged one — so the flag belongs to the paragraph giving up its
+     * another flagged one -- so the flag belongs to the paragraph giving up its
      * own space, and it is asked of each side separately.
      *
      * Done here rather than in the layout because this is the last place that
@@ -1915,8 +1915,8 @@ class BodyReader {
     /**
      * Whether this block asked to stay ON the section's grid.
      *
-     * True for anything the reader has no note about — a table, or a block from
-     * somewhere else — because the grid is the default and `w:snapToGrid` is
+     * True for anything the reader has no note about -- a table, or a block from
+     * somewhere else -- because the grid is the default and `w:snapToGrid` is
      * the exception.
      */
     snapsToGrid(block: Block): boolean {
@@ -1960,7 +1960,7 @@ class BodyReader {
         pPr: XmlElement | null,
         styleId: string | null,
     ): { properties: ParagraphProperties; marker: PendingMarker | null } {
-        // A paragraph may name a list itself, or take one from its STYLE —
+        // A paragraph may name a list itself, or take one from its STYLE --
         // which is how Word's own "List Paragraph" works, and a reader that
         // looked only at the paragraph would see no list at all.
         const numPr = pPr?.element('w:numPr') ?? null;
@@ -1987,8 +1987,8 @@ class BodyReader {
 
         // `w:lvlRestart` above zero names the level whose change restarts this
         // one; this engine restarts under ANY shallower level. It
-        // cannot be measured — LibreOffice ignores the attribute in every
-        // spelling — so it is reported rather than left silent.
+        // cannot be measured -- LibreOffice ignores the attribute in every
+        // spelling -- so it is reported rather than left silent.
         if (null !== level.restart && level.restart > 0) {
             this.report(
                 'unknown-numbering',
@@ -2020,7 +2020,7 @@ class BodyReader {
             marker: {
                 run: { text, font: resolved.font, sizePx, ...(true === run.kerned ? { kerned: true } : {}) },
                 // Through `advanceOf` so the marker is measured by the same
-                // rule as the text beside it — kerned only where the run says
+                // rule as the text beside it -- kerned only where the run says
                 // `w:kern`. A right-justified marker is placed BY
                 // this width, so the two must not disagree.
                 widthPx: advanceOf(text, { font: resolved.font, sizePx, kerned: true === run.kerned }),
@@ -2037,7 +2037,7 @@ class BodyReader {
      * Where a list marker is drawn, and where the text after it starts.
      *
      * Deferred until the paragraph's properties are merged because both
-     * answers need the EFFECTIVE indents, and a paragraph may state its own —
+     * answers need the EFFECTIVE indents, and a paragraph may state its own --
      * in which case the level's are not consulted at all (a level
      * saying 720/360 under a paragraph saying 1000/200 printed its marker at
      * the paragraph's numbers).
@@ -2045,18 +2045,18 @@ class BodyReader {
      * Two rules, both measured off the printed page:
      *
      * - The marker is justified around the ANCHOR, `indentLeft - hanging`.
-     *   `left` starts there, `right` ends there — growing away from the text,
-     *   never into it — and `center` straddles it. The hanging indent is
+     *   `left` starts there, `right` ends there -- growing away from the text,
+     *   never into it -- and `center` straddles it. The hanging indent is
      *   therefore not a first-line indent at all: it positions the marker, and
      *   the text of the first line is decided separately, below.
-     * - A `tab` suffix — Word's default — takes the text to the first tab stop
+     * - A `tab` suffix -- Word's default -- takes the text to the first tab stop
      *   at or after the marker's RIGHT edge. The stops are the paragraph's
      *   explicit `w:tabs` where it has any, its own left indent, and the
      *   repeating default; all measured from the margin.
      *
      * A `space` or `nothing` suffix has no stop to find, so the text follows
      * the marker directly and is never pulled left of the indent. That much is
-     * unmeasured — no printed page here separates it from the tab case — and
+     * unmeasured -- no printed page here separates it from the tab case -- and
      * is what this did for every suffix before the tab rule was measured.
      */
     private placeMarker(
@@ -2120,7 +2120,7 @@ class BodyReader {
         // The complex form is a RUN SEQUENCE, not a container: a `begin`
         // fldChar, the instruction in `w:instrText`, a `separate`, the value
         // Word last computed, then `end`. Only what lies between `separate` and
-        // `end` is the result, so the state has to survive across siblings —
+        // `end` is the result, so the state has to survive across siblings --
         // which is why it is threaded into the run reader rather than kept
         // inside it.
         const state: FieldState = {
@@ -2138,26 +2138,26 @@ class BodyReader {
                     case 'w:del':
                     case 'w:moveFrom':
                         // `w:moveFrom` is the half of a tracked MOVE the text
-                        // left behind, and it disappeared here already — but by
+                        // left behind, and it disappeared here already -- but by
                         // accident, because its runs hold `w:delText` and only
                         // `w:t` is read. Named outright so the two do not drift
                         // apart, and so the notice below covers both.
                         //
                         // Text deleted under revision tracking. It is still in
                         // the file, and this engine draws the document as it
-                        // would READ once the changes are accepted — the text
+                        // would READ once the changes are accepted -- the text
                         // without its markup.
                         //
                         // MEASURED, NOT BUILT. LibreOffice prints the
                         // other view, the one a word processor shows an editor:
                         // `DELETED` drawn in place, struck through by a 0.60pt
                         // rule 44.90 long sitting 2.60 above the baseline, with
-                        // a change bar down the margin at 64.95 — 7.15pt left
+                        // a change bar down the margin at 64.95 -- 7.15pt left
                         // of the text. So it is markup, not content, and a page
                         // that shows it is answering a different question.
                         //
                         // Reported, because dropping text silently is the one
-                        // thing a reader must not do — the same rule that
+                        // thing a reader must not do -- the same rule that
                         // covers a character it cannot draw.
                         this.report(
                             'revision-hidden',
@@ -2205,12 +2205,12 @@ class BodyReader {
             ...readDirectRunProperties(run.element('w:rPr')),
         };
 
-        // `w:vanish` — the document says to hide this run, so it does not reach
+        // `w:vanish` -- the document says to hide this run, so it does not reach
         // the layout at all. Measured: LibreOffice prints neither the
         // text nor the room it would take, the words either side of a hidden
         // one sitting exactly as far apart as the first one is wide. Returning
         // here rather than dropping the ink later is what makes the width go
-        // too — and what keeps hidden text out of a rendered page, which is
+        // too -- and what keeps hidden text out of a rendered page, which is
         // the whole point of the property.
         if (true === properties.hidden) {
             return;
@@ -2224,7 +2224,7 @@ class BodyReader {
         // the page count follows.
         const capitalise = true === properties.caps;
         // `w:smallCaps` capitalises too, but only the LOWER case is made
-        // smaller — measured against LibreOffice, where a capital in a small
+        // smaller -- measured against LibreOffice, where a capital in a small
         // caps run kept its full size and the letters beside it did not.
         const smallCaps = !capitalise && true === properties.smallCaps;
 
@@ -2262,7 +2262,7 @@ class BodyReader {
                     // into a distance: a tab's width is the way to its next
                     // STOP, which is not known until the line has got there.
                     // (This said "tab stops are not implemented" long after
-                    // they were — `w:tabs` reaches `style.tabStops`, defaults
+                    // they were -- `w:tabs` reaches `style.tabStops`, defaults
                     // and decimal alignment included.)
                     text += '\t';
                     break;
@@ -2283,7 +2283,7 @@ class BodyReader {
                     if (null !== face.substitutedFor) {
                         // The glyph is only in the font the document names, and
                         // that font is not here. Drawing the code point out of
-                        // a substitute prints whatever happens to live there —
+                        // a substitute prints whatever happens to live there --
                         // an `a` where the document wanted an arrow.
                         this.report(
                             'font-substituted',
@@ -2316,7 +2316,7 @@ class BodyReader {
 
                     // Word's built-in `EndnoteReference` raises the mark, and
                     // LibreOffice draws it raised whether or not the file
-                    // carries the style — so the default is applied here for
+                    // carries the style -- so the default is applied here for
                     // the same reason the numbering is. Only where the
                     // document has not raised it ALREADY, or the two would be
                     // applied one on top of the other.
@@ -2341,7 +2341,7 @@ class BodyReader {
                 case 'w:footnoteReference':
                 case 'w:footnoteRef': {
                     // The mark ends whatever text preceded it in this run, and
-                    // then IS a run of its own — its number is not part of the
+                    // then IS a run of its own -- its number is not part of the
                     // sentence and must be able to carry the superscript the
                     // `FootnoteReference` style puts on it.
                     flush();
@@ -2417,7 +2417,7 @@ class BodyReader {
                     }
                     const anchored = this.readAnchor(child);
                     if (null !== anchored) {
-                        // A float belongs to the PARAGRAPH, not to this run —
+                        // A float belongs to the PARAGRAPH, not to this run --
                         // it is anchored to the paragraph and placed against
                         // it, and it occupies no width in the line at all.
                         this.pendingFloats.push(anchored);
@@ -2434,8 +2434,8 @@ class BodyReader {
                     break;
                 }
                 case 'w:object': {
-                    // An embedded object — a chart, an equation, a spreadsheet
-                    // — which Word stores beside a VML PICTURE of what it looks
+                    // An embedded object -- a chart, an equation, a spreadsheet
+                    // -- which Word stores beside a VML PICTURE of what it looks
                     // like. The object itself is not something this can run;
                     // the picture is what a reader sees, and dropping it lost
                     // the whole thing.
@@ -2460,7 +2460,7 @@ class BodyReader {
                     }
 
                     // The base is read as runs of its own, which reach the
-                    // paragraph at once — so whatever text this run has
+                    // paragraph at once -- so whatever text this run has
                     // buffered has to reach it first or the two come out in
                     // the wrong order.
                     flush();
@@ -2471,8 +2471,8 @@ class BodyReader {
                     }
 
                     // The gloss rides on the FIRST run of the base, which is
-                    // the one it is set over. A base of several runs — a word
-                    // that changes style half way — would want it spread
+                    // the one it is set over. A base of several runs -- a word
+                    // that changes style half way -- would want it spread
                     // across them, and no measurement covers that; the report
                     // says so rather than the gloss going quietly.
                     const gloss = this.readRubyGloss(child, styleId);
@@ -2489,11 +2489,11 @@ class BodyReader {
                     break;
                 }
                 case 'w:pict': {
-                    // VML — the shape format DrawingML replaced, still written
+                    // VML -- the shape format DrawingML replaced, still written
                     // by older producers and by anything converting from .doc.
                     flush();
                     // A VML text box is a SHAPE with words in it, and its
-                    // shape is usually a plain rectangle — so `readShape`
+                    // shape is usually a plain rectangle -- so `readShape`
                     // below would happily draw the panel and drop the text.
                     const textBox = this.readTextBox(child, 'VML');
                     if (null !== textBox) {
@@ -2501,7 +2501,7 @@ class BodyReader {
                         break;
                     }
                     // An INLINE one sits in the line, so it is a piece rather
-                    // than a float — and it carries its own stacked words, the
+                    // than a float -- and it carries its own stacked words, the
                     // way the DrawingML spelling does.
                     const inlineBox = this.readInlineVmlTextBox(child);
                     if (null !== inlineBox) {
@@ -2513,8 +2513,8 @@ class BodyReader {
                         break;
                     }
 
-                    // A box this cannot build — no width to stack against, or
-                    // nothing but a table inside — still had words in it, and
+                    // A box this cannot build -- no width to stack against, or
+                    // nothing but a table inside -- still had words in it, and
                     // they are about to be dropped by the shape path below.
                     // The report belongs HERE rather than where it used to
                     // live: said unconditionally, it announced a loss on every
@@ -2536,8 +2536,8 @@ class BodyReader {
                         break;
                     }
 
-                    // No picture in it: the shape is FURNITURE — a rule, a
-                    // border, a coloured panel — and a document whose boxes are
+                    // No picture in it: the shape is FURNITURE -- a rule, a
+                    // border, a coloured panel -- and a document whose boxes are
                     // VML had none of them before.
                     const box = this.readShape(child);
                     if (null !== box) {
@@ -2568,7 +2568,7 @@ class BodyReader {
                     break;
                 case 'w:cr':
                     // The same break under an older name, and it was in no
-                    // branch at all — so the text either side of one ran
+                    // branch at all -- so the text either side of one ran
                     // together. Measured: `cc` and `dd` either side
                     // of a `w:cr` printed 11.50 apart, exactly as they do
                     // either side of a `w:br`.
@@ -2585,7 +2585,7 @@ class BodyReader {
      * A `w:drawing`, if it holds a picture this engine can draw.
      *
      * Descends by LOCAL name. The prefixes are `wp`, `a` and `pic` by
-     * convention and by convention only — a producer may bind those namespaces
+     * convention and by convention only -- a producer may bind those namespaces
      * to any prefix it likes, and matching on the prefix would silently lose
      * every picture in such a file.
      *
@@ -2594,7 +2594,7 @@ class BodyReader {
      * text it was meant to sit beside down the page.
      */
     /**
-     * A `w:pict` — a picture in the shape language DrawingML replaced.
+     * A `w:pict` -- a picture in the shape language DrawingML replaced.
      *
      * The picture is named the same way a drawing names one, so it resolves
      * through the same relationship map. What differs is the SIZE: VML states
@@ -2631,15 +2631,15 @@ class BodyReader {
     /**
      * A text box: the words inside a `w:txbxContent`, and the frame round them.
      *
-     * Both spellings wrap that same element — VML's `v:textbox` and
-     * DrawingML's `wps:txbx` — so ONE search finds either, and only the frame
+     * Both spellings wrap that same element -- VML's `v:textbox` and
+     * DrawingML's `wps:txbx` -- so ONE search finds either, and only the frame
      * around it differs. Words that cannot be placed are REPORTED rather than
      * dropped in silence, which is what this used to do.
      *
      * Measured against LibreOffice, whose numbers the placement reproduces: a
      * box anchored 200pt across and 20pt down printed its first baseline at
-     * 279.30, 736.89 — the frame's corner, plus the inset, plus the line's own
-     * rise — and the body either side stepped its ordinary 11.50, undisturbed.
+     * 279.30, 736.89 -- the frame's corner, plus the inset, plus the line's own
+     * rise -- and the body either side stepped its ordinary 11.50, undisturbed.
      *
      * `null` means this drawing is not a text box at all, which is the ordinary
      * answer: every picture in every document comes through here.
@@ -2663,8 +2663,8 @@ class BodyReader {
                 return null;
             }
 
-            // The VML spelling of the same thing — a shape with no
-            // `position:absolute` — which this engine does not build YET.
+            // The VML spelling of the same thing -- a shape with no
+            // `position:absolute` -- which this engine does not build YET.
             // Dropped, and said in its own words: the generic message below
             // would claim it said nothing about where it sits, and it did. It
             // said "in the line".
@@ -2677,7 +2677,7 @@ class BodyReader {
             //
             // TWO decimals, not three. The prints give positions to a hundredth
             // and this engine already runs about 0.10 left of them, so 18.01
-            // and 18.02 are the same measurement — the printed page gives
+            // and 18.02 are the same measurement -- the printed page gives
             // 18.02 and `run-width.mjs` says 18.01 off the wrap probe.
             // Agreement in that last digit would be arithmetic, not evidence.
             //
@@ -2686,16 +2686,16 @@ class BodyReader {
             // the text before it rather than computed from the face. `P-before`
             // is 34.43, not the 36 that was assumed, and `L-` is 9.44. The page
             // never moved; the arithmetic did. Measure the run you are
-            // subtracting, or subtract nothing — `tools/probes/run-width.mjs`
+            // subtracting, or subtract nothing -- `tools/probes/run-width.mjs`
             // exists so that subtraction is never estimated again.
             //
-            // The HEIGHT was carried here as a missing number — "stepped 38.25
-            // where a plain line steps 11.55" — and it never was one. The shape
+            // The HEIGHT was carried here as a missing number -- "stepped 38.25
+            // where a plain line steps 11.55" -- and it never was one. The shape
             // falls through to the inline-shape path and this engine already
             // steps such a line by box-height-plus-descent, which is precisely
-            // what LibreOffice does — measured at three sizes, in two fonts.
+            // what LibreOffice does -- measured at three sizes, in two fonts.
             //
-            // Both are built now — the room and the words alike — so this
+            // Both are built now -- the room and the words alike -- so this
             // hands the inline spelling back for the caller to place
             // in the line, and says nothing, because nothing was lost.
             //
@@ -2705,7 +2705,7 @@ class BodyReader {
 
             // Named by SPELLING, and not only for the reader's sake: the two
             // travel different paths through this file, and one message for
-            // both meant a test could not tell which of them had spoken —
+            // both meant a test could not tell which of them had spoken --
             // every mutation silencing one of the two survived.
             this.report(
                 'unsupported-block',
@@ -2722,7 +2722,7 @@ class BodyReader {
     }
 
     /**
-     * The same box, sitting IN the line rather than beside it — `wp:inline`.
+     * The same box, sitting IN the line rather than beside it -- `wp:inline`.
      *
      * Measured: a 90x36pt box takes exactly its `wp:extent` in the
      * line and draws its words 7.20 inside that, which is the body inset. So
@@ -2772,20 +2772,20 @@ class BodyReader {
      * The box keeps 9pt of wrap distance either side of itself and
      * an INSET of 4.25 on every side. That inset was arrived at
      * twice over, from measurements that knew nothing of each other: the words
-     * start 13.2 from the shape's origin — 13.21, 13.21 and 13.22 at 90pt@10pt,
-     * 150pt@10pt and 90pt@20pt, so neither the font's nor the box's — which is
+     * start 13.2 from the shape's origin -- 13.21, 13.21 and 13.22 at 90pt@10pt,
+     * 150pt@10pt and 90pt@20pt, so neither the font's nor the box's -- which is
      * the 9.0 of wrap plus 4.25; and the first line sits 13.55 below the box's
      * top at 10pt and 22.90 at 20pt, which are the same 4.25 once the line's
      * own rise comes off.
      *
      * The content width is the stated width less that inset twice. Two rules
-     * survived the whole arc — `stated - 13.2` and `stated - 8.5` — because
+     * survived the whole arc -- `stated - 13.2` and `stated - 8.5` -- because
      * every wrap measured fell outside the 4.7pt gap between them. A string
      * built with `run-width.mjs` to land INSIDE it settled it: `alpha beta
      * gammaw`, 79.97 wide, stayed on its line in a 90pt box, which `stated -
      * 13.2` (76.8) forbids.
      *
-     * `null` for a float — that is `readTextBox`'s — and for a shape holding
+     * `null` for a float -- that is `readTextBox`'s -- and for a shape holding
      * no words, which is furniture and `readShape`'s.
      */
     private readInlineVmlTextBox(pict: XmlElement): InlineShape | null {
@@ -2817,7 +2817,7 @@ class BodyReader {
         const stacked = stackBlocks(blocks, Math.max(0, widthPx - insetPx - insetPx));
 
         // A box is a shape that happens to hold words, so its PANEL is read
-        // the way any shape's is — including the rule that a `v:shape` naming
+        // the way any shape's is -- including the rule that a `v:shape` naming
         // no shapetype paints nothing. Reading it here instead would
         // give a filled `v:rect` with text in it a box nobody draws, which the
         // print does draw: the green one in `vml-shape-geometryless.docx`.
@@ -2836,7 +2836,7 @@ class BodyReader {
     /**
      * The room a VML shape keeps in the line BESIDE the width it draws at.
      *
-     * Wrap distance, 9pt a side where the document says nothing — which is
+     * Wrap distance, 9pt a side where the document says nothing -- which is
      * what a document usually says, and why this read as an unexplained
      * constant for five slices.
      */
@@ -2853,7 +2853,7 @@ class BodyReader {
      * ## The outer paragraph's floats have to survive this
      *
      * `readParagraph` clears the reader's pending floats when it starts and
-     * takes them when it ends — and the box is found part-way through the OUTER
+     * takes them when it ends -- and the box is found part-way through the OUTER
      * paragraph's runs, so reading the paragraphs inside it would carry off
      * whatever that paragraph had anchored already. Saved and put back, or a
      * picture anchored before a text box in the same paragraph disappears.
@@ -2885,14 +2885,14 @@ class BodyReader {
      * A DrawingML text box's frame: `wp:anchor` for where, `wp:extent` for how
      * big, `wps:bodyPr` for the space inside it.
      *
-     * An INLINE text box — `wp:inline` rather than `wp:anchor` — sits in the
+     * An INLINE text box -- `wp:inline` rather than `wp:anchor` -- sits in the
      * line like a picture rather than beside the text. It returns null and the
      * caller says so.
      *
      * MEASURED at last, where this said no measurement covered it.
      * A 90x36pt inline box takes **exactly its `wp:extent`** in the line: the
-     * print draws its words at 115.35 — the box's own left edge plus the 7.20
-     * body inset — and the text after it at **198.20**, which is 90.00 past
+     * print draws its words at 115.35 -- the box's own left edge plus the 7.20
+     * body inset -- and the text after it at **198.20**, which is 90.00 past
      * where the box begins. This engine reserves nothing and puts that text at
      * 108.09, so a box's worth of words vanishes and the line closes over it.
      *
@@ -2904,7 +2904,7 @@ class BodyReader {
      *
      * The VML spelling wants its own answer: the same 90pt shape reserved
      * 108.0 and drew its words 13.2 in, and nothing in the file accounts for
-     * the extra 18.0 — read as 17.50 and then 16.40 before it was measured
+     * the extra 18.0 -- read as 17.50 and then 16.40 before it was measured
      * rather than estimated.
      */
     private drawingBoxFrame(drawing: XmlElement): Omit<FloatingBox, 'blocks'> | null {
@@ -2934,13 +2934,13 @@ class BodyReader {
      * A VML text box's frame, which says everything in CSS.
      *
      * `margin-left` and `margin-top` are the offsets and they are measured from
-     * the defaults this engine already uses — the column across, the paragraph
+     * the defaults this engine already uses -- the column across, the paragraph
      * down. Measured: `margin-left:200pt` on a page with a 72pt
      * margin put the frame's edge at 272.10, which is the column's own left
      * plus 200.
      *
      * A shape may state some OTHER origin in `mso-position-horizontal-relative`
-     * and its vertical twin. Those are not measured, so they are not obeyed —
+     * and its vertical twin. Those are not measured, so they are not obeyed --
      * and the box says so rather than landing somewhere unexplained.
      */
     private vmlBoxFrame(pict: XmlElement): Omit<FloatingBox, 'blocks'> | null {
@@ -2960,18 +2960,18 @@ class BodyReader {
 
         // A VML shape with no absolute position sits IN the line, and this
         // engine builds that only for the DrawingML spelling. It was
-        // coming through here as a float with no offsets at all — placed at
+        // coming through here as a float with no offsets at all -- placed at
         // the paragraph's own origin, and its words drawn nowhere. Dropped and
         // SAID, which is what the other spelling did before it was built.
         //
         // Returning null drops it from the FLOAT path only. It then falls
         // through to the ordinary inline-shape path and reserves its stated
-        // size — which is why its LINE is already right: this engine steps an
+        // size -- which is why its LINE is already right: this engine steps an
         // inline shape by box-height-plus-descent, and LibreOffice was
         // measured doing exactly that, at three sizes and in two fonts.
         //
         // What is still missing is the 18.0 of extra width the print gives
-        // such a box, and the words inside it — an extra read as 17.50 and
+        // such a box, and the words inside it -- an extra read as 17.50 and
         // then 16.40 before it was measured rather than estimated.
         if ('absolute' !== styleValue(style, 'position')) {
             return null;
@@ -3013,7 +3013,7 @@ class BodyReader {
      * A `w:pict` that holds no picture: a shape DRAWN rather than shown.
      *
      * VML says the size in the shape's `style` and its colours in attributes
-     * beside it — `fillcolor`, `strokecolor`, `strokeweight` — and says so in
+     * beside it -- `fillcolor`, `strokecolor`, `strokeweight` -- and says so in
      * CSS spellings rather than in OOXML's. A shape with neither fill nor
      * stroke is invisible, and is left out rather than given a box of nothing.
      */
@@ -3034,14 +3034,14 @@ class BodyReader {
 
         // A `v:shape` has no outline of its OWN: it takes one from the
         // `v:shapetype` its `type` names. Name no type and there is no path to
-        // draw, so LibreOffice paints nothing at all — while still keeping the
+        // draw, so LibreOffice paints nothing at all -- while still keeping the
         // shape's room in the line.
         //
         // This engine painted a white box with a black border there, because
         // the colours below default to white and black for a shape that names
         // none. Measured with the control that makes the null mean something:
-        // in ONE print, a `v:rect` — which IS a rectangle and needs no
-        // shapetype — came out with its 3pt stroke at width 3.000, and the
+        // in ONE print, a `v:rect` -- which IS a rectangle and needs no
+        // shapetype -- came out with its 3pt stroke at width 3.000, and the
         // bare `v:shape` beside it produced no mark anywhere on the page.
         //
         // The room is kept deliberately: the print puts the run after such a
@@ -3052,7 +3052,7 @@ class BodyReader {
         // the drawn one would grow a box the print draws at its stated size.
         //
         // The 18.0 carried for a long time as an unexplained constant is this,
-        // defaulted: 9pt a side. ISOLATED at last — a 90pt rect
+        // defaulted: 9pt a side. ISOLATED at last -- a 90pt rect
         // whose run after it starts at 189.55 by default starts at 171.55 with
         // both distances set to 0, at 211.55 with both at 20pt, and at 191.55
         // with 20pt on the left alone. The 20pt line is the control that makes
@@ -3061,13 +3061,13 @@ class BodyReader {
         // It also settles a contradiction the suite caught: a shape in a
         // TURNED cell was measured charging its height and nothing more. Wrap
         // distance is per-SIDE, and a turned line advances down the page, where
-        // the top and bottom distances apply — and those default to nought.
+        // the top and bottom distances apply -- and those default to nought.
         // Hence `advanceWidthPx`, which the turned path does not read.
         //
         // Where the box sits INSIDE that room is not built, because it is not
         // measured: the print puts a 90pt box's edge about 8.8 in, but the only
-        // fixtures that draw at all draw degenerately — one half-width segment
-        // — so this leaves the box against the left of its room, where it was.
+        // fixtures that draw at all draw degenerately -- one half-width segment
+        // -- so this leaves the box against the left of its room, where it was.
         const advanceWidthPx = widthPx + this.vmlWrapExtraPx(style);
 
         const generic = findByLocalName(pict, 'shape');
@@ -3133,7 +3133,7 @@ class BodyReader {
     }
 
     /**
-     * A `wp:anchor` — a picture text flows around rather than through.
+     * A `wp:anchor` -- a picture text flows around rather than through.
      *
      * Returns null for a drawing that is not anchored, so the caller can fall
      * through to the inline reader without asking twice.
@@ -3175,7 +3175,7 @@ class BodyReader {
     }
 
     /**
-     * The `w:rt` of a `w:ruby` — the gloss itself.
+     * The `w:rt` of a `w:ruby` -- the gloss itself.
      *
      * Its runs are resolved exactly as any other run's are, so the gloss is in
      * whatever face and size the file gave it. `w:rubyPr/w:hps` states that
@@ -3243,10 +3243,10 @@ class BodyReader {
             : halfPointsToPx(properties.sizeHalfPoints);
 
         // A script run is SMALLER and sits off the line. Reducing the size here
-        // rather than at drawing time means every measurement downstream —
-        // widths, line breaking, the line's own height — already knows.
+        // rather than at drawing time means every measurement downstream --
+        // widths, line breaking, the line's own height -- already knows.
         // `w:position` moves a run by hand, and WINS over `w:vertAlign`
-        // outright — measured against LibreOffice, a run that stated both came
+        // outright -- measured against LibreOffice, a run that stated both came
         // out at the hand-set height and at FULL size, its neighbour starting
         // exactly where an unscripted one did. The two do not add.
         const positioned = undefined !== properties.positionHalfPoints
@@ -3371,8 +3371,8 @@ function resolveLineHeight(properties: ParagraphProperties, runs: readonly Style
 /**
  * Single spacing for these runs: the tallest natural line height among them.
  *
- * Shared by the two places that need it — resolving a paragraph's own
- * `w:spacing`, and re-resolving that same spacing against a section's grid —
+ * Shared by the two places that need it -- resolving a paragraph's own
+ * `w:spacing`, and re-resolving that same spacing against a section's grid --
  * so the second cannot drift from the first.
  */
 function naturalLineHeightOf(runs: readonly StyledRun[]): number {
@@ -3395,7 +3395,7 @@ const SOFT_HYPHEN_TEXT = String.fromCodePoint(SOFT_HYPHEN);
 /**
  * Word's default gap between columns, for a `w:cols` that states none.
  *
- * Half an inch, and 1440 twips to the inch as OOXML defines — so this is a
+ * Half an inch, and 1440 twips to the inch as OOXML defines -- so this is a
  * DEFINITION rather than anything read off a page. (It leant on a citation in
  * a neighbouring comment until a constant was inserted between the two and
  * `audit:claims` noticed the justification had drifted out of view.)
@@ -3406,7 +3406,7 @@ const DEFAULT_COLUMN_GAP_TWIPS = 720;
  * `w:cols/@w:equalWidth`, read as the toggle it is.
  *
  * ABSENT is false here, which is the opposite of what the schema says the
- * default is — see {@link readColumns}. It is what the page does, and the
+ * default is -- see {@link readColumns}. It is what the page does, and the
  * default only decides the case where no width is stated, which this is never
  * asked about.
  */
@@ -3415,7 +3415,7 @@ function isEqualWidth(value: string | null): boolean {
 }
 
 /**
- * `w:cols` — the columns a section's text flows down.
+ * `w:cols` -- the columns a section's text flows down.
  *
  * Returned as absolute edges rather than a count and a gap, because Word can
  * state each column's own width and a count could not say that. Equal columns
@@ -3441,14 +3441,14 @@ function readColumns(
     let leftTwips = 0;
 
     // A stated width WINS unless the document explicitly asks for equal
-    // columns — which is not what the schema's default says, and is what the
+    // columns -- which is not what the schema's default says, and is what the
     // page does. The same two columns of 3000 and 5526 twips put
     // their second at 247.10 with `w:equalWidth="0"`, with `"false"`, and with
     // the attribute absent altogether; only `"1"` divided the width evenly and
     // put it at 315.75.
     //
     // Reading it as "off" alone missed two of those three: the attribute is a
-    // TOGGLE, and a toggle is spelt `0`, `false` or `off` — while a document
+    // TOGGLE, and a toggle is spelt `0`, `false` or `off` -- while a document
     // that states widths and says nothing at all plainly means the widths.
     if (stated.length > 0 && !isEqualWidth(cols.attribute('w:equalWidth'))) {
         for (const col of stated) {
@@ -3475,14 +3475,14 @@ function readColumns(
 /**
  * `w:pgNumType/@w:start`, when a section restarts its numbering.
  *
- * The element is often there and EMPTY — the fixture Word saved for this
- * repository carries one — which says nothing at all and must not be read as
+ * The element is often there and EMPTY -- the fixture Word saved for this
+ * repository carries one -- which says nothing at all and must not be read as
  * a restart at zero.
  */
 /**
  * The gap LibreOffice leaves when `w:distance` says nothing: half a centimetre.
  *
- * Measured, not assumed — a number with no distance stated came out 14.05pt in
+ * Measured, not assumed -- a number with no distance stated came out 14.05pt in
  * from the writing area, against the 18 a quarter-inch would have given.
  */
 const DEFAULT_LINE_NUMBER_GAP_PX = 0.5 / 2.54 * 96;
@@ -3512,7 +3512,7 @@ function readLineNumbering(sectPr: XmlElement | null): LineNumbering | null {
 }
 
 /**
- * `w:docGrid` — an East Asian typesetting grid, which moves LATIN text too.
+ * `w:docGrid` -- an East Asian typesetting grid, which moves LATIN text too.
  *
  * Measured against LibreOffice: a 360-twip pitch stepped 18pt where the same
  * text ungridded steps 11.5, and `linesAndChars` did the same as `lines` for
@@ -3520,7 +3520,7 @@ function readLineNumbering(sectPr: XmlElement | null): LineNumbering | null {
  *
  * Applied to the section's paragraphs rather than carried beside them: the
  * grid is what a paragraph falls back to, and one that states its own
- * `w:spacing` keeps it — so this is a default, and defaults belong on the
+ * `w:spacing` keeps it -- so this is a default, and defaults belong on the
  * thing they default.
  */
 function readLinePitchPx(sectPr: XmlElement | null): number | null {
@@ -3541,11 +3541,11 @@ function readLinePitchPx(sectPr: XmlElement | null): number | null {
  *
  * A paragraph that states nothing takes the pitch, which is what this did from
  * the start. A paragraph that states spacing of its OWN is re-resolved against
- * the pitch rather than left alone — measured against LibreOffice on
+ * the pitch rather than left alone -- measured against LibreOffice on
  * an 18pt grid over a font whose natural line is 11.50:
  *
  *   `atLeast` 12pt   stepped 18.00, which is max(12, PITCH)
- *   `auto` 1.5       stepped 27.00, which is 1.5 x PITCH — not 1.5 x 11.50
+ *   `auto` 1.5       stepped 27.00, which is 1.5 x PITCH -- not 1.5 x 11.50
  *   `exact` 14pt     stepped 14.00, the one rule the grid does not touch
  *
  * Measuring the `exact` case ALONE reads as "a paragraph stating its own
@@ -3562,7 +3562,7 @@ function readLinePitchPx(sectPr: XmlElement | null): number | null {
  * A cell's paragraphs, with any `atLeast` FLOOR taken off them.
  *
  * Under a grid, a cell takes the font's own line and neither the pitch nor its
- * own floor — measured at floors of 8, 12, 20 and 24 over a natural line of
+ * own floor -- measured at floors of 8, 12, 20 and 24 over a natural line of
  * 11.55, all four printing 11.55. Only `atLeast` goes: a cell asking
  * for one and a half lines still printed 17.25, one and a half of the font, so
  * `auto` is honoured and left alone.
@@ -3606,12 +3606,12 @@ function onGrid(
         // cell's own stacking; the grid is the SECTION's line, and a cell is
         // not on it. Measured at last rather than asserted: under an
         // 18pt grid a cell's paragraphs printed 11.50 apart, the font's own
-        // line, while the body paragraph above the table stepped 18.00 — and a
+        // line, while the body paragraph above the table stepped 18.00 -- and a
         // cell asking for 1.5 lines took 17.25, one and a half of the FONT,
         // where the same request on the body takes one and a half pitches.
         //  AND YET a cell sees the pitch for `atLeast`: under the
         // same 18.00 grid, a cell paragraph stating a floor of 12.00 printed
-        // an 18.00 step — the section's pitch — where this engine gives it the
+        // an 18.00 step -- the section's pitch -- where this engine gives it the
         // 12.00 it asked for. The two prints do not contradict each other so
         // much as split the question: a cell is off the grid for the STEP it
         // takes (11.50, and 17.25 for one and a half) and on it for the FLOOR
@@ -3621,11 +3621,11 @@ function onGrid(
         // four floors and two pitches, a cell's `atLeast` step looked exactly
         // like `max(floor, PITCH)`: floors of 8 and 12 printed 18.00 under an
         // 18.00 grid, 20 and 24 printed themselves, and under a 24.00 grid
-        // both 12 and 20 printed 24.00 — tracking the pitch, not a number that
+        // both 12 and 20 printed 24.00 -- tracking the pitch, not a number that
         // happened to be 18.
         //
         // Building that broke `doc-grid-cell.docx`, which has the SAME 18.00
-        // pitch and the SAME 12.00 floor and prints 11.50 — LibreOffice
+        // pitch and the SAME 12.00 floor and prints 11.50 -- LibreOffice
         // dropping the floor BELOW what the paragraph asked, which stood
         // unexplained. The one thing that differs between the two
         // files is the font: a natural line of 11.50 there against 10.35 here.
@@ -3641,8 +3641,8 @@ function onGrid(
         // measured earlier is a BODY rule that was read off a cell.
         //
         // It was read off a cell in `grid-cell-floor.docx`, which is
-        // hand-built and carries no `word/settings.xml` — and that part's mere
-        // PRESENCE decides which defaults LibreOffice uses — an empty one
+        // hand-built and carries no `word/settings.xml` -- and that part's mere
+        // PRESENCE decides which defaults LibreOffice uses -- an empty one
         // behaves like a full one. Only the modern branch is built: it is
         // what Word and LibreOffice both emit, and the legacy one is the
         // behaviour of a file no producer writes.
@@ -3650,13 +3650,13 @@ function onGrid(
             return modernDefaults ? withoutCellFloors(block) : block;
         }
 
-        // `w:snapToGrid w:val="0"` — the paragraph asked to come off the grid,
+        // `w:snapToGrid w:val="0"` -- the paragraph asked to come off the grid,
         // and comes off it whole: measured, it steps the font's own
         // 11.50 beside a neighbour stepping the grid's 18.00.
         //
         // Asked only of PARAGRAPHS, and after the table above, so the question
         // is only ever put about a block the reader recorded. That leaves the
-        // predicate's own default for an unrecorded one unobservable — a
+        // predicate's own default for an unrecorded one unobservable -- a
         // mutation flipping it changes nothing and cannot be killed, which is
         // the honest reason it is written where the reader can see the map
         // rather than defended here.
@@ -3677,10 +3677,10 @@ function onGrid(
 
         // `auto` resolved to a multiple of the FONT's line and is re-taken
         // against the pitch. The multiple survives that first resolution
-        // exactly — it is what turned the font's line into this number — so
+        // exactly -- it is what turned the font's line into this number -- so
         // dividing recovers it rather than guessing at it.
         //
-        //  `atLeast` was thought to need nothing here — "its floor is the
+        //  `atLeast` was thought to need nothing here -- "its floor is the
         // pitch, a gridded line already takes whole pitches, and a mutation
         // taking max(stated, pitch) as well survived, which is what dead code
         // looks like". MEASURED, and it is not dead code, it is a blind
@@ -3695,10 +3695,10 @@ function onGrid(
         //
         // Two faults, and the second is the more interesting: a cell is off
         // the grid for its own line rule, and this says it is ON it for the
-        // pitch. Not built here — it is a rule about where the grid reaches,
+        // pitch. Not built here -- it is a rule about where the grid reaches,
         // which wants its own slice rather than a patch inside this one.
         //
-        // And the body fault is NOT in this branch — it is not in this FILE.
+        // And the body fault is NOT in this branch -- it is not in this FILE.
         // Taking `max(declared, pitch)` here leaves the 21.45 exactly where it
         // was, and the reader hands the layout precisely what it should: this
         // paragraph arrives as `rule=grid, height=24.00`, and a 21.45 step
@@ -3708,22 +3708,22 @@ function onGrid(
         //
         // Calling it `grid` was the fault: the grid rule spends
         // `(height / pitch - 1)` of the grid's own leading at the foot of the
-        // paragraph — measured for a MULTIPLE, where 1.5-line spacing means
-        // something by 1.5 — and a floor of 24.00 on an 18.00 grid is not a
+        // paragraph -- measured for a MULTIPLE, where 1.5-line spacing means
+        // something by 1.5 -- and a floor of 24.00 on an 18.00 grid is not a
         // multiple of anything. Read as one it gave back 2.55, which is where
         // the 21.45 came from against the print's 24.00.
         //
         // As `atLeast` both cases fall out: the layout takes the larger of the
         // floor and the line's own text, so a floor under the pitch prints the
-        // pitch — 18.00 for a stated 12.00 — and one above it prints itself.
+        // pitch -- 18.00 for a stated 12.00 -- and one above it prints itself.
         if ('atLeast' === block.style.lineRule) {
             return {
                 ...block,
                 style: {
                     ...style,
                     // The floor itself: the layout's grid rule already
-                    // takes whole pitches — `max(declared, ceil(natural /
-                    // pitch) * pitch)` — so raising it to the pitch here
+                    // takes whole pitches -- `max(declared, ceil(natural /
+                    // pitch) * pitch)` -- so raising it to the pitch here
                     // changes nothing a mutation can find, and this one
                     // really is dead code rather than a blind fixture.
                     lineHeightPx: declaredPx,
@@ -3752,7 +3752,7 @@ function readPageBorders(sectPr: XmlElement | null): PageBorders | null {
     }
 
     // `w:offsetFrom` defaults to `text`, which is what a border with no say in
-    // the matter gets — and the two are 22.6pt apart on A4 at a one-centimetre
+    // the matter gets -- and the two are 22.6pt apart on A4 at a one-centimetre
     // margin, so the default is not a detail.
     return {
         borders,
@@ -3767,11 +3767,11 @@ function readFirstPageNumber(sectPr: XmlElement | null): number | null {
 }
 
 /**
- * `w:pgNumType/@w:fmt` — the numerals this section's page numbers are written
+ * `w:pgNumType/@w:fmt` -- the numerals this section's page numbers are written
  * in.
  *
- * Folded onto the four this engine can write. Anything else — `ordinal`,
- * `cardinalText`, the East Asian systems — is left as decimal rather than
+ * Folded onto the four this engine can write. Anything else -- `ordinal`,
+ * `cardinalText`, the East Asian systems -- is left as decimal rather than
  * guessed at, which is what the reader does with an unknown field switch too.
  */
 function readPageNumberFormat(sectPr: XmlElement | null): NumeralStyle | null {
@@ -3798,21 +3798,21 @@ function readGeometry(sectPr: XmlElement | null): PageGeometry {
     const margin = sectPr?.element('w:pgMar') ?? null;
 
     const widthTwips = attributeNumber(size, 'w:w') ?? DEFAULT_GEOMETRY.widthTwips;
-    // `w:gutter` — the BINDING margin: room left on the edge the pages are
+    // `w:gutter` -- the BINDING margin: room left on the edge the pages are
     // stitched or punched at, so the text is not swallowed by the fold. Word
     // writes the attribute on every document and almost always as zero, which
     // is why ignoring it went unnoticed for the whole of this arc.
     //
     // It is part of the LEFT MARGIN rather than a thing of its own, and the
     // measurement says so twice over: a section with 720 twips of gutter began
-    // its text at 108.10 against the control's 72.10 — half an inch further in
-    // — and one with 1440 began at 144.10, the shift following the value. The
+    // its text at 108.10 against the control's 72.10 -- half an inch further in
+    // -- and one with 1440 began at 144.10, the shift following the value. The
     // writing width comes off with it rather than the text sliding over the
     // right margin: the same paragraph fitted 22 words a line with no gutter,
     // 20 with half an inch and 18 with a whole one.
     //
     // Adding it here, before the columns and the margin are given back, is
-    // what carries it to everything measured from the margin — and the header
+    // what carries it to everything measured from the margin -- and the header
     // and footer moved with the body in the same print, all four sections
     // drawing their furniture at exactly the body's own left edge.
     const gutterTwips = attributeNumber(margin, 'w:gutter') ?? 0;
@@ -3841,7 +3841,7 @@ function readGeometry(sectPr: XmlElement | null): PageGeometry {
  * A cell margin, which is written as a child element with its own `w:w`
  * rather than as an attribute of the parent.
  */
-/** Include a key only when there is a value — see style-sheet's own `pick`. */
+/** Include a key only when there is a value -- see style-sheet's own `pick`. */
 function pick<K extends string, V>(key: K, value: V | null): { [P in K]?: V } {
     return (null === value ? {} : { [key]: value }) as { [P in K]?: V };
 }

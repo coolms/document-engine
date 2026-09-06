@@ -102,7 +102,7 @@ describe('resolveFields', () => {
 
     it('returns the very same blocks when none of them has a field', () => {
         // Furniture is re-resolved for every page, and a header with no page
-        // number is the common case — copying it per page would allocate a whole
+        // number is the common case -- copying it per page would allocate a whole
         // tree for no change.
         const blocks = [paragraph({ text: 'Chapter One' })];
 

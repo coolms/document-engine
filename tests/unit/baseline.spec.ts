@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { baselineOffsetPx, EXACT_BASELINE_RATIO } from '../../src/layout/baseline.js';
 
 /**
- * A font 20 tall naturally, reaching 4 below the baseline — so its natural
+ * A font 20 tall naturally, reaching 4 below the baseline -- so its natural
  * baseline sits at 16, and every case below moves visibly off that.
  */
 const FONT = { naturalHeightPx: 20, descentPx: 4 };
@@ -52,7 +52,7 @@ describe('baselineOffsetPx', () => {
 
         it('can put the baseline ABOVE where the font wanted it', () => {
             // An exact line shorter than the font asks for loses the descender
-            // to the line below rather than moving the baseline — that is what
+            // to the line below rather than moving the baseline -- that is what
             // "exact" means, and why it can clip.
             expect(baselineOffsetPx({ ...FONT, lineHeightPx: 10, rule: 'exact' })).toBe(8);
         });

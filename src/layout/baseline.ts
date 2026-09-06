@@ -3,7 +3,7 @@
  *
  * A line's height says how much room it takes; it does not say where the text
  * within it rests. Get this wrong and every glyph on the page is drawn at the
- * wrong height — the page count stays right and the document is visibly wrong.
+ * wrong height -- the page count stays right and the document is visibly wrong.
  *
  * ## The three rules disagree, and only about this
  *
@@ -12,8 +12,8 @@
  * number. Drawing needs more than that: two lines of identical height put their
  * baseline in different places depending on which rule produced it.
  *
- * All three were measured out of LibreOffice's own PDF — the `Td` operand of
- * each line — at three heights each, and confirmed twice per height by solving
+ * All three were measured out of LibreOffice's own PDF -- the `Td` operand of
+ * each line -- at three heights each, and confirmed twice per height by solving
  * consecutive baseline-to-baseline gaps rather than trusting any assumption
  * about where a line box ended.
  */
@@ -24,10 +24,10 @@ export type LineRule = 'auto' | 'exact' | 'atLeast' | 'grid';
 /**
  * The proportion of an EXACTLY spaced line that sits above the baseline.
  *
- * A flat proportion, not a font metric — verified by setting the same exact
+ * A flat proportion, not a font metric -- verified by setting the same exact
  * height in Liberation Serif and Liberation Sans, whose natural baselines
  * differ by 0.05pt, and finding the exact baseline identical in both at
- * 19.18pt of a 24pt line. 0.8 × 24 is 19.2, and the 0.02 is the constant inset
+ * 19.18pt of a 24pt line. 0.8 x 24 is 19.2, and the 0.02 is the constant inset
  * LibreOffice applies to every line including left-aligned ones.
  *
  * So a font with a deep descender loses its descender to the line below rather
@@ -63,13 +63,13 @@ export function baselineOffsetPx(metrics: BaselineMetrics): number {
 
     // `w:docGrid` puts the leading round the line rather than on one side of
     // it: measured against LibreOffice, an 18pt pitch moved a 11.5pt line's
-    // first baseline from 804.14 to 800.89 — 3.25 down, which is half of the
+    // first baseline from 804.14 to 800.89 -- 3.25 down, which is half of the
     // 6.5 the grid added. The text sits in the middle of its grid line.
     //
     // There is no leading to halve when the line is TALLER than the pitch, and
     // half of a negative number puts the baseline above the box. Measured: a
     // line carrying a 36pt picture on an 18pt grid printed its baseline 36.00
-    // below the top of a box three grid lines deep — the line flush with the
+    // below the top of a box three grid lines deep -- the line flush with the
     // top and all the spare room below it.
     if ('grid' === metrics.rule) {
         return Math.max(0, (metrics.lineHeightPx - metrics.naturalHeightPx) / 2)

@@ -87,7 +87,7 @@ describe('readWordDocument', () => {
         it('paginates the three-page lease agreement as THREE pages', () => {
             // The document says so itself: its paragraphs read "Page one",
             // "Page two", "Page three", separated by explicit page breaks. This
-            // is the original complaint — "3 pages on 1 page" — asserted
+            // is the original complaint -- "3 pages on 1 page" -- asserted
             // against a real file rather than a fixture written to pass.
             const document = read(fixture('phpword.document.xml'), fixture('phpword.styles.xml'));
             const pages = layoutPages(document.paragraphs, document.geometry);
@@ -153,7 +153,7 @@ describe('readWordDocument', () => {
 
             // Its styles are all basedOn="Normal" and it HAS no Normal style.
             // The dangling reference must not throw and must not be reported as
-            // an unknown style either — the paragraphs name styles that exist.
+            // an unknown style either -- the paragraphs name styles that exist.
             const unknown = document.diagnostics.filter((d) => 'unknown-paragraph-style' === d.kind);
             expect(unknown).toEqual([]);
         });
@@ -258,7 +258,7 @@ describe('readWordDocument', () => {
         it('ignores a conditional format that says no w:type', () => {
             // `w:type` is required on `w:tblStylePr`, so a file without it is
             // malformed and there is nothing measured to follow. Reading it as
-            // `firstRow` — the tempting guess, since that is the common one —
+            // `firstRow` -- the tempting guess, since that is the common one --
             // would shade a header row the document never asked to shade.
             const NS = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
             const document = read(
@@ -280,7 +280,7 @@ describe('readWordDocument', () => {
             // The built-in heading spacing keys on the whole name,
             // `heading 1` through `heading 9`. Word ships a built-in called
             // `TOC Heading`, and a contents heading pushed 12pt down the page
-            // is a real document breaking on a real file — so the negative case
+            // is a real document breaking on a real file -- so the negative case
             // here is that name rather than an invented one.
             const NS = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
             const named = (id: string, name: string): string =>
@@ -309,7 +309,7 @@ describe('readWordDocument', () => {
             // `rPrDefault` and never again. The fallback a styles part gets
             // when it states nothing has to stand aside for it.
             //
-            // THIRTEEN points, deliberately — the shared fixture above says ten,
+            // THIRTEEN points, deliberately -- the shared fixture above says ten,
             // which is the fallback's own number, so a fallback written to
             // overwrite rather than to fill a gap would pass against it and
             // change every real document's body size on the way past.
@@ -461,7 +461,7 @@ describe('readWordDocument', () => {
         it('does not draw text deleted under revision tracking', () => {
             // Word writes deleted text as w:delText, which this reader would
             // ignore anyway. The w:t case is the one that actually exercises
-            // the rule — without skipping the w:del wrapper it renders, and a
+            // the rule -- without skipping the w:del wrapper it renders, and a
             // deleted paragraph reappears in the laid-out document.
             const realistic = read(doc(
                 '<w:p><w:r><w:t>kept </w:t></w:r><w:del><w:r><w:delText>gone</w:delText></w:r></w:del></w:p>',
@@ -715,7 +715,7 @@ describe('readWordDocument', () => {
             // ABSENT, and only `"1"` divided the width evenly, at 315.75.
             //
             // So a stated width wins unless the document asks for equal ones,
-            // and the attribute is read as the toggle it is — `0`, `false` and
+            // and the attribute is read as the toggle it is -- `0`, `false` and
             // `off` all turning it off.
             const stated = '<w:col w:w="7000"/><w:col w:w="1960"/>';
             const widths = (attribute: string): (number | undefined)[] =>
@@ -894,7 +894,7 @@ describe('readWordDocument', () => {
             // On a `v:rect`, which HAS a rectangle's geometry. The colour
             // grammar is the same on any VML element; the reason it cannot be
             // shown on a bare `v:shape` is that such a shape is painted by
-            // nobody — see the shapetype test below.
+            // nobody -- see the shapetype test below.
             const shapeOf = (attributes: string) => {
                 const block = readWordDocument({
                     documentXml: doc(`<w:p><w:r><w:pict><v:rect ${NS_V} `
@@ -945,7 +945,7 @@ describe('readWordDocument', () => {
         it('keeps the room but paints nothing for a shape naming no shapetype', () => {
             // A `v:shape` borrows its outline from the `v:shapetype` its
             // `type` names. Naming none leaves no path, and LibreOffice draws
-            // nothing — even for the loudest colours a shape can ask for.
+            // nothing -- even for the loudest colours a shape can ask for.
             //
             // Measured with a control in one print: a `v:rect`
             // carrying these very attributes came out with its stroke at
@@ -966,8 +966,8 @@ describe('readWordDocument', () => {
             const bare = shapeOf(`<v:shape ${NS_V} ${attributes}/>`);
             const rect = shapeOf(`<v:rect ${NS_V} ${attributes}/>`);
 
-            // The room is kept — that is what the run after it is measured
-            // against — and only the paint is dropped.
+            // The room is kept -- that is what the run after it is measured
+            // against -- and only the paint is dropped.
             expect(bare?.widthPx).toBeCloseTo(120, 6);
             expect(bare?.heightPx).toBeCloseTo(48, 6);
             expect(bare?.fillHex).toBeUndefined();
@@ -1224,7 +1224,7 @@ describe('readWordDocument', () => {
         it('reports a symbol whose font is not here, rather than guessing', () => {
             // The glyph lives only in the font the document names. Drawing its
             // code point out of a substitute prints whatever happens to sit
-            // there — an `a` where the document wanted an arrow.
+            // there -- an `a` where the document wanted an arrow.
             const document = read(doc(symbol('Wingdings', 'F0E0')));
 
             expect(document.diagnostics.map((entry) => entry.detail))
@@ -1249,7 +1249,7 @@ describe('readWordDocument', () => {
 
         it('draws it in the font the SYMBOL names, not the run own', () => {
             // The glyph is chosen by code, and the code means different things
-            // in different fonts — which is the whole reason `w:font` is there.
+            // in different fonts -- which is the whole reason `w:font` is there.
             const runs = runsOf(symbol('Liberation Mono', '2022'));
 
             expect(runs[1]!.font).not.toBe(runs[0]!.font);
@@ -1330,7 +1330,7 @@ describe('readWordDocument', () => {
         it('says so when a gloss covers several runs, which it cannot', () => {
             // The gloss rides on the FIRST run of the base. A base that changes
             // style half way would want it spread across the runs, and nothing
-            // measures that — so it is said rather than done quietly.
+            // measures that -- so it is said rather than done quietly.
             const document = readWordDocument({
                 documentXml: doc('<w:p><w:r><w:ruby>'
                     + '<w:rt><w:r><w:t>gloss</w:t></w:r></w:rt>'
@@ -1546,7 +1546,7 @@ describe('readWordDocument', () => {
 
         it('reads w:tblW in FIFTIETHS of a percent, unresolved', () => {
             // Measured: fifty percent of an A4 text column printed at
-            // 269.29pt, which is half of 538.58 — so 2500 is half, not
+            // 269.29pt, which is half of 538.58 -- so 2500 is half, not
             // twenty-five hundredths of one.
             // 2500 is half, not twenty-five hundredths of one. The fraction is
             // carried rather than turned into a width: the same table is one
@@ -1666,7 +1666,7 @@ describe('readWordDocument', () => {
             // The width is 500 and the answer is still nought: `nil` means the
             // cell pads itself by nothing, whatever number sits beside it.
             // Word writes `w:w="0"` there, which would let the rule pass
-            // untested — so this states a width the rule has to throw away.
+            // untested -- so this states a width the rule has to throw away.
             expect(celled('<w:tcMar><w:left w:w="500" w:type="nil"/></w:tcMar>')?.leftPx)
                 .toBe(0);
         });
@@ -1702,7 +1702,7 @@ describe('readWordDocument', () => {
         it('does not let a stated NOUGHT cancel a superscript', () => {
             // A run asking for no movement is not a run asking to be moved, so
             // it has nothing to win over. Probed: LibreOffice drew `position=0`
-            // beside a superscript exactly as it drew the superscript alone —
+            // beside a superscript exactly as it drew the superscript alone --
             // same 3.95pt rise, same shrunken width, the run after it starting
             // in the same place.
             const both = runOf('<w:position w:val="0"/><w:vertAlign w:val="superscript"/>');
@@ -1813,7 +1813,7 @@ describe('readWordDocument', () => {
 
         it('reads the ONE border a run draws round all four of its sides', () => {
             // `w:bdr` is a single element with one width, one colour and one
-            // space — not four sides like `w:pBdr`.
+            // space -- not four sides like `w:pBdr`.
             const border = boxed(
                 '<w:bdr w:val="single" w:sz="24" w:space="2" w:color="112233"/>');
 
@@ -1872,7 +1872,7 @@ describe('readWordDocument', () => {
 
         it('reads both quarter turns', () => {
             // Off the PDF's text matrix: `btLr` came out `[0 1 -1 0]` and
-            // `tbRl` `[0 -1 1 0]` — anticlockwise and clockwise.
+            // `tbRl` `[0 -1 1 0]` -- anticlockwise and clockwise.
             expect(turned('<w:textDirection w:val="btLr"/>')).toBe('btLr');
             expect(turned('<w:textDirection w:val="tbRl"/>')).toBe('tbRl');
         });
@@ -1880,7 +1880,7 @@ describe('readWordDocument', () => {
         it('leaves a cell upright where it says nothing, or something else', () => {
             expect(turned('')).toBeUndefined();
             // `lrTb` is upright, and the vertical-East-Asian spellings are not
-            // quarter turns of Latin text — none of them is read as one.
+            // quarter turns of Latin text -- none of them is read as one.
             expect(turned('<w:textDirection w:val="lrTb"/>')).toBeUndefined();
             expect(turned('<w:textDirection w:val="tbRlV"/>')).toBeUndefined();
         });
@@ -1914,7 +1914,7 @@ describe('readWordDocument', () => {
             // w:type describes how the section it DEFINES begins, so a
             // continuous break sits on the FOLLOWING section's sectPr. That
             // section shares the previous page, which means the paper it asks
-            // for cannot take effect where it sits — folding it in keeps what
+            // for cannot take effect where it sits -- folding it in keeps what
             // the document already did, and changing the page a paragraph early
             // would be worse than saying so.
             const first = paragraph('x', '<w:pPr><w:sectPr><w:pgSz w:w="11906" w:h="16838"/>'
@@ -2000,7 +2000,7 @@ describe('readWordDocument', () => {
 
         it('puts the marker in the hanging space and the TEXT at the indent', () => {
             // The bullet is drawn 360 twips left of the indent, and every line
-            // of the paragraph — including the first — starts AT the indent.
+            // of the paragraph -- including the first -- starts AT the indent.
             // Giving the first line the negative indent instead draws its text
             // on top of the bullet, which is what this used to do.
             const document = readNumbered(doc(item('first')), numberingXml(bulletLevel));
@@ -2014,8 +2014,8 @@ describe('readWordDocument', () => {
 
         it('sends the first line to the next TAB STOP when the marker outgrows its space', () => {
             // A long marker has to go somewhere, and it does NOT push the text
-            // snugly clear of itself — the suffix is a tab, so the text lands
-            // on the first stop past the marker's right edge — a `10.`
+            // snugly clear of itself -- the suffix is a tab, so the text lands
+            // on the first stop past the marker's right edge -- a `10.`
             // overrunning a 6pt hanging indent put its text 36pt further on
             // rather than the 6.5pt it overran by.
             const wide = '<w:lvl w:ilvl="0"><w:numFmt w:val="decimal"/>'
@@ -2033,7 +2033,7 @@ describe('readWordDocument', () => {
             const stopPx = Math.ceil(rightPx / DEFAULT_TAB_PX) * DEFAULT_TAB_PX;
 
             expect(block.style.indentFirstLinePx).toBe(stopPx - twipsToPx(720));
-            // Which is further than the overrun, not equal to it — the whole
+            // Which is further than the overrun, not equal to it -- the whole
             // point of the rule, and what the snug push got wrong.
             expect(block.style.indentFirstLinePx).toBeGreaterThan(markerPx - twipsToPx(120));
         });
@@ -2074,7 +2074,7 @@ describe('readWordDocument', () => {
 
         it('lets an UNKNOWN w:jc fall through to the style rather than overruling it', () => {
             // Answering 'left' for a value we do not know would quietly undo an
-            // alignment the style got right — the paragraph would look like it
+            // alignment the style got right -- the paragraph would look like it
             // had asked to be left-aligned when it had asked for nothing we
             // understood.
             const styles = `<w:styles ${W}><w:style w:type="paragraph" w:styleId="Centred">`
@@ -2549,7 +2549,7 @@ describe('readWordDocument', () => {
             it('reads the words inside as blocks of their own', () => {
                 const box = boxOf(vmlBox('<w:p><w:r><w:t>inside</w:t></w:r></w:p>'));
 
-                // A box holds BLOCKS — it can hold a table — so the
+                // A box holds BLOCKS -- it can hold a table -- so the
                 // paragraphs have to be picked out of them.
                 expect(box.blocks
                     .filter((block): block is Paragraph => !isTable(block))
@@ -2572,7 +2572,7 @@ describe('readWordDocument', () => {
 
             it('does not carry off the floats of the paragraph it sits IN', () => {
                 // `readParagraph` clears the pending floats when it starts and
-                // takes them when it ends — and a box is found part-way through
+                // takes them when it ends -- and a box is found part-way through
                 // the OUTER paragraph's runs, so reading the paragraphs inside
                 // it walks that same collector. Without saving and restoring
                 // it, the picture anchored before the box vanishes.
@@ -2593,7 +2593,7 @@ describe('readWordDocument', () => {
             it('keeps a TABLE inside a box, beside the paragraphs', () => {
                 // It used to be dropped and said so, because a placed float
                 // carried lines and rows wanted the renderer's row path as
-                // well — which turned out to be one call. Printed, a
+                // well -- which turned out to be one call. Printed, a
                 // 2x2 table in a box at 180pt drew its cells at 261.25 and
                 // 321.25 with its rules from 255.30 to 376.30, so there was
                 // something real to keep.
@@ -2626,7 +2626,7 @@ describe('readWordDocument', () => {
                 expect(boxOf(vmlBox('<w:p/>')).inset).toEqual({
                     leftPx: tenth, topPx: twentieth, rightPx: tenth, bottomPx: twentieth,
                 });
-                // Each side on its own, and an EMPTY one falls back — which is
+                // Each side on its own, and an EMPTY one falls back -- which is
                 // how VML says "this side only".
                 expect(boxOf(vmlBox('<w:p/>', '', ' inset="4pt,,8pt,"')).inset).toEqual({
                     leftPx: twipsToPx(80),
@@ -2639,7 +2639,7 @@ describe('readWordDocument', () => {
             it('reads each side of a DrawingML inset off its OWN attribute', () => {
                 // Four different values, because four equal ones cannot tell a
                 // side read off the wrong attribute from one read off the right
-                // one — and `tIns` and `bIns` share a default, so the usual
+                // one -- and `tIns` and `bIns` share a default, so the usual
                 // fixture hides exactly that swap.
                 const box = boxOf(
                     '<w:drawing><wp:anchor xmlns:wp="http://schemas.openxmlformats.org/'
@@ -2695,7 +2695,7 @@ describe('readWordDocument', () => {
         it('keeps only the LAST piece of a paragraph split by a page break', () => {
             // An explicit break inside a paragraph makes two blocks of it. What
             // follows the first of them is the rest of its own text, not the
-            // next paragraph — so only the second piece carries the keep.
+            // next paragraph -- so only the second piece carries the keep.
             const document = read(doc(
                 '<w:p><w:pPr><w:keepNext/></w:pPr><w:r><w:t>one</w:t></w:r>'
                 + '<w:r><w:br w:type="page"/></w:r><w:r><w:t>two</w:t></w:r></w:p>',
@@ -2740,7 +2740,7 @@ describe('readWordDocument', () => {
 
         it('lets baseline CANCEL a superscript the style asked for', () => {
             // Absent and `baseline` look the same on a bare run, so only a
-            // style to override can tell them apart — and dropping the value
+            // style to override can tell them apart -- and dropping the value
             // rather than recording it would let the style's superscript
             // through.
             const NS = 'xmlns:w="http://schemas.openxmlformats.org/'
@@ -2886,7 +2886,7 @@ describe('readWordDocument', () => {
 
         it('needs the SWITCH, not merely the word', () => {
             // `\\*` in a regular expression is "zero or more backslashes", which
-            // matches every word in the instruction — so a field whose name or
+            // matches every word in the instruction -- so a field whose name or
             // argument happened to read `roman` was numbered by it without any
             // switch at all.
             const document = read(doc(`<w:p>${complex(' SEQ roman ', '9')}</w:p>`));
@@ -2978,7 +2978,7 @@ describe('readWordDocument', () => {
 
         it('keeps the CACHED value of a field it cannot compute', () => {
             // A TOC page number is the best answer available for a field this
-            // engine does not evaluate — better than blanking it.
+            // engine does not evaluate -- better than blanking it.
             expect(runsOf(`<w:p>${complex(' TOC \\o "1-3" ', 'iv')}</w:p>`))
                 .toEqual([['iv', undefined]]);
         });
@@ -3071,7 +3071,7 @@ describe('readWordDocument', () => {
 
         it('measures a table in a header instead of dropping it', () => {
             // A logo beside an address is a table, and a header that ignored it
-            // would be half the height the document says — pushing the body up
+            // would be half the height the document says -- pushing the body up
             // over furniture that is drawn anyway.
             const withTable = `<w:hdr ${W}>` + paragraph('header line')
                 + '<w:tbl><w:tblGrid><w:gridCol w:w="4000"/></w:tblGrid>'
@@ -3111,7 +3111,7 @@ describe('readWordDocument', () => {
 
             it('uses even-page headers only when the document SAYS it does', () => {
                 // w:evenAndOddHeaders is off by default, and without it Word
-                // ignores an even-page header altogether — even one the section
+                // ignores an even-page header altogether -- even one the section
                 // took the trouble to define. Using it regardless would give
                 // every other page a header the document asked not to show.
                 const off = readWordDocument({
@@ -3141,7 +3141,7 @@ describe('readWordDocument', () => {
                 );
 
                 // Page two is 'even' and there is no even header, so it uses the
-                // default one — and the writing area is the same on both.
+                // default one -- and the writing area is the same on both.
                 expect(document.contentBox(1, 2).topPx).toBe(document.contentBox(0, 1).topPx);
             });
         });
@@ -3210,7 +3210,7 @@ describe('readWordDocument', () => {
         it('re-measures an INHERITED header on the new section\'s paper', () => {
             // The same header, wrapped in two different columns. A landscape
             // section is half as wide again, so a header that runs to two lines
-            // in portrait fits on one — and its height is what pushes the body
+            // in portrait fits on one -- and its height is what pushes the body
             // down. Carrying the portrait measurement across starts the
             // landscape body a whole line too low.
             const wide = `<w:hdr ${HDR}>` + paragraph(
@@ -3234,7 +3234,7 @@ describe('readWordDocument', () => {
         it('measures furniture in the COLUMN, not across the sheet', () => {
             // Same paper and the same header; only the margins differ. The
             // writing width is what a header wraps in, so the narrow one must
-            // come out taller — measured edge to edge the two are identical.
+            // come out taller -- measured edge to edge the two are identical.
             const long = `<w:hdr ${HDR}>` + paragraph(
                 Array.from({ length: 40 }, () => 'aaaaaaaaaa').join(' '),
             ) + '</w:hdr>';
@@ -3437,7 +3437,7 @@ describe('readWordDocument', () => {
 
         it('reads which page a section has to START on', () => {
             // How a chapter always opens on a right-hand page. Anything the
-            // engine does not model — nextColumn, or nothing at all — simply
+            // engine does not model -- nextColumn, or nothing at all -- simply
             // starts a page, which is what a section break does.
             const odd = paragraph('a', `<w:pPr><w:sectPr><w:type w:val="oddPage"/>${A4}</w:sectPr></w:pPr>`);
             const even = paragraph('b', `<w:pPr><w:sectPr><w:type w:val="evenPage"/>${A4}</w:sectPr></w:pPr>`);
@@ -3450,7 +3450,7 @@ describe('readWordDocument', () => {
         });
 
         it('folds a continuous break into the section before it', () => {
-            // The flag belongs to the section that BEGINS continuously — here
+            // The flag belongs to the section that BEGINS continuously -- here
             // the last one, which shares the page with what came before it.
             const first = paragraph('x', `<w:pPr><w:sectPr>${A4}</w:sectPr></w:pPr>`);
             const document = read(doc(
@@ -3479,7 +3479,7 @@ describe('readWordDocument', () => {
         });
 
         it('reports a continuous break that changes only the MARGINS', () => {
-            // Same paper, different writing area — which a comparison on page
+            // Same paper, different writing area -- which a comparison on page
             // size alone would call identical and silently drop.
             const first = paragraph('x', '<w:pPr><w:sectPr><w:pgSz w:w="11906" w:h="16838"/>'
                 + '<w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/>'

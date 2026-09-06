@@ -11,13 +11,13 @@ import {
 } from './zip.js';
 
 /**
- * An OOXML package — a `.docx`, `.xlsx` or `.pptx` — as a set of named parts.
+ * An OOXML package -- a `.docx`, `.xlsx` or `.pptx` -- as a set of named parts.
  *
  * This is the layer that makes the engine usable on a FILE rather than on a
  * part someone already extracted. Together with the XML layer it gives the
  * whole chain the same property end to end: open a document, change one
  * paragraph, save it, and every byte you did not touch is the byte the original
- * producer wrote — inside the parts, because the XML layer preserves them, and
+ * producer wrote -- inside the parts, because the XML layer preserves them, and
  * between the parts, because an untouched entry is re-emitted with its original
  * COMPRESSED bytes rather than compressed again.
  */
@@ -31,7 +31,7 @@ export interface ZipCodec {
  * The one codec, working in Node and in a browser unchanged.
  *
  * `DecompressionStream` is a platform API in both, so the package needs no
- * dependency and no `node:zlib` import — an import that would work here and
+ * dependency and no `node:zlib` import -- an import that would work here and
  * break the moment this is bundled for the editor.
  */
 export const webStreamsCodec: ZipCodec = {
@@ -125,7 +125,7 @@ export class OpcPackage {
         return new TextDecoder('utf-8').decode(await this.bytes(name));
     }
 
-    /** The part if it is there, or null — for the many OPC parts that are optional. */
+    /** The part if it is there, or null -- for the many OPC parts that are optional. */
     async textIfPresent(name: string): Promise<string | null> {
         return this.has(name) ? this.text(name) : null;
     }
@@ -135,7 +135,7 @@ export class OpcPackage {
      *
      * Only an EXISTING part: adding one means declaring its content type in
      * `[Content_Types].xml` and usually a relationship as well, and a part
-     * added without those is invisible to Word — a silent no-op that looks like
+     * added without those is invisible to Word -- a silent no-op that looks like
      * it worked.
      */
     replace(name: string, content: Uint8Array | string): void {

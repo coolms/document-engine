@@ -6,7 +6,7 @@ import { crc32 } from './crc32.js';
  * ## Why the compressed bytes are kept
  *
  * An entry nobody edited is re-emitted with the EXACT compressed bytes it
- * arrived with — never re-compressed. Two reasons, and the second is the
+ * arrived with -- never re-compressed. Two reasons, and the second is the
  * important one:
  *
  * 1. Re-compressing is work nobody asked for on a package where one part
@@ -20,7 +20,7 @@ import { crc32 } from './crc32.js';
  * ## What is deliberately not supported
  *
  * Encryption, multi-disk archives, and compression methods other than stored
- * and deflate — none of which appear in an OOXML package. Each is REFUSED with
+ * and deflate -- none of which appear in an OOXML package. Each is REFUSED with
  * a clear message rather than mis-parsed into plausible rubbish.
  */
 
@@ -43,7 +43,7 @@ export interface ZipEntry {
     /** MS-DOS date and time, preserved so an untouched package round-trips. */
     readonly dosTime: number;
     readonly dosDate: number;
-    /** External attributes — carries the unix mode some producers set. */
+    /** External attributes -- carries the unix mode some producers set. */
     readonly externalAttributes: number;
 }
 
@@ -86,7 +86,7 @@ export function readZip(bytes: Uint8Array): ZipEntry[] {
         }
 
         // Directories are recorded as entries with no content. They carry no
-        // information an OPC package needs — the part names hold the paths.
+        // information an OPC package needs -- the part names hold the paths.
         if (!name.endsWith('/')) {
             entries.push({
                 name,

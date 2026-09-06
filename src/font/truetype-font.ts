@@ -9,30 +9,30 @@ import { FontReader, readTableDirectory, requireTable, type TableRecord, type Ta
  *
  * It answers "how far does the pen advance after drawing this character",
  * which is the only question line breaking asks. It does not read outlines,
- * shape complex scripts, or apply substitutions — those change what is DRAWN,
+ * shape complex scripts, or apply substitutions -- those change what is DRAWN,
  * not (for Latin and Cyrillic) how far the pen moves.
  *
  *  **Kerning is not applied yet.** See {@link measureAdvance}. That is a
- * named gap with a test asserting it, not an oversight — pretending otherwise
+ * named gap with a test asserting it, not an oversight -- pretending otherwise
  * would put a number in the engine that quietly disagrees with the renderer.
  */
 /**
  * Characters that LOOK like another, for a font that carries only the other.
  *
  * `.notdef` is not a free answer: a renderer advances by its width, and in
- * Liberation Serif that is 0.7778 em where a hyphen is 0.3330 — more than twice
+ * Liberation Serif that is 0.7778 em where a hyphen is 0.3330 -- more than twice
  * as wide. Measured: a word joined by a `w:noBreakHyphen` broke a
  * character earlier here than in the print, because U+2011 is absent from every
  * face this engine ships and was being measured as `.notdef`. LibreOffice drew
  * it 3.30pt wide, which is the ordinary hyphen.
  *
  * Deliberately tiny, and only for characters that are the SAME MARK with
- * different behaviour — a non-breaking hyphen is a hyphen that refuses a break,
+ * different behaviour -- a non-breaking hyphen is a hyphen that refuses a break,
  * and its shape is not in question. A general "nearest glyph" table would be
  * inventing.
  *
- * The `0 === id` guard below — a font that HAS the character draws its own
- * glyph — cannot be tested while no face this engine ships carries U+2011,
+ * The `0 === id` guard below -- a font that HAS the character draws its own
+ * glyph -- cannot be tested while no face this engine ships carries U+2011,
  * which is the only entry here. A mutation removing it survives, honestly.
  */
 const SAME_SHAPE = new Map<number, number>([
@@ -42,15 +42,15 @@ const SAME_SHAPE = new Map<number, number>([
 /**
  * Unicode's `Default_Ignorable_Code_Point`s, as sorted inclusive ranges.
  *
- * The formatting marks — joiners, bidi controls, variation selectors, the soft
- * hyphen — that steer shaping and never carry ink. A font is free to leave them
+ * The formatting marks -- joiners, bidi controls, variation selectors, the soft
+ * hyphen -- that steer shaping and never carry ink. A font is free to leave them
  * out of `cmap`, and most do: then {@link TrueTypeFont.glyphId} answers 0 and
  * `.notdef` charges its box for a character DEFINED to occupy nothing.
  *
  * Measured through the faces this engine ships: Caladea has no glyph for a
  * single one of them and was charging 7.40px each at 12px, Carlito none for
  * U+2060 and was charging 6.08px. A word with a zero-width space between every
- * letter — what a soft-wrap hinter emits — measured 125% too wide in Caladea,
+ * letter -- what a soft-wrap hinter emits -- measured 125% too wide in Caladea,
  * which moves the break and therefore the page.
  *
  * Not a hand-picked keep-list that could go stale: it is the Unicode property
@@ -62,7 +62,7 @@ const SAME_SHAPE = new Map<number, number>([
  * at exactly the x of `aaaabbbb` for every X below, in Caladea (which has none
  * of the glyphs) and in Carlito (which has most of them) alike. So the width is
  * zero whether or not the font carries the character, and skipping the code
- * point outright — rather than substituting a zero — is also what lets a kern
+ * point outright -- rather than substituting a zero -- is also what lets a kern
  * pair span one, which is what being ignorable in processing means.
  *
  *  MEASUREMENT only. These characters stay in the text handed to a renderer,
@@ -114,7 +114,7 @@ export class TrueTypeFont {
     private constructor(
         private readonly reader: FontReader,
         private readonly tables: Map<TableTag, TableRecord>,
-        /** Font design units per em — the denominator for every advance. */
+        /** Font design units per em -- the denominator for every advance. */
         readonly unitsPerEm: number,
         /** How many glyphs carry their own advance; the rest reuse the last. */
         private readonly numberOfHMetrics: number,
@@ -142,7 +142,7 @@ export class TrueTypeFont {
         const font = new TrueTypeFont(reader, tables, unitsPerEm, numberOfHMetrics);
         // A font may ship neither table; the fallbacks put the rule a tenth of
         // the em below the baseline and half way up it, at a twentieth thick,
-        // which is where a reader expects them and never zero — a rule of no
+        // which is where a reader expects them and never zero -- a rule of no
         // thickness is an underline that does not appear.
         const post = tables.get('post');
         const os2 = tables.get('OS/2');
@@ -190,7 +190,7 @@ export class TrueTypeFont {
 
     /**
      * Vertical metrics, in font units. The natural height of one line is
-     * ascender − descender + lineGap, which is what "single spacing" means.
+     * ascender - descender + lineGap, which is what "single spacing" means.
      */
     vertical: VerticalMetrics = { ascenderUnits: 0, descenderUnits: 0, lineGapUnits: 0 };
 
@@ -220,7 +220,7 @@ export class TrueTypeFont {
     familyName = '';
 
     /**
-     * `Regular`, `Bold`, `Italic`, `Bold Italic` — how this file differs from
+     * `Regular`, `Bold`, `Italic`, `Bold Italic` -- how this file differs from
      * the family's regular face.
      *
      * Weight and slant live in SEPARATE FILES in this engine, so a renderer
@@ -230,25 +230,25 @@ export class TrueTypeFont {
     subfamilyName = '';
 
     /**
-     * Where a rule under the text goes, and how thick — the `post` table's
+     * Where a rule under the text goes, and how thick -- the `post` table's
      * `underlinePosition` and `underlineThickness`, in font units.
      *
      * The position is NEGATIVE: it is below the baseline, and is kept that way
      * so a caller adds it rather than having to know which direction it means.
      *
      *  LibreOffice does not use these. Measured at 10pt it draws Liberation
-     * Sans at −1.1/0.5 where the font says −0.33/0.73, Serif at −1.2/0.6
-     * against −0.60/0.49, and Mono at −1.6/0.7 against −1.92/0.41 — the
+     * Sans at -1.1/0.5 where the font says -0.33/0.73, Serif at -1.2/0.6
+     * against -0.60/0.49, and Mono at -1.6/0.7 against -1.92/0.41 -- the
      * thickness ordering is even inverted. Its source could not be identified
      * from three faces, so the FONT's own numbers are used, which is what the
      * designer specified and what a conformant renderer may use. The difference
      * is under half a point of position.
      *
      * A SECOND SIZE, and it still cannot be identified. Liberation
-     * Serif at 40pt printed its underline at −4.40/2.20 and its strikeout at
-     * +10.40/2.20, against this engine's −3.38/1.95 and +8.20/1.95. Neither
-     * ratio holds across the two sizes — the underline's position is 1.43 times
-     * ours at 10pt and 1.30 at 40 — so it is not a constant scale of the font's
+     * Serif at 40pt printed its underline at -4.40/2.20 and its strikeout at
+     * +10.40/2.20, against this engine's -3.38/1.95 and +8.20/1.95. Neither
+     * ratio holds across the two sizes -- the underline's position is 1.43 times
+     * ours at 10pt and 1.30 at 40 -- so it is not a constant scale of the font's
      * numbers either, and the em fractions it looks like (0.11 and 0.055) do
      * not survive the 10pt row. The decision stands, now on six measurements
      * rather than three.
@@ -263,7 +263,7 @@ export class TrueTypeFont {
     /**
      * How far BELOW the baseline the centre of an underline sits, at a size.
      *
-     * The table gives the TOP of the rule, not its middle — so half the
+     * The table gives the TOP of the rule, not its middle -- so half the
      * thickness is added, or a stroke drawn from this would sit half a rule too
      * high and a heavy underline would touch the text it belongs to.
      */
@@ -291,7 +291,7 @@ export class TrueTypeFont {
      * How far the font reaches BELOW the baseline, as a positive length.
      *
      * Positive because every caller wants a depth rather than a direction, and
-     * `descenderUnits` is stored negative — a sign flipped at each call site is
+     * `descenderUnits` is stored negative -- a sign flipped at each call site is
      * a sign flipped wrongly at one of them.
      */
     descent(sizePx: number): number {
@@ -340,7 +340,7 @@ export class TrueTypeFont {
      * Advance width of a glyph in FONT UNITS.
      *
      * `hmtx` stores full metrics for the first `numberOfHMetrics` glyphs and
-     * only left-side bearings after that — the trailing glyphs all share the
+     * only left-side bearings after that -- the trailing glyphs all share the
      * last recorded advance. Monospaced fonts exploit this heavily: Liberation
      * Mono records one advance and lets thousands of glyphs inherit it.
      */
@@ -355,7 +355,7 @@ export class TrueTypeFont {
      * Pair kerning for this font, parsed on first use.
      *
      * Lazy because parsing GPOS costs real work and a document that never
-     * measures proportional text — or a caller that only wants raw advances —
+     * measures proportional text -- or a caller that only wants raw advances --
      * should not pay for it.
      */
     get kerning(): GposKerning {
@@ -372,7 +372,7 @@ export class TrueTypeFont {
      *
      * NOT the number line breaking uses by itself. Which of this and
      * {@link measureUnkerned} applies is the DOCUMENT's to decide, through the
-     * run's `w:kern`, and a run that says nothing is not kerned — measured off
+     * run's `w:kern`, and a run that says nothing is not kerned -- measured off
      * a printed page, where `AVAVAVAVAV` came out 11.60pt wider without the
      * element than with it. Everything that measures a run goes
      * through `advanceOf`, which picks; call this one directly only when the
@@ -398,7 +398,7 @@ export class TrueTypeFont {
             // Dropped rather than measured as zero, so the kern pair either
             // side of one still meets: `Ta` kerns the same with a bidi mark
             // between the letters as without. See {@link DEFAULT_IGNORABLE}.
-            // It is also why a font that LACKS one reports no missing glyph —
+            // It is also why a font that LACKS one reports no missing glyph --
             // `missingGlyphs` asks whether to substitute a face, and no face
             // would draw this character anyway.
             if (isZeroAdvance(codePoint)) {
@@ -435,7 +435,7 @@ export class TrueTypeFont {
      *
      * The COMMON case, not a diagnostic: a run is kerned only where it says
      * `w:kern`, and nothing in the corpus does. It stayed a spare
-     * primitive for a long time because the engine kerned everything — and it
+     * primitive for a long time because the engine kerned everything -- and it
      * is what proved the defect, since the printed page agreed with this
      * number and not with the kerned one.
      */
@@ -510,7 +510,7 @@ export interface TextDecorationMetrics {
 
 export interface VerticalMetrics {
     readonly ascenderUnits: number;
-    /** Negative — it is below the baseline, and stays that way. */
+    /** Negative -- it is below the baseline, and stays that way. */
     readonly descenderUnits: number;
     readonly lineGapUnits: number;
 }
@@ -518,7 +518,7 @@ export interface VerticalMetrics {
 export interface MeasuredText {
     /** Width in typographic points at the requested size, kerning included. */
     readonly widthPt: number;
-    /** Total in font design units — size-independent, so safe to cache. */
+    /** Total in font design units -- size-independent, so safe to cache. */
     readonly units: number;
     /** The advance sum alone, before any pair adjustment. */
     readonly unkernedUnits: number;
@@ -541,14 +541,14 @@ interface CmapSegment {
     readonly endCode: number;
     readonly idDelta: number;
     readonly idRangeOffset: number;
-    /** Address of this segment's idRangeOffset entry — the base for its trick. */
+    /** Address of this segment's idRangeOffset entry -- the base for its trick. */
     readonly idRangeOffsetAddress: number;
 }
 
 /**
  * Read the cmap's format 4 (BMP) subtable.
  *
- * Format 4 is what every font we ship uses — verified against all twenty files
+ * Format 4 is what every font we ship uses -- verified against all twenty files
  * before this was written. A font carrying only format 12 (astral planes) would
  * fail loudly here rather than silently measure everything as .notdef.
  */

@@ -101,8 +101,8 @@ describe('renderPage', () => {
     });
 
     it('draws the marker in the marker’s OWN colour', () => {
-        // A numbered list can colour its numbers differently from its text —
-        // Word puts the marker's formatting on the numbering, not the run — so
+        // A numbered list can colour its numbers differently from its text --
+        // Word puts the marker's formatting on the numbering, not the run -- so
         // the bullet cannot inherit the paragraph's colour.
         const item: Paragraph = {
             runs: [{ text: 'text', font: MONO, sizePx: 16, colorHex: '#0000FF' }],
@@ -271,7 +271,7 @@ describe('renderPage', () => {
     describe('tab leaders', () => {
         // HALF a cell past a whole number of them. Liberation Mono is
         // monospaced, so a span of exactly nine glyphs cannot tell a fill that
-        // rounds DOWN from one that rounds up — both give nine.
+        // rounds DOWN from one that rounds up -- both give nine.
         const SPAN = CELL * 9.5;
 
         const led = (leader?: 'dot' | 'underscore'): ReturnType<typeof textOps> => {
@@ -432,8 +432,8 @@ describe('renderPage', () => {
 
         it('never draws a rule thinner than a tenth of a POINT', () => {
             // LibreOffice's underline is about a twentieth of the font's size
-            // — measured at 0.1, 0.2, 0.5 and 2.1pt for 2, 4, 10 and 40pt text
-            // — and at 1pt, where a twentieth would be 0.05, it still drew
+            // -- measured at 0.1, 0.2, 0.5 and 2.1pt for 2, 4, 10 and 40pt text
+            // -- and at 1pt, where a twentieth would be 0.05, it still drew
             // 0.1. That is the floor. This used to assert 0.5 PIXELS, which is
             // 0.375pt and nearly three times too thick: an invented number,
             // and the one flag `npm run audit:claims` was left holding.
@@ -546,7 +546,7 @@ describe('renderPage', () => {
             // A horizontal rule is centred in the gap the flow keeps for it, so
             // it stands half its width outside the CONTENT. Measured against
             // LibreOffice: a row of 11.5pt text ran 800.97 to 789.47 with its
-            // rules at 801.489 and 788.989 — half a point outside either end.
+            // rules at 801.489 and 788.989 -- half a point outside either end.
             const half = side.widthPx / 2;
             const top = row.yPx - half;
             const bottom = row.yPx + row.heightPx + half;
@@ -668,7 +668,7 @@ describe('renderPage', () => {
                 [para('aa  bb  cc', { alignment: 'justify' })], PAGE, { widowOrphanControl: false },
             );
 
-            // Both are one line, so neither is stretched — the last line never
+            // Both are one line, so neither is stretched -- the last line never
             // is. Stretch them by hand to state the rule directly.
             const stretched = {
                 ...single[0]!,
@@ -735,7 +735,7 @@ describe('a vertically merged cell', () => {
 
     it('draws its box down the whole span', () => {
         // Both rows are one line tall, so a box that stopped at the foot of the
-        // first would be half as tall — and would put a rule straight through
+        // first would be half as tall -- and would put a rule straight through
         // the middle of the cell.
         const rows = page().rows;
         const top = rows[0]!.yPx;
@@ -810,7 +810,7 @@ describe('a tracked run', () => {
         // The renderer splits a piece at its spaces so each word can take its
         // share of a justified line. Measuring those parts bare would land
         // every word after the first short by the tracking on the one before.
-        // Two lines, so the FIRST one is justified — the last line of a
+        // Two lines, so the FIRST one is justified -- the last line of a
         // justified paragraph is not, and the whole piece is drawn at once.
         const spaced: Paragraph = {
             runs: [{ text: 'aa bb cc dd', font: MONO, sizePx: 16, letterSpacingPx: 4 }],
@@ -822,7 +822,7 @@ describe('a tracked run', () => {
         const first = ops.find((op) => 'aa' === op.text)!;
         const second = ops.find((op) => 'bb' === op.text)!;
 
-        // 'aa ' is three characters, each a glyph wide and tracked by four —
+        // 'aa ' is three characters, each a glyph wide and tracked by four --
         // plus the share of the slack this justified line gave its one space.
         expect(second.xPx - first.xPx).toBeCloseTo(
             MONO.measureAdvance('aa ', 16).widthPt + 12 + page!.lines[0]!.wordSpacingPx,
@@ -913,7 +913,7 @@ describe('a drawn VML shape', () => {
 
         it('runs every rule half the crossing rule past the corner', () => {
             // LibreOffice's one-point box ran its top from 27.4 to 567.95 while
-            // the sides stood at 27.9 and 567.45 — half a width past each end,
+            // the sides stood at 27.9 and 567.45 -- half a width past each end,
             // both ways. Butt the ends instead and each corner loses a square
             // the width of the stroke.
             const [laid] = layoutPages([para('xx', { borders: BOX })], PAGE);
@@ -981,7 +981,7 @@ describe('everything on a page reaches the ink', () => {
      * header's boxes were collected and then discarded where the furniture was
      * placed; and until someone went looking, nothing checked that any of the
      * newer surface survived the serialiser at all. Each was invisible in
-     * exactly the same way — the model was right and the page was blank.
+     * exactly the same way -- the model was right and the page was blank.
      *
      * So the compiler asks the question now. Add a field to `Page` and this
      * stops type-checking until someone says whether `renderPage` draws it.

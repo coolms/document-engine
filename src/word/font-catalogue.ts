@@ -3,7 +3,7 @@ import { TrueTypeFont } from '../font/truetype-font.js';
 /**
  * Turning the font a document ASKS for into a font we actually have.
  *
- * A `.docx` names Times New Roman, Calibri or Arial — faces we cannot ship and
+ * A `.docx` names Times New Roman, Calibri or Arial -- faces we cannot ship and
  * cannot serve to a browser. The vendored set is metric-compatible with each of
  * them, which is the whole point: substituting Carlito for Calibri keeps every
  * advance width identical, so an inherited document does not repaginate when it
@@ -124,7 +124,7 @@ export class FontCatalogue {
         }
 
         const wanted = fontStyleKey(bold, italic);
-        // Falling back to regular is a last resort and a metric lie — a regular
+        // Falling back to regular is a last resort and a metric lie -- a regular
         // face is narrower than its bold. Every vendored family carries all
         // four, so this only fires if the manifest is incomplete.
         const file = entry.files[wanted] ?? entry.files['regular'];
@@ -139,7 +139,7 @@ export class FontCatalogue {
         };
     }
 
-    /** Parsed once per file — a document repeats the same few faces constantly. */
+    /** Parsed once per file -- a document repeats the same few faces constantly. */
     private parse(file: string): TrueTypeFont {
         const cached = this.parsed.get(file);
         if (undefined !== cached) {

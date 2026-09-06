@@ -6,7 +6,7 @@
  * The layout engine must not ask the DOM how wide text is. If it did, line
  * breaking would inherit whatever the browser decides, the server's renderer
  * would decide something slightly different, and the pages on screen would stop
- * matching the pages in the .docx — the one failure that makes a paginated
+ * matching the pages in the .docx -- the one failure that makes a paginated
  * editor worse than an unpaginated one.
  *
  * Advance widths live in the font file. Reading them ourselves makes the
@@ -71,7 +71,7 @@ export class FontReader {
         return this.view.getUint32(offset, false);
     }
 
-    /** Four bytes as ASCII — how sfnt spells its table names. */
+    /** Four bytes as ASCII -- how sfnt spells its table names. */
     tag(offset: number): string {
         this.require(offset, 4);
 
@@ -98,7 +98,7 @@ export class FontReader {
  *
  * Accepts the two containers that matter: `0x00010000` (TrueType outlines) and
  * `OTTO` (CFF outlines). Both carry the same metric tables, which is all we
- * read — the outline format only decides how glyphs are DRAWN, and we never
+ * read -- the outline format only decides how glyphs are DRAWN, and we never
  * draw them.
  *
  * TrueType Collections (`ttcf`) are refused rather than half-handled: a

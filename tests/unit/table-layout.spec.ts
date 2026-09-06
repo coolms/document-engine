@@ -223,7 +223,7 @@ describe('table layout', () => {
 
         it('draws no rule across the break it was cut at', () => {
             // The halves meet at a page boundary, so the edge between them is
-            // not an edge of the table — a rule there is a line the document
+            // not an edge of the table -- a rule there is a line the document
             // never asked for.
             const side = { widthPx: 2, colorHex: '#000000', style: 'solid' as const };
             const pages = lay([
@@ -315,7 +315,7 @@ describe('table layout', () => {
         it('breaks a row taller than a whole page across pages', () => {
             // Something CAN be done for it: it is cut, and cut again, until
             // what is left fits. Measured against LibreOffice
-            // (`table-split-row-taller.docx`) — a 150-line row spans three
+            // (`table-split-row-taller.docx`) -- a 150-line row spans three
             // pages there rather than running off the foot of one.
             //
             // This test asserted a single page for as long as the engine ran
@@ -377,7 +377,7 @@ describe('table layout', () => {
             //
             // Measured (`table-two-headers.docx`): the whole table
             // moves. LibreOffice ended the page with its filler and opened the
-            // next with H1, H2 and the body row — it did not leave H1 standing
+            // next with H1, H2 and the body row -- it did not leave H1 standing
             // alone above a page break. This test used to assert that it did.
             const pages = lay([
                 para('a\nb\nc\nd'),
@@ -606,7 +606,7 @@ describe('vertically merged cells', () => {
 
         it('matches a merge by its grid COLUMN, not by its place in the row', () => {
             // The first row's opening cell covers two columns, so the cell
-            // beside it starts at column two — which is where the merge below
+            // beside it starts at column two -- which is where the merge below
             // it must be looked for. Counting cells instead would pair the
             // merge with the wrong column entirely.
             expect(verticalSpans(table([
@@ -747,7 +747,7 @@ describe('vertically merged cells', () => {
         it('carries a merged cell\'s edge to the row below the SPAN', () => {
             // The row below the span declares a thinner edge, and the two have
             // to agree or the join draws twice. The row below the merge's FIRST
-            // row is not that row — nothing of the merge ends there.
+            // row is not that row -- nothing of the merge ends there.
             const placed = lay([table([
                 row([{ ...merged('m'), borders: { bottom: side(4) } }, cell('a')]),
                 row([swallowed(), cell('b')]),
@@ -800,7 +800,7 @@ describe('a table nested inside a cell', () => {
 
     it('stacks the blocks around it in document order', () => {
         // Measured against LibreOffice: a line, then two nested rows, then a
-        // line — and the outer row four lines tall to hold them.
+        // line -- and the outer row four lines tall to hold them.
         const [page] = lay(
             [table([row([holding(para('above'), inner('deep'), para('below')), cell('side')])])],
             { ...PAGE, heightPx: LINE * 20 },
@@ -832,7 +832,7 @@ describe('a table nested inside a cell', () => {
 
     it('keeps an empty paragraph that is NOT that one', () => {
         // The same paragraph one place earlier, and one that ends a cell with
-        // no table above it, both take a whole line — which is what makes the
+        // no table above it, both take a whole line -- which is what makes the
         // rule about the table below it rather than about emptiness.
         const after = lay([table([row([holding(inner('deep'), empty, para('x')), cell('s')])])]);
         const alone = lay([table([row([holding(para('x'), empty), cell('s')])])]);
@@ -951,7 +951,7 @@ describe('fitTable', () => {
             table({ borders: { left }, ...over });
 
         // The indent counts to the cell's TEXT, so the border falls a cell
-        // margin left of the number — and the hang plays no further part.
+        // margin left of the number -- and the hang plays no further part.
         expect(fitTable(bordered({ indentPx: 40 }), COLUMN).offsetPx).toBe(30);
         expect(fitTable(bordered({ alignment: 'center' }), COLUMN).offsetPx).toBe(250);
         expect(fitTable(bordered({ alignment: 'right' }), COLUMN).offsetPx).toBe(500);

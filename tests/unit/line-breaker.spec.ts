@@ -16,7 +16,7 @@ function font(file: string): TrueTypeFont {
 const MONO = font('LiberationMono-Regular.ttf');
 const SERIF = font('LiberationSerif-Regular.ttf');
 
-/** One monospaced character at 16px — the unit every width below is built from. */
+/** One monospaced character at 16px -- the unit every width below is built from. */
 const CELL = MONO.measureAdvance('x', 16).widthPt;
 
 function mono(text: string): StyledRun[] {
@@ -86,8 +86,8 @@ describe('breakIntoLines', () => {
             // A picture's piece stands for itself with a single
             // object-replacement character, and its width comes from the
             // picture rather than from measuring that character. Cutting into
-            // it would measure the character — a couple of points where the
-            // picture is a hundred — and draw the picture at that width.
+            // it would measure the character -- a couple of points where the
+            // picture is a hundred -- and draw the picture at that width.
             //
             // No printed page decides this one: it is what the piece MEANS.
             const image = {
@@ -133,7 +133,7 @@ describe('breakIntoLines', () => {
         });
 
         it('treats CRLF as ONE break, not two', () => {
-            // Two lines, not three with an empty one between — the classic
+            // Two lines, not three with an empty one between -- the classic
             // Windows-file symptom.
             expect(breakIntoLines(mono('a\r\nb'), CELL * 100).map(textOf)).toEqual(['a', 'b']);
         });
@@ -159,7 +159,7 @@ describe('breakIntoLines', () => {
             // as an ordinary space overrides them silently.
             //
             // The CONTROL is the point. Asserting only that the NBSP case
-            // yields one line proves nothing by itself — it would pass just as
+            // yields one line proves nothing by itself -- it would pass just as
             // well if the column were wide enough, or if nothing ever broke.
             // Mutation testing caught exactly that. The identical string with
             // U+0020 must break in the same column, so the difference can only
@@ -190,7 +190,7 @@ describe('breakIntoLines', () => {
         /**
          * A monospaced font makes this exact rather than approximate: every
          * glyph is one cell WIDE, `.notdef` included. So a character the font
-         * has no glyph for used to cost exactly one cell — and the assertion
+         * has no glyph for used to cost exactly one cell -- and the assertion
          * below is "the same string still fits the same column", with the
          * control proving the column is the tight one.
          *
@@ -209,7 +209,7 @@ describe('breakIntoLines', () => {
             expect(breakIntoLines(mono('aaa bbb'), CELL * 6).map(textOf)).toEqual(['aaa ', 'bbb']);
 
             for (const invisible of [ZWSP, WJ, BOM]) {
-                // Placed inside the first word, where it can only add width —
+                // Placed inside the first word, where it can only add width --
                 // it offers no break there that would rescue the line.
                 const lines = breakIntoLines(mono('a' + invisible + 'aa bbb'), CELL * 7);
 
@@ -234,7 +234,7 @@ describe('breakIntoLines', () => {
         it('does not charge LETTER SPACING for a character that is not a letter', () => {
             // Tracking is added per character, so an invisible one puts the
             // phantom width straight back for exactly the runs that set
-            // `w:spacing` — the font skipping it is not enough on its own.
+            // `w:spacing` -- the font skipping it is not enough on its own.
             const ZWSP = String.fromCodePoint(0x200b);
             const tracked = (text: string): StyledRun[] =>
                 [{ text, font: MONO, sizePx: 16, letterSpacingPx: 4 }];
@@ -296,7 +296,7 @@ describe('breakIntoLines', () => {
         /**
          * Every line reports the span of source it covers. An editor maps a page
          * boundary back to a caret position with this, so an off-by-one puts the
-         * caret in the wrong word — and the pieces alone cannot supply it,
+         * caret in the wrong word -- and the pieces alone cannot supply it,
          * because a mandatory break occupies source and appears in no piece.
          */
         const withoutBreaks = (text: string): string => text.replace(/[\r\n]/g, '');
@@ -318,7 +318,7 @@ describe('breakIntoLines', () => {
             // makes a caret map that is wrong somewhere in the middle and looks
             // right at both ends.
             // Both line-ending conventions, because a CRLF is one break and TWO
-            // units — the case where a gap is easiest to introduce and hardest
+            // units -- the case where a gap is easiest to introduce and hardest
             // to notice, since the ends of the document still look right.
             for (const text of [
                 'alpha beta gamma delta epsilon zeta eta theta',
@@ -376,7 +376,7 @@ describe('breakIntoLines', () => {
         });
 
         it('gives each piece its own start, even mid-WORD across a run boundary', () => {
-            // One word whose second half is styled differently — a single
+            // One word whose second half is styled differently -- a single
             // unbreakable segment holding two pieces. Two separate words would
             // be two segments, and each piece would start where its segment
             // did, which is the same answer for the wrong reason.
@@ -437,7 +437,7 @@ describe('breakIntoLines', () => {
     describe('comparing widths', () => {
         it('fits a line that is over by a rounding error', () => {
             // Twips and points reach this engine by different routes, so the
-            // same length computed two ways differs in the last bits — a
+            // same length computed two ways differs in the last bits -- a
             // writing area of `page - left - right` against a tab stop declared
             // at exactly that width is out by about 1e-13px. Compared exactly,
             // a right stop at the margin puts its page number on a line of its
@@ -607,8 +607,8 @@ describe('tab stops', () => {
         };
 
         it('advances a tab to the next STOP, not by a glyph', () => {
-            // The tab character maps to .notdef in every font here — 8.11px in
-            // Carlito, 12.45px in Liberation Serif — and neither is a column.
+            // The tab character maps to .notdef in every font here -- 8.11px in
+            // Carlito, 12.45px in Liberation Serif -- and neither is a column.
             expect(widthOf('a\tb', { defaultPx: 100 })).toBeCloseTo(100 + CELL, 6);
         });
 
@@ -627,7 +627,7 @@ describe('tab stops', () => {
 
         it('moves PAST a stop the cursor is already sitting on', () => {
             // Three characters land exactly on the stop at three cells. A tab
-            // there must go to the NEXT column — taking the one it is already at
+            // there must go to the NEXT column -- taking the one it is already at
             // would advance nothing, and two tabbed fields would print on top of
             // each other.
             const width = widthOf('aaa\tb', { stops: [{ positionPx: CELL * 3, align: 'left' }, { positionPx: CELL * 6, align: 'left' }], defaultPx: 100 });
@@ -638,8 +638,8 @@ describe('tab stops', () => {
         it('falls to the COLUMN’s own default stops past the last explicit one', () => {
             // Otherwise a third tabbed column stops dead on the second one.
             //
-            // The defaults are at multiples of the step from the margin — 100,
-            // 200, 300 — and not a fresh repeat measured from the last explicit
+            // The defaults are at multiples of the step from the margin -- 100,
+            // 200, 300 -- and not a fresh repeat measured from the last explicit
             // stop, which would put this at 350. The pen reaches
             // 250 + CELL, so the first default past it is 300. The ones behind
             // 250 are simply out of reach, never having been removed.
@@ -648,8 +648,8 @@ describe('tab stops', () => {
         });
 
         it('measures stops from the COLUMN, not from the line', () => {
-            // A line starting 40 along its column — pushed there by an indent,
-            // a first-line indent, or both — still has its tabs land in the
+            // A line starting 40 along its column -- pushed there by an indent,
+            // a first-line indent, or both -- still has its tabs land in the
             // column's own places.
             const shifted = breakIntoLines(mono('a\tb'), CELL * 40, {
                 tabStops: { defaultPx: 100, originOf: () => 40 },
@@ -704,7 +704,7 @@ describe('a run that boxes itself', () => {
 
     it('costs the line the room at BOTH ends of the run’s span', () => {
         // The box needs its room kept clear before the run and after it, so a
-        // boxed run fits `2 × room` less on a line than the same words plain.
+        // boxed run fits `2 x room` less on a line than the same words plain.
         // Charging one end, or none, or once a WORD, all change this number.
         const room = (BORDER.spacePx ?? 0) + BORDER.widthPx;
         const plain = breakIntoLines(mono('aaaa bbbb cccc'), CELL * 10);

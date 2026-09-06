@@ -5,7 +5,7 @@
  * ## Why not a normal XML library
  *
  * A conventional parser builds a model and a serialiser writes that model back
- * out. Anything the model does not represent is lost — and a real `.docx` is
+ * out. Anything the model does not represent is lost -- and a real `.docx` is
  * full of things this engine will never model: `mc:AlternateContent` fallbacks,
  * VML shapes, chart parts, revision tracking, custom XML, twenty-three
  * namespace declarations on the root element. Round-tripping through a model
@@ -17,7 +17,7 @@
  * Every node keeps the exact slice of source it was parsed from. Serialising an
  * untouched node emits that slice verbatim; only a node that was actually
  * modified is rebuilt from its parts, and modifying one invalidates it and its
- * ancestors — nothing else. So fidelity is not something the serialiser has to
+ * ancestors -- nothing else. So fidelity is not something the serialiser has to
  * be careful about, it is a property of the structure: the ONLY bytes that can
  * differ are the ones under a node someone changed.
  *
@@ -64,7 +64,7 @@ export abstract class XmlNode {
      */
     invalidate(): void {
         if (null === this.pristine) {
-            // Already invalidated — so are the ancestors, and stopping here
+            // Already invalidated -- so are the ancestors, and stopping here
             // keeps a deep edit from walking the spine once per changed node.
             return;
         }
@@ -114,7 +114,7 @@ export class XmlVerbatim extends XmlNode {
 
 export interface XmlAttribute {
     readonly name: string;
-    /** As it appears in the file, still escaped — so it re-emits identically. */
+    /** As it appears in the file, still escaped -- so it re-emits identically. */
     rawValue: string;
     /** The quote character used, because a file may use either. */
     quote: string;
@@ -132,12 +132,12 @@ export class XmlElement extends XmlNode {
         super(pristine);
     }
 
-    /** @internal — used by the parser while building the tree. */
+    /** @internal -- used by the parser while building the tree. */
     addAttribute(attribute: XmlAttribute): void {
         this.attributes.push(attribute);
     }
 
-    /** @internal — used by the parser while building the tree. */
+    /** @internal -- used by the parser while building the tree. */
     appendChild(node: XmlNode): void {
         node.parent = this;
         this.childNodes.push(node);
@@ -174,7 +174,7 @@ export class XmlElement extends XmlNode {
      * Every descendant element with this name, in document order.
      *
      * Depth-first and pre-order, so `descendants('w:p')` returns paragraphs in
-     * reading order — which is the order layout needs them in.
+     * reading order -- which is the order layout needs them in.
      */
     descendants(name: string): XmlElement[] {
         const out: XmlElement[] = [];
@@ -242,7 +242,7 @@ export class XmlElement extends XmlNode {
     }
 
     /**
-     * All text beneath this element, concatenated — XPath's string-value.
+     * All text beneath this element, concatenated -- XPath's string-value.
      *
      * Descendants rather than direct children because a paragraph's text lives
      * two levels down, inside its runs.
@@ -269,7 +269,7 @@ export class XmlElement extends XmlNode {
      * Nothing clears `selfClosing` here on purpose: {@link rebuild} refuses to
      * self-close an element that has children, so the two cannot disagree. A
      * flag cleared at every mutation site is a rule that holds until someone
-     * adds a site and forgets — losing the content silently, since a
+     * adds a site and forgets -- losing the content silently, since a
      * self-closing tag is perfectly valid XML.
      */
     setText(value: string): void {
@@ -597,7 +597,7 @@ export function escapeText(text: string): string {
  * Escape an attribute value for DOUBLE quotes.
  *
  * Tabs and newlines become character references because an XML processor
- * normalises literal whitespace in an attribute value to a space — a run's
+ * normalises literal whitespace in an attribute value to a space -- a run's
  * `w:val` containing a newline would silently become a different value on the
  * next read.
  */

@@ -14,16 +14,16 @@ import {
 import type { FontCatalogue } from '../word/font-catalogue.js';
 
 /**
- * Paginating an EDITOR's document — the shape a rich-text editor already has,
+ * Paginating an EDITOR's document -- the shape a rich-text editor already has,
  * rather than the shape a `.docx` has.
  *
  * ## Why the caller supplies the coordinates
  *
  * An editor needs page boundaries back as positions in ITS OWN document model,
  * so it can put a spacer there or tell the user which page the caret is on.
- * ProseMirror's position arithmetic has rules of its own — a text node counts
+ * ProseMirror's position arithmetic has rules of its own -- a text node counts
  * its UTF-16 length, a leaf counts one, a container counts two plus its content
- * — and re-deriving them here from a JSON tree would be a second implementation
+ * -- and re-deriving them here from a JSON tree would be a second implementation
  * that agrees with the first until it does not.
  *
  * So each span carries an `at` handle that means whatever the caller wants, and
@@ -39,7 +39,7 @@ export interface TextSpan {
     readonly fontSizePx?: number;
     /**
      * The caller's position for this span's first character. Offsets within the
-     * span are added to it, so it must advance one per UTF-16 unit — which is
+     * span are added to it, so it must advance one per UTF-16 unit -- which is
      * exactly how a ProseMirror text position behaves.
      */
     readonly at?: number;
@@ -61,12 +61,12 @@ export interface BlockStyle {
     readonly keepWithNext?: boolean;
     readonly widowControl?: boolean;
     /**
-     * `w:pBdr` — a box round the block, which costs the FLOW room.
+     * `w:pBdr` -- a box round the block, which costs the FLOW room.
      *
      * Here because a border is not only ink: measured against LibreOffice,
      * a bordered paragraph steps 12.5pt where a plain one steps 11.5, and
      * more again with `w:space`. An editor that paginates without it puts
-     * its page breaks in a different place from the document it exports —
+     * its page breaks in a different place from the document it exports --
      * which is the whole of what a paged editor is for. The editor draws
      * the box itself, in its own CSS; this is what the BREAKS need.
      */
@@ -87,12 +87,12 @@ export interface FlowBlock {
  *
  * The caller supplies the column widths because only it knows them: a
  * ProseMirror table carries `colwidth` per cell, and where that is absent the
- * columns divide the writing width evenly — a rule about the EDITOR's CSS,
+ * columns divide the writing width evenly -- a rule about the EDITOR's CSS,
  * not about documents.
  */
 export interface FlowTableCell {
     /**
-     * What the cell holds — paragraphs, and tables nested inside it.
+     * What the cell holds -- paragraphs, and tables nested inside it.
      *
      * A `FlowItem` rather than a block, because a cell in a `.docx` may hold a
      * table and an editor's may too: a grid inside a grid is how a page layout
@@ -101,7 +101,7 @@ export interface FlowTableCell {
     readonly blocks: readonly FlowItem[];
     readonly gridSpan?: number;
     /**
-     * How many rows the cell covers — a ProseMirror `rowspan`.
+     * How many rows the cell covers -- a ProseMirror `rowspan`.
      *
      * An editor states a merge ONCE, on the cell that opens it, and the rows
      * beneath simply have one cell fewer. The layout wants the opposite: a
@@ -117,7 +117,7 @@ export interface FlowTableCell {
 export interface FlowTableRow {
     readonly cells: readonly FlowTableCell[];
     /**
-     * `w:trHeight` — a height the AUTHOR set, in px.
+     * `w:trHeight` -- a height the AUTHOR set, in px.
      *
      * Absent means the row is as tall as its tallest cell, which is what a
      * table does unasked and what every row did before this existed. Stated, it
@@ -128,11 +128,11 @@ export interface FlowTableRow {
      */
     readonly heightPx?: number;
     /**
-     * `w:tblHeader` — "repeat this row at the top of every page", stated.
+     * `w:tblHeader` -- "repeat this row at the top of every page", stated.
      *
      *  Absent falls back to the old rule: a row of header CELLS repeats. That
      * rule is a guess, and it was wrong in one direction for as long as it was
-     * the only one — the canvas repeated a `<th>` row that the `.docx` never
+     * the only one -- the canvas repeated a `<th>` row that the `.docx` never
      * did, because nothing wrote `w:tblHeader`. A document whose editor states
      * the fact says so here instead, and then the sheet on screen and the
      * printed page break in the same place.
@@ -222,7 +222,7 @@ export interface FlowPageStart {
 
 export interface FlowPagination {
     readonly pages: Page[];
-    /** The layout blocks the flow was turned into — paragraphs and tables. */
+    /** The layout blocks the flow was turned into -- paragraphs and tables. */
     readonly paragraphs: Block[];
     /** Where each page after the first begins. Its length is `pages.length - 1`. */
     readonly pageStarts: readonly FlowPageStart[];
@@ -301,7 +301,7 @@ export function paginateFlow(
 /**
  * A flow table as the layout's table.
  *
- * A row counts as a header only when EVERY cell in it is one — which is how a
+ * A row counts as a header only when EVERY cell in it is one -- which is how a
  * rich-text editor models a header row, and stops a single header cell in an
  * ordinary row from making that row repeat on every page.
  */
@@ -319,7 +319,7 @@ function toTable(table: FlowTable, base: FlowStyle, fonts: FontCatalogue): Table
         // Walked by column rather than by cell: a row under a merge has one
         // cell fewer than the grid has columns, and appending the place-holder
         // would put it at the END of the row instead of in the column the
-        // merge occupies — which is the column everything below lines up on.
+        // merge occupies -- which is the column everything below lines up on.
         while (column < table.columnWidthsPx.length) {
             const held = open.get(column);
             if (undefined !== held) {
@@ -357,14 +357,14 @@ function toTable(table: FlowTable, base: FlowStyle, fonts: FontCatalogue): Table
             cells,
             //  The STATED fact first. `??` and not `||`, because an explicit
             // `false` is an author saying "these are header cells and this row
-            // does not repeat" — which is exactly the case the fallback below
+            // does not repeat" -- which is exactly the case the fallback below
             // gets wrong.
             isHeader: row.repeatHeader
                 ?? (0 < row.cells.length && row.cells.every((cell) => true === cell.isHeader)),
             cantSplit: false,
             // A floor, not a fixed height: `heightRule` is left absent, which
             // the layout reads as `atLeast`. An author who sets 40px on a row
-            // whose text needs 60 gets 60 — the same answer Word gives, and the
+            // whose text needs 60 gets 60 -- the same answer Word gives, and the
             // only one that cannot hide their content.
             ...(undefined === row.heightPx ? {} : { heightPx: row.heightPx }),
         };
@@ -467,8 +467,8 @@ function toParagraph(block: FlowBlock, base: FlowStyle, fonts: FontCatalogue): P
  * The caller's position for a text offset within a block.
  *
  * Resolved through the SPANS rather than from the block's own `at` plus the
- * offset: inline content the editor counts but this engine never sees — an
- * image, a field chip — sits between spans and occupies a position without
+ * offset: inline content the editor counts but this engine never sees -- an
+ * image, a field chip -- sits between spans and occupies a position without
  * occupying any text. Adding the offset to the block's start would drift past
  * every one of them.
  */

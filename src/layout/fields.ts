@@ -17,7 +17,7 @@ export interface FieldContext {
     /** How many pages the finished document has. */
     readonly pageCount: number;
     /**
-     * `w:pgNumType/@w:fmt` — how this SECTION writes its page numbers.
+     * `w:pgNumType/@w:fmt` -- how this SECTION writes its page numbers.
      *
      * A field's own `\*` switch wins where it has one; this is the answer for
      * the many that do not, and it is how a document actually asks for roman
@@ -59,7 +59,7 @@ export function fieldText(
  *
  * Blocks with no fields in them are returned AS THEY ARE, not copied. Furniture
  * is re-resolved for every page of the document, and a header with no page
- * number in it is the common case — copying it each time would allocate a fresh
+ * number in it is the common case -- copying it each time would allocate a fresh
  * tree per page for no change at all.
  */
 export function resolveFields(blocks: readonly Block[], context: FieldContext): readonly Block[] {
@@ -71,7 +71,7 @@ export function resolveFields(blocks: readonly Block[], context: FieldContext): 
 }
 
 /**
- * Whether anything here is a field — of a given kind, if one is named.
+ * Whether anything here is a field -- of a given kind, if one is named.
  *
  * The kind matters: `PAGE` is answered exactly on the first pass, because a
  * page knows its own number. `NUMPAGES` is the only one worth laying a document
@@ -100,7 +100,7 @@ function resolveParagraph(paragraph: Paragraph, context: FieldContext): Paragrap
  * A block is a paragraph when it is not a table.
  *
  * Spelled out here rather than imported from `page-layout`, which would put
- * this module on that one's runtime graph — the very thing keeping the two
+ * this module on that one's runtime graph -- the very thing keeping the two
  * apart. The test is the same one `isTable` makes.
  */
 function isParagraph(block: Block): block is Paragraph {

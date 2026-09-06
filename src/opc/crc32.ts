@@ -3,7 +3,7 @@
  *
  * Needed only for parts this engine REWRITES: an untouched entry keeps the
  * checksum the original producer wrote, alongside its original compressed
- * bytes. A wrong CRC is not a soft failure — Word and every zip tool reject the
+ * bytes. A wrong CRC is not a soft failure -- Word and every zip tool reject the
  * whole package, so this is verified against the standard check value rather
  * than against itself.
  */

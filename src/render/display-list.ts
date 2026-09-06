@@ -41,7 +41,7 @@ export interface TextOp {
      * `ccw` reads bottom-to-top and `cw` top-to-bottom; measured off the PDF's
      * text matrix, LibreOffice writes them as `[0 1 -1 0]` and `[0 -1 1 0]`.
      * Absent means upright, which is every operation this engine has emitted
-     * until now — the field is here so a renderer can turn one, and the layout
+     * until now -- the field is here so a renderer can turn one, and the layout
      * that decides WHICH is a second measuring pass, still to come.
      */
     readonly turn?: 'ccw' | 'cw';
@@ -54,7 +54,7 @@ export interface TextOp {
      * Whether to KERN this string, from the run's `w:kern`.
      *
      * A renderer must be told, because it draws the text as a string and the
-     * drawing engine steps between the glyphs itself — kerning as it sees fit,
+     * drawing engine steps between the glyphs itself -- kerning as it sees fit,
      * which for every browser means kerning by default. This engine measured
      * the string unkerned unless the document asked, so an operation
      * drawn on the other rule lands its later glyphs off the measurement.
@@ -62,7 +62,7 @@ export interface TextOp {
     readonly kerned?: boolean;
 }
 
-/** A filled rectangle — cell shading, and the paper itself. */
+/** A filled rectangle -- cell shading, and the paper itself. */
 export interface RectOp {
     readonly kind: 'rect';
     readonly xPx: number;
@@ -73,7 +73,7 @@ export interface RectOp {
 }
 
 /**
- * A straight rule — one edge of one cell.
+ * A straight rule -- one edge of one cell.
  *
  * Given as a line rather than a thin rectangle because a border has a JOIN and
  * a cap: two edges meeting at a corner want to be strokes, and a renderer that
@@ -94,7 +94,7 @@ export interface LineOp {
  * A picture, placed by its TOP-LEFT corner.
  *
  * By its top-left because that is what every drawing surface takes, even though
- * the layout knows it by its baseline — converting once here beats every
+ * the layout knows it by its baseline -- converting once here beats every
  * consumer subtracting the height and one of them forgetting.
  */
 export interface ImageOp {
@@ -129,7 +129,7 @@ export function renderPage(page: Page): RenderedPage {
         }
     };
 
-    // Furniture first, so body text drawn over it wins any overlap — which is
+    // Furniture first, so body text drawn over it wins any overlap -- which is
     // what happens when a header outgrows the margin it was measured for.
     furniture(page.header);
     furniture(page.footer);
@@ -142,7 +142,7 @@ export function renderPage(page: Page): RenderedPage {
         }
     }
 
-    // Shading, then rules, then the text inside them — a cell's fill drawn
+    // Shading, then rules, then the text inside them -- a cell's fill drawn
     // after its text would paint over the words.
     pushRows(ops, page.rows);
 
@@ -184,7 +184,7 @@ export function renderPage(page: Page): RenderedPage {
             y2Px: separatorYPx,
             // A HAIRLINE, which is the thinnest rule LibreOffice will draw and
             // what it draws this one at: measured at 0.100 against
-            // the whole point this used to be — seven and a half times too
+            // the whole point this used to be -- seven and a half times too
             // heavy for a rule whose whole job is to be unobtrusive. Its
             // place, its length and its height above the notes were all
             // measured long ago; its thickness never was.
@@ -214,7 +214,7 @@ export function renderPage(page: Page): RenderedPage {
 /**
  * A float, drawn at the place the layout gave it.
  *
- * By its top-left already — unlike an inline picture, a float never sat on a
+ * By its top-left already -- unlike an inline picture, a float never sat on a
  * baseline, so there is nothing to convert.
  *
  * A TEXT BOX arrives here as lines instead of a picture, already at page
@@ -256,7 +256,7 @@ function pushRows(ops: DrawOp[], rows: readonly PlacedRow[]): void {
     rows.forEach((row, index) => {
         // A shared edge is ONE rule, not two. Every row draws its own
         // bottom, and only the first of its table on this page draws a
-        // top — measured against LibreOffice, which printed 63 rules for
+        // top -- measured against LibreOffice, which printed 63 rules for
         // 62 rows on the first page of a split table and 9 for 8 on the
         // second: one per row, plus a top on each part.
         const opens = 0 === index || rows[index - 1]?.blockIndex !== row.blockIndex;
@@ -315,7 +315,7 @@ function pushBorders(ops: DrawOp[], row: PlacedRow, opensHere: boolean): void {
         const left = cell.xPx;
         const right = cell.xPx + cell.widthPx;
         // A horizontal rule is CENTRED in the gap the flow kept for it, so it
-        // stands half its width OUTSIDE the content it belongs to — measured
+        // stands half its width OUTSIDE the content it belongs to -- measured
         // against LibreOffice, a row of 11.5pt text between one-point rules
         // ran 800.97 to 789.47 with its rules at 801.489 and 788.989.
         const halfTop = (borders.top?.widthPx ?? 0) / 2;
@@ -332,13 +332,13 @@ function pushBorders(ops: DrawOp[], row: PlacedRow, opensHere: boolean): void {
         // The verticals run half a horizontal rule PAST it at each end, rather
         // than stopping on its centre line, which is what fills the corner in.
         // Measured: a table between one-point rules at 769.389 and
-        // 719.189 printed its left edge from 769.889 to 718.689 — half a rule
+        // 719.189 printed its left edge from 769.889 to 718.689 -- half a rule
         // beyond each. Stopping on the line leaves a quarter of every outer
         // corner unpainted.
         //
         // Half of THIS cell's rule, which is right wherever it shows: at an
-        // inside junction the cell's own top edge has been resolved away — the
-        // row above draws it — and the gap that leaves is underneath the
+        // inside junction the cell's own top edge has been resolved away -- the
+        // row above draws it -- and the gap that leaves is underneath the
         // horizontal rule itself, which is a whole width tall.
         rule(ops, borders.left, left, top - halfTop, left, bottom + halfBottom);
         rule(ops, borders.right, right, top - halfTop, right, bottom + halfBottom);
@@ -371,7 +371,7 @@ function rule(
 
 /**
  * Where one of a decoration's rules goes, given how far from the baseline it
- * sits — positive below, negative above.
+ * sits -- positive below, negative above.
  *
  * Upright and turned text disagree only about which direction that is, so WHAT
  * a decoration is (an underline the font's offset below the baseline, a second
@@ -436,7 +436,7 @@ function pushLine(ops: DrawOp[], placed: PlacedLine): void {
         }
 
         // The room a boxed run keeps clear is the RUN's, charged once where
-        // its span opens on this line and once where it closes — so the box
+        // its span opens on this line and once where it closes -- so the box
         // goes round the whole span and not round each word of it.
         if (opensBorderSpan(piece, pieces[index - 1])) {
             x += piece.borderRoomPx ?? 0;
@@ -454,7 +454,7 @@ function pushLine(ops: DrawOp[], placed: PlacedLine): void {
         const from = x;
         // The gloss of a `w:ruby`, on a baseline of its own at the TOP of the
         // line. Measured: a 5pt gloss printed 4.68 below the line's
-        // top — its own ascent — and centred over its base, which is what
+        // top -- its own ascent -- and centred over its base, which is what
         // `rubyAlign` centre asks for and what the piece's width already
         // reserves where the gloss is the wider of the two.
         if (undefined !== piece.ruby) {
@@ -489,7 +489,7 @@ function pushLine(ops: DrawOp[], placed: PlacedLine): void {
             x = from + piece.widthPx;
         }
 
-        // Over the text, and across the whole piece — a justified line's gaps
+        // Over the text, and across the whole piece -- a justified line's gaps
         // are underlined too, which is why this uses the advanced width rather
         // than the piece's own.
         if (undefined !== piece.underline || undefined !== piece.strike) {
@@ -522,8 +522,8 @@ function pushLine(ops: DrawOp[], placed: PlacedLine): void {
 /**
  * The box round one line's worth of a boxed run.
  *
- * The rules stand `w:space` plus half the width outside the text — a
- * space-nought box measured 19.25pt round a run whose own advance is 18.30 —
+ * The rules stand `w:space` plus half the width outside the text -- a
+ * space-nought box measured 19.25pt round a run whose own advance is 18.30 --
  * and run half the crossing rule past each corner, as a paragraph's box does.
  *
  * Measured off its OWN baseline and its OWN metrics, not off the line it sits
@@ -571,10 +571,10 @@ function pushRunBorder(
 /**
  * What each leader is made of.
  *
- * `heavy` is Word's thick underscore, drawn here as an ordinary one — the right
+ * `heavy` is Word's thick underscore, drawn here as an ordinary one -- the right
  * character at the wrong weight, which is closer than leaving the gap blank.
  */
-/** A piece that is nothing but tabs — the breaker gives each its own. */
+/** A piece that is nothing but tabs -- the breaker gives each its own. */
 const TABS_ONLY = /^\t+$/u;
 
 const LEADER_GLYPHS: Record<string, string> = {
@@ -589,7 +589,7 @@ const LEADER_GLYPHS: Record<string, string> = {
  * How many leader glyphs fill a span `exact` of them long.
  *
  * Three answers for five leaders, each measured off a printed page
- * rather than reasoned about — the spans are in `tab-leader-fill.docx`, chosen
+ * rather than reasoned about -- the spans are in `tab-leader-fill.docx`, chosen
  * to land just over, halfway, just under and exactly on a glyph, because only
  * the exact case tells `ceil` from "one more than fits".
  *
@@ -609,14 +609,14 @@ function leaderCount(leader: string, exact: number): number {
         case 'heavy':
             return Math.floor(exact) + 1;
         // Whichever is nearer: 54.804 printed 55, 54.053 printed 54. But
-        // nothing at all where a whole glyph does not fit — 0.546 printed
+        // nothing at all where a whole glyph does not fit -- 0.546 printed
         // none, which rounding alone would have made one.
         case 'hyphen':
         case 'middleDot':
             return exact < 1 ? 0 : Math.round(exact);
         // Dots never overshoot. 140.109, 140.509, 140.909 and 140.982 all
-        // printed 140 — so not `round`, which would have given 141 for three
-        // of them — and an exact 141.000 printed 141.
+        // printed 140 -- so not `round`, which would have given 141 for three
+        // of them -- and an exact 141.000 printed 141.
         default:
             return Math.floor(exact);
     }
@@ -625,8 +625,8 @@ function leaderCount(leader: string, exact: number): number {
 /**
  * Fill a tab's span with its leader.
  *
- * Starting where the tab does — LibreOffice begins its dots immediately after
- * the text before the tab, not ranged against the stop — and as many glyphs as
+ * Starting where the tab does -- LibreOffice begins its dots immediately after
+ * the text before the tab, not ranged against the stop -- and as many glyphs as
  * {@link leaderCount} says, which is not always as many as fit.
  */
 function pushLeader(ops: DrawOp[], piece: LinePiece, x: number, baseline: number): void {
@@ -680,11 +680,11 @@ function pushDecoration(piece: LinePiece, colour: string, rule: PushRule): void 
             //
             // MEASURED, NOT MATCHED. LibreOffice draws a double
             // underline THINNER than a single one and straddles the single's
-            // place with it: Liberation Serif at 10pt printed −0.80 and −2.10
-            // at 0.40 thick where a single is −1.20 at 0.60, and at 40pt
-            // −3.00 and −7.20 at 1.40 against −4.40 at 2.20. This engine takes
-            // its single from the FONT rather than from LibreOffice — the
-            // decision in `TrueTypeFont.decoration`, on six measurements — and
+            // place with it: Liberation Serif at 10pt printed -0.80 and -2.10
+            // at 0.40 thick where a single is -1.20 at 0.60, and at 40pt
+            // -3.00 and -7.20 at 1.40 against -4.40 at 2.20. This engine takes
+            // its single from the FONT rather than from LibreOffice -- the
+            // decision in `TrueTypeFont.decoration`, on six measurements -- and
             // a double built on somebody else's single would be neither.
             rule(offset + thickness * 2, thickness, style, stroke);
         }
@@ -709,14 +709,14 @@ function pushDecoration(piece: LinePiece, colour: string, rule: PushRule): void 
  * The thinnest rule LibreOffice will draw: a tenth of a point.
  *
  * Measured, where this used to be an invented 0.5px. An underline is about a
- * twentieth of the font's size — 0.1, 0.2, 0.5 and 2.1pt at 2, 4, 10 and 40pt
- * — and at 1pt, where a twentieth would be 0.05, LibreOffice still drew 0.1.
+ * twentieth of the font's size -- 0.1, 0.2, 0.5 and 2.1pt at 2, 4, 10 and 40pt
+ * -- and at 1pt, where a twentieth would be 0.05, LibreOffice still drew 0.1.
  * That is the floor, and 0.5px is 0.375pt: nearly three times too thick.
  */
 const MINIMUM_RULE_PX = 0.1 * 96 / 72;
 
 /**
- * One paragraph's box — or a page's, which is drawn the same way.
+ * One paragraph's box -- or a page's, which is drawn the same way.
  *
  * Shared because a cell draws these too: `w:pBdr` inside a table cell came out
  * of LibreOffice with the same geometry it has on the page, and a second copy
@@ -784,7 +784,7 @@ function pushParagraphBox(ops: DrawOp[], box: PlacedParagraphBorder): void {
  * against an upright baseline, and no measurement of a turned one exists.
  */
 function pushTurnedLine(ops: DrawOp[], placed: PlacedLine, turn: 'ccw' | 'cw'): void {
-    // The line's baseline runs across its own advance, so it offsets X —
+    // The line's baseline runs across its own advance, so it offsets X --
     // from the box's left edge for `ccw`, whose glyph tops face left, and from
     // its right edge for `cw`, where they face the other way.
     const baselineX = 'ccw' === turn
@@ -803,7 +803,7 @@ function pushTurnedLine(ops: DrawOp[], placed: PlacedLine, turn: 'ccw' | 'cw'): 
         // A quarter turn leaves a rectangle axis-aligned, so a turned
         // highlight is the upright box with its sides swapped. Measured: a
         // 12.2pt line highlighted over a 14.25pt run printed as
-        // `re 33.600 763.739 12.150 14.250` — the LINE across, the RUN along.
+        // `re 33.600 763.739 12.150 14.250` -- the LINE across, the RUN along.
         if (undefined !== piece.highlightHex) {
             ops.push({
                 kind: 'rect',
@@ -832,8 +832,8 @@ function pushTurnedLine(ops: DrawOp[], placed: PlacedLine, turn: 'ccw' | 'cw'): 
             pushDecoration(piece, piece.colorHex ?? '#000000',
                 (offsetPx, thickness, style, stroke) => {
                     // Below the baseline becomes BESIDE it. LibreOffice draws
-                    // this one inside the rotation — `0 -1.1 l 14.2 -1.1`, the
-                    // run's own length at the font's offset — so the same
+                    // this one inside the rotation -- `0 -1.1 l 14.2 -1.1`, the
+                    // run's own length at the font's offset -- so the same
                     // number lands on X here, on the descender side.
                     const acrossPx = baselineX - forward * offsetPx;
 
@@ -880,7 +880,7 @@ function pushWhole(
         // the line rather than over it.
         const top = baseline - piece.shape.heightPx;
 
-        // A shape may stand a little INTO the room it keeps — a VML one begins
+        // A shape may stand a little INTO the room it keeps -- a VML one begins
         // a wrap distance in. Its words are already offset by that
         // and by the box's inset, stacked when it was read, so all
         // that is left is to put box and words where the box stands.
@@ -933,7 +933,7 @@ function pushWhole(
 
     // A tab is a distance, not a mark. Its advance is already in the positions
     // of everything after it, and drawing the character as well adds a space's
-    // worth of ink — a renderer that honours `xml:space` draws one, and one
+    // worth of ink -- a renderer that honours `xml:space` draws one, and one
     // that does not collapses it to nothing at an unpredictable width.
     if (TABS_ONLY.test(piece.text)) {
         return x + piece.widthPx;
@@ -971,7 +971,7 @@ function inkOf(piece: LinePiece, isLast: boolean): string {
 /**
  * Emit a justified piece one word at a time, so each gap can be widened.
  *
- * The stretch was divided by GAPS, and a run of several spaces is one gap — so
+ * The stretch was divided by GAPS, and a run of several spaces is one gap -- so
  * it is added once per run and not once per space. Adding it per character
  * would push every line containing a double space past the margin it was fitted
  * to, and the line would no longer end where justification promised.

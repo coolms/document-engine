@@ -6,7 +6,7 @@ import { FontReader, type TableRecord } from './sfnt.js';
  * ## Why this exists
  *
  * Advance widths alone are not how wide text is. Renderers adjust the space
- * between specific pairs — `AV` tucks together, `To` tucks under the T.
+ * between specific pairs -- `AV` tucks together, `To` tucks under the T.
  * Measured against Chrome, our unkerned sum of `AVAVAVAV` came out **14.4375px
  * too wide at 16px** (about 462 font units per pair), which is enough to move a
  * page boundary.
@@ -17,7 +17,7 @@ import { FontReader, type TableRecord } from './sfnt.js';
  * run's `w:kern`, and Chrome is the wrong renderer to have asked: a browser
  * kerns by default and a WORD PROCESSOR does not. Printed by LibreOffice,
  * `AVAVAVAVAV` with no `w:kern` came out **11.60pt WIDER** than the same string
- * with one — the wider number being the plain sum of advances.
+ * with one -- the wider number being the plain sum of advances.
  *
  * So every caller measures through {@link advanceOf}, which kerns only where
  * the document asked. Nothing in the fixture corpus asks, including both real
@@ -26,7 +26,7 @@ import { FontReader, type TableRecord } from './sfnt.js';
  * ## Why GPOS rather than the `kern` table
  *
  * Of the five families we ship, only Liberation Sans and Serif carry the legacy
- * `kern` table at all. Carlito — our DEFAULT font — Caladea and Liberation Mono
+ * `kern` table at all. Carlito -- our DEFAULT font -- Caladea and Liberation Mono
  * put kerning in GPOS exclusively. Reading `kern` would have covered two
  * families and silently under-measured the other three.
  *
@@ -53,8 +53,8 @@ export class GposKerning {
      * Kerning for a font that has none.
      *
      * A real instance rather than a null: callers measure the same way whether
-     * or not the font kerns, and the alternative — parsing a zero offset as if
-     * it were a GPOS table — would read the sfnt header and invent adjustments
+     * or not the font kerns, and the alternative -- parsing a zero offset as if
+     * it were a GPOS table -- would read the sfnt header and invent adjustments
      * out of it.
      */
     static none(): GposKerning {
@@ -100,7 +100,7 @@ export class GposKerning {
      * Features are gathered across ALL scripts rather than resolved per
      * script/language. Latin and Cyrillic share the same pair adjustments in
      * these fonts, and picking a script would mean knowing the run's language
-     * before measuring it — a dependency that buys nothing here and would have
+     * before measuring it -- a dependency that buys nothing here and would have
      * to be threaded through the whole engine.
      */
     static parse(reader: FontReader, gpos: TableRecord): GposKerning {
@@ -198,8 +198,8 @@ function readPairSubtable(reader: FontReader, subtable: number, out: PairSubtabl
  * Format 1: an explicit list of second glyphs per first glyph.
  *
  * Flattened into a map at parse time. These lists are small (a few thousand
- * pairs in a text font) and the alternative — a binary search per character
- * pair per measurement — would run inside the line-breaking loop.
+ * pairs in a text font) and the alternative -- a binary search per character
+ * pair per measurement -- would run inside the line-breaking loop.
  */
 function readPairFormat1(
     reader: FontReader,
@@ -240,7 +240,7 @@ function readPairFormat1(
 /**
  * Format 2: glyphs grouped into classes, with a class-by-class matrix.
  *
- * Evaluated on demand rather than flattened — the matrix is class1 x class2 and
+ * Evaluated on demand rather than flattened -- the matrix is class1 x class2 and
  * expanding it to every glyph pair would be enormous for no benefit, since only
  * the pairs a document actually contains are ever asked for.
  */
