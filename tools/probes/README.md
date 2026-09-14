@@ -150,3 +150,25 @@ python3 tools/probes/pdf-lines-to-oracle.py positions.txt > tests/fixtures/docx/
 A regenerated baseline only moves the comparison to the fixture as it is now;
 it does not make the engine agree with LibreOffice on text the two break
 differently. Change the fixture width-for-width and the baseline stays.
+
+## Neutralising `real-adr.docx` without moving a line
+
+`tools/neutralise-width-for-width.py` replaces every letter and digit of a run
+with another of the SAME ADVANCE in the one face that run is set in, at random
+per occurrence. Every word keeps its width, every line breaks where it broke,
+and the baseline above stays valid -- which is the check, and it is exact:
+
+```
+python3 tools/neutralise-width-for-width.py original.docx tests/fixtures/docx/real-adr.docx \
+    --fonts assets/fonts --face serif=LiberationSerif-Regular.ttf \
+    --face serif-bold=LiberationSerif-Bold.ttf --face sans-bold=LiberationSans-Bold.ttf \
+    --face mono=LiberationMono-Regular.ttf --seed 5
+soffice --headless --convert-to pdf tests/fixtures/docx/real-adr.docx
+python3 tools/probes/pdf-positions.py real-adr.pdf | python3 tools/probes/pdf-lines-to-oracle.py /dev/stdin
+```
+
+The reprint must reproduce `real-adr.libreoffice.json` to 0.00pt. Not every
+seed does: one line of the document ends within a hair of the margin, and
+LibreOffice's sub-point glyph positioning of the substituted letters can push
+its last dash over. Seeds 5, 15, 16 and 18 of the first 24 reproduced all 93
+lines exactly on 2026-09-15; seed 5 is the fixture in the tree.
