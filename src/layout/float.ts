@@ -5,7 +5,7 @@ import type { Block, Paragraph, PlacedLine, PlacedRow } from './page-layout.js';
  * Things that text flows around: a picture, or a text box.
  *
  * A float is not in the line. It is anchored to a PARAGRAPH and placed at
- * coordinates of its own, and the lines it overlaps step aside for it — so
+ * coordinates of its own, and the lines it overlaps step aside for it -- so
  * unlike everything else in this engine, its position is decided before the
  * text near it is broken, and then decides how that text breaks.
  *
@@ -33,17 +33,17 @@ export interface FloatPosition {
     readonly align?: string;
 }
 
-/** Where a float sits and how text behaves near it — true of every kind. */
+/** Where a float sits and how text behaves near it -- true of every kind. */
 export interface FloatFrame {
     readonly horizontal: FloatPosition;
     readonly vertical: FloatPosition;
     readonly wrap: WrapMode;
-    /** `distT`/`distB`/`distL`/`distR` — the clear space text keeps from it. */
+    /** `distT`/`distB`/`distL`/`distR` -- the clear space text keeps from it. */
     readonly marginTopPx: number;
     readonly marginBottomPx: number;
     readonly marginLeftPx: number;
     readonly marginRightPx: number;
-    /** `behindDoc` — drawn under the text rather than over it. */
+    /** `behindDoc` -- drawn under the text rather than over it. */
     readonly behindText: boolean;
 }
 
@@ -55,7 +55,7 @@ export interface FloatingImage extends FloatFrame {
  * A text box: a little page of its own, anchored like a picture.
  *
  * Its size is on the FRAME rather than taken from what is inside it, because
- * that is the way round the file says it — a box states its extent, and the
+ * that is the way round the file says it -- a box states its extent, and the
  * text is broken to fit. Measured against LibreOffice: the same
  * fourteen words in a 120pt box came out five to a line with the default inset
  * and six with the inset set to zero, so the width that breaks the text is the
@@ -78,7 +78,7 @@ export interface FloatingBox extends FloatFrame {
  * Four sides because that is the shape the format states, though only three do
  * work here: the left and right come off the width the text is broken at, the
  * top pushes the first line down, and the bottom would matter only to a box
- * that clipped its text or grew to fit it — neither of which is measured.
+ * that clipped its text or grew to fit it -- neither of which is measured.
  */
 export interface BoxInset {
     readonly leftPx: number;
@@ -108,7 +108,7 @@ export interface PlacedFloat {
     /**
      * A text box's own TABLES, moved the same way its lines are.
      *
-     * A box was dropping them outright — `PlacedFloat` carried lines, and
+     * A box was dropping them outright -- `PlacedFloat` carried lines, and
      * rows wanted the renderer's row path as well as its line path, which
      * is one call. Measured: a 2x2 table in a box at 180pt drew
      * its cells at 261.25 and 321.25 and its rules from 255.30 to 376.30.
@@ -145,8 +145,8 @@ export interface LineBox {
  * Word can split a line into runs either side of a float. This does not: a line
  * overlapping a float is given whichever side has more room, and the other is
  * left empty. Measured against LibreOffice, which put every wrapped line to the
- * RIGHT of a float 36pt from the margin — the 27pt left of it could not hold a
- * word — and the same rule gives the same answer there.
+ * RIGHT of a float 36pt from the margin -- the 27pt left of it could not hold a
+ * word -- and the same rule gives the same answer there.
  *
  * `none`-wrapped floats are ignored entirely: they sit over or under the text
  * and nothing steps aside.

@@ -1,5 +1,5 @@
 /**
- * `@coolms/document-engine` — the public surface.
+ * `@coolms/document-engine` -- the public surface.
  *
  * The chain, in the order a document travels it:
  *
@@ -88,7 +88,7 @@ export { crc32 } from './opc/crc32.js';
 export { findById, findByType, readRelationships, relationshipPartFor, resolveTarget } from './opc/relationships.js';
 export type { Relationship } from './opc/relationships.js';
 
-// Rich text — an editor's document shape rather than a .docx's.
+// Rich text -- an editor's document shape rather than a .docx's.
 export { DEFAULT_FLOW_STYLE, isFlowTable, paginateFlow } from './richtext/flow.js';
 export type {
     BlockStyle,

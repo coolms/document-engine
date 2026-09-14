@@ -129,12 +129,12 @@ export interface PageGeometry {
     readonly marginRightPx: number;
     readonly marginBottomPx: number;
     readonly marginLeftPx: number;
-    /** `w:pgMar/@w:header` — page edge to the TOP of the header. */
+    /** `w:pgMar/@w:header` -- page edge to the TOP of the header. */
     readonly headerDistancePx?: number;
-    /** `w:pgMar/@w:footer` — page edge to the BOTTOM of the footer. */
+    /** `w:pgMar/@w:footer` -- page edge to the BOTTOM of the footer. */
     readonly footerDistancePx?: number;
     /**
-     * `w:cols` — the columns text flows down before it reaches the next page.
+     * `w:cols` -- the columns text flows down before it reaches the next page.
      *
      * Absolute rather than a count and a gap, because Word can state each
      * column's own width (`w:equalWidth="0"`), and a count could not say that.
@@ -158,7 +158,7 @@ export interface ParagraphStyle {
     /** Exact line height. When absent, the font's natural single spacing wins. */
     readonly lineHeightPx?: number;
     /**
-     * How that height was ARRIVED at — `w:spacing/@w:lineRule`.
+     * How that height was ARRIVED at -- `w:spacing/@w:lineRule`.
      *
      * Kept even though the flow only needs the number, because two lines of
      * identical height put their baseline in different places depending on
@@ -173,13 +173,13 @@ export interface ParagraphStyle {
      * answer different questions once a paragraph states spacing of its own:
      * the height is the room the line ASKS for and the pitch is what its
      * leading is measured against. Measured: under an 18pt grid, a
-     * paragraph at 1.5 lines steps 27.00 — one and a half PITCHES, not one and
-     * a half of the font's 11.50 — while its baseline stays 12.62 down, the
+     * paragraph at 1.5 lines steps 27.00 -- one and a half PITCHES, not one and
+     * a half of the font's 11.50 -- while its baseline stays 12.62 down, the
      * natural line centred in a single pitch with the rest of the room below.
      */
     readonly gridPitchPx?: number;
     /**
-     * The gridded height is a FLOOR — `atLeast` — rather than a multiple.
+     * The gridded height is a FLOOR -- `atLeast` -- rather than a multiple.
      *
      * A grid paragraph gives leading back at its foot in proportion to the
      * multiple it asked for, which is meaningless for a floor: 24.00 on an
@@ -190,7 +190,7 @@ export interface ParagraphStyle {
      */
     readonly gridFloor?: boolean;
     /**
-     * `w:suppressLineNumbers` — this paragraph's lines are not counted.
+     * `w:suppressLineNumbers` -- this paragraph's lines are not counted.
      *
      * On the style rather than worked out per line because the numbering runs
      * over PLACED pages, long after the paragraph that asked for it went past.
@@ -208,7 +208,7 @@ export interface ParagraphStyle {
      */
     readonly keepLinesTogether: boolean;
     /**
-     * `w:keepNext` — keep this paragraph on the page that holds the block after
+     * `w:keepNext` -- keep this paragraph on the page that holds the block after
      * it. Word calls it "Keep with next" and turns it on for headings, so a
      * heading is never stranded at the foot of a page above its own text.
      *
@@ -226,7 +226,7 @@ export interface ParagraphStyle {
      */
     readonly widowControl?: boolean;
     /**
-     * `w:pBdr` — the paragraph's OWN border: a rule under a heading, a box
+     * `w:pBdr` -- the paragraph's OWN border: a rule under a heading, a box
      * round a call-out.
      *
      * Consecutive paragraphs carrying the same border are one box, which is
@@ -235,12 +235,12 @@ export interface ParagraphStyle {
     readonly borders?: BoxBorders;
     /** Explicit tab stops, from the paragraph's left indent, ascending. */
     readonly tabStops?: readonly TabStop[];
-    /** `w:decimalSymbol` — what a decimal stop lines its numbers up on. */
+    /** `w:decimalSymbol` -- what a decimal stop lines its numbers up on. */
     readonly decimalSymbol?: string;
     /**
      * The repeating stop past the last explicit one.
      *
-     * Word's default is half an inch, which is 48px here — and a tab that
+     * Word's default is half an inch, which is 48px here -- and a tab that
      * advanced by its GLYPH instead would move 8px in Carlito and 12 in
      * Liberation Serif, neither of which is a column.
      */
@@ -264,7 +264,7 @@ export const DEFAULT_PARAGRAPH_STYLE: ParagraphStyle = {
 export interface ListMarker {
     readonly run: StyledRun;
     /**
-     * How far LEFT of the paragraph's left indent the marker is drawn — the
+     * How far LEFT of the paragraph's left indent the marker is drawn -- the
      * hanging indent.
      *
      * Its own field because the marker sits there and the TEXT does not: a
@@ -279,7 +279,7 @@ export interface Paragraph {
     readonly runs: readonly StyledRun[];
     readonly style: ParagraphStyle;
     /**
-     * A list marker — "1.", "a)", a bullet glyph — drawn in the hanging
+     * A list marker -- "1.", "a)", a bullet glyph -- drawn in the hanging
      * indent beside the FIRST line.
      *
      * Not part of the runs, because it is not part of the text: it is never
@@ -301,7 +301,7 @@ export interface PlacedLine {
     /** Left edge, margins, indents and alignment already applied. */
     readonly xPx: number;
     /**
-     * Extra width to add to EACH space on this line — CSS `word-spacing`.
+     * Extra width to add to EACH space on this line -- CSS `word-spacing`.
      *
      * Zero unless the paragraph is justified. Carried as one number rather
      * than as re-measured pieces because that is all a renderer needs, and
@@ -313,7 +313,7 @@ export interface PlacedLine {
     readonly yPx: number;
     readonly heightPx: number;
     /**
-     * How far below {@link yPx} the baseline sits — where the glyphs rest.
+     * How far below {@link yPx} the baseline sits -- where the glyphs rest.
      *
      * On the line rather than left to the renderer, because working it out
      * needs the line RULE and the font's descent, and a renderer given only
@@ -361,7 +361,7 @@ export interface PlacedMarker {
  *
  * MEASURED at last, where this was an uncited claim that happened to
  * be right: the print runs it from 28.350 to 172.350 on a page with 1cm
- * margins — 144.00pt, two inches exactly, starting ON the margin. `audit:claims`
+ * margins -- 144.00pt, two inches exactly, starting ON the margin. `audit:claims`
  * never asked because 192 is a whole number, which is worth remembering about
  * that guard: it catches a fraction nobody measured, not a round number nobody
  * measured.
@@ -398,7 +398,7 @@ export interface PlacedFurniture {
      * Boxes round its bordered paragraphs, in PAGE coordinates.
      *
      * A header is stacked by the same code a cell is, so it gathers these the
-     * same way — and dropping them here is what left a bordered heading in a
+     * same way -- and dropping them here is what left a bordered heading in a
      * header drawing nothing. LibreOffice draws it: 14.45pt round an 11.5pt
      * line for a three-point rule, standing 1.5 outside the text either side.
      */
@@ -411,14 +411,14 @@ export interface PlacedFurniture {
 export interface Page {
     /**
      * Text belonging to the page itself. Lines inside a table cell are NOT
-     * here — they live on their cell, where their position and their column
+     * here -- they live on their cell, where their position and their column
      * are known together.
      */
     readonly lines: readonly PlacedLine[];
     /** Table rows on this page, including headers repeated onto it. */
     readonly rows: readonly PlacedRow[];
     /**
-     * This page's header, already positioned — absent when it has none.
+     * This page's header, already positioned -- absent when it has none.
      *
      * A header GROWS DOWNWARDS from its distance off the top edge, and a footer
      * grows UPWARDS from its distance off the bottom one. Placing the footer
@@ -466,29 +466,29 @@ export interface Page {
 }
 
 /**
- * `w:pgBorders` — a box round the whole page, and what it is measured from.
+ * `w:pgBorders` -- a box round the whole page, and what it is measured from.
  *
  * `page` counts from the edge of the PAPER inward and `text` from the writing
  * area outward, which put the same border 22.6pt apart on A4 with a
  * one-centimetre margin. Either way the `w:space` is the CLEAR GAP between the
- * rule and the thing it is measured from — measured against LibreOffice, a
+ * rule and the thing it is measured from -- measured against LibreOffice, a
  * three-point rule 24 points from the paper drew its centre at 25.5.
  */
 /**
- * `w:lnNumType` — numbers printed down the margin beside the body's lines.
+ * `w:lnNumType` -- numbers printed down the margin beside the body's lines.
  *
  * Measured against LibreOffice: the number's RIGHT edge lands `distance` in
  * from the writing area, an empty paragraph is a line and gets one, and a line
  * inside a TABLE does not.
  */
 export interface LineNumbering {
-    /** `w:countBy` — a number is printed where the count divides by this. */
+    /** `w:countBy` -- a number is printed where the count divides by this. */
     readonly countBy: number;
     /**
      * `w:start`, which LibreOffice adds to the count rather than starting at.
      *
      * Stated as five with `countBy` two, it printed 6, 8 and 10 against lines
-     * one, three and five — so the first line is `start + 1`, not `start`.
+     * one, three and five -- so the first line is `start + 1`, not `start`.
      */
     readonly start: number;
     /** `w:distance`; absent, LibreOffice left half a centimetre. */
@@ -513,7 +513,7 @@ export interface Section {
     readonly blocks: readonly Block[];
     readonly geometry: PageGeometry;
     /**
-     * `w:pgNumType/@w:start` — the number this section's first page PRINTS.
+     * `w:pgNumType/@w:start` -- the number this section's first page PRINTS.
      *
      * Front matter numbered i, ii, iii and a body that begins again at 1 is
      * two sections and one document: without this the body's first page is
@@ -522,23 +522,23 @@ export interface Section {
      */
     readonly firstPageNumber?: number;
     /**
-     * `w:pgNumType/@w:fmt` — how this section writes its page numbers.
+     * `w:pgNumType/@w:fmt` -- how this section writes its page numbers.
      *
      * Measured: a section saying `lowerRoman` printed i and ii, and
      * the section after it printed 1. It is the ordinary way a document asks
-     * for roman front matter — far commoner than a `PAGE \* roman` switch on
+     * for roman front matter -- far commoner than a `PAGE \* roman` switch on
      * each field, which is all this engine read before.
      */
     readonly pageNumberFormat?: NumeralStyle;
-    /** `w:pgBorders` — drawn on every page of the section. */
+    /** `w:pgBorders` -- drawn on every page of the section. */
     readonly pageBorders?: PageBorders;
-    /** `w:lnNumType` — numbers down the margin of every page of the section. */
+    /** `w:lnNumType` -- numbers down the margin of every page of the section. */
     readonly lineNumbering?: LineNumbering;
     /**
      * The document's footnotes, by the id its references name.
      *
      * On the SECTION rather than left to the caller because a caller that
-     * forgot to hand them over would lose them silently — which is the whole of
+     * forgot to hand them over would lose them silently -- which is the whole of
      * what was wrong before they were read at all.
      */
     readonly footnotes?: ReadonlyMap<number, readonly Block[]>;
@@ -559,7 +559,7 @@ export interface Section {
      *
      * `evenPage` and `oddPage` are how a chapter always starts on a
      * right-hand page: if the parity is wrong a BLANK page is inserted to
-     * reach it, and that blank page is real — it is printed, and it counts.
+     * reach it, and that blank page is real -- it is printed, and it counts.
      */
     readonly startsOn?: 'nextPage' | 'evenPage' | 'oddPage';
 }
@@ -569,7 +569,7 @@ export interface Section {
  *
  * Given BOTH numbers because Word needs both and they diverge. "Different first
  * page" means the first page of the SECTION, while "different odd and even"
- * counts PRINTED pages — so a section opening on document page four is its own
+ * counts PRINTED pages -- so a section opening on document page four is its own
  * first page and an even page at once, and one index cannot say which.
  *
  * Verified against LibreOffice: with both settings on, such a page draws the
@@ -589,7 +589,7 @@ export interface ContentBox {
 }
 
 export interface LayoutOptions {
-    /** `w:pgNumType/@w:fmt` — how the section being laid writes its numbers. */
+    /** `w:pgNumType/@w:fmt` -- how the section being laid writes its numbers. */
     readonly pageNumberFormat?: NumeralStyle;
     /**
      * Each footnote's blocks, by the id its references name.
@@ -599,22 +599,22 @@ export interface LayoutOptions {
      */
     readonly footnotes?: ReadonlyMap<number, readonly Block[]>;
     /**
-     * Word's "Widow/Orphan control", which is **ON by default** — so this
+     * Word's "Widow/Orphan control", which is **ON by default** -- so this
      * defaults to true as well. Leaving it off would make our page breaks
      * disagree with the .docx for any paragraph that straddles a boundary,
      * which is most of them in a long document.
      *
      *  THE REFERENCE DISAGREES, and only here. LibreOffice honours
-     * `w:widowControl` when a document states it — asked for outright, both a
+     * `w:widowControl` when a document states it -- asked for outright, both a
      * stranded first line and a stranded last one moved the whole paragraph on
-     * — but with the element ABSENT it allows both: a printed page ended with
+     * -- but with the element ABSENT it allows both: a printed page ended with
      * one line of a three-line paragraph, and another left the third line
      * alone overleaf.
      *
      * Kept as true because the thing being modelled is WORD's layout, and
      * LibreOffice is the reference this engine can measure rather than the
      * authority on what a `.docx` means. Two witnesses agree against it: the
-     * format states the default is true, and Word applies it — it is the
+     * format states the default is true, and Word applies it -- it is the
      * "Widow/Orphan control" tick. The divergence is confined to SILENCE: a
      * document that states the element either way is laid out identically by
      * both. Not one document in this corpus states it, including the
@@ -635,7 +635,7 @@ export interface LayoutOptions {
     readonly footerFor?: FurnitureSource;
     /**
      * The printed number of this run's FIRST page. One unless other sections
-     * came before it — `layoutSections` supplies the running count.
+     * came before it -- `layoutSections` supplies the running count.
      */
     readonly firstPageNumber?: number;
     /**
@@ -661,8 +661,8 @@ export interface LayoutOptions {
  * ## Widow and orphan control
  *
  * A paragraph is never split so as to leave one line alone. An ORPHAN is its
- * first line stranded at the foot of a page — the whole paragraph moves on. A
- * WIDOW is its last line stranded at the head of the next — one more line is
+ * first line stranded at the foot of a page -- the whole paragraph moves on. A
+ * WIDOW is its last line stranded at the head of the next -- one more line is
  * pushed over to join it. Both are on by default because they are on by default
  * in Word, and this engine's purpose is to agree with the file it produces.
  *
@@ -702,7 +702,7 @@ export function layoutPages(
          * How much of the PREVIOUS page's notes had to be carried here.
          *
          * A note taller than the room its page can spare is continued rather
-         * than drawn over the text — so the page it continues onto owes that
+         * than drawn over the text -- so the page it continues onto owes that
          * much before it owes anything of its own.
          */
         carriedPx: number;
@@ -735,7 +735,7 @@ export function layoutPages(
      *
      * The same note can be asked about many times over while the page decides
      * whether the line referencing it fits, and a note is a column of blocks
-     * like any other — measuring it each time would flow the whole thing again
+     * like any other -- measuring it each time would flow the whole thing again
      * for every candidate line.
      */
     const noteHeights = new Map<number, number>();
@@ -755,7 +755,7 @@ export function layoutPages(
     /**
      * The room the foot of the page owes its notes.
      *
-     * The rule sits on a LINE of its own above them — measured against
+     * The rule sits on a LINE of its own above them -- measured against
      * LibreOffice, a page carrying one note held twelve body lines where an
      * unfootnoted one held fourteen, which is the note AND the line the rule
      * stands on. Nothing at all is owed while the page carries no notes.
@@ -780,7 +780,7 @@ export function layoutPages(
      * A note taller than the page cannot have all of it: measured against
      * LibreOffice, the referencing line stayed where it was and the notes took
      * everything below it, the rest continuing overleaf. So the reserve is
-     * capped at the room below the text already placed — never at nothing,
+     * capped at the room below the text already placed -- never at nothing,
      * because a note area of no height would carry the whole note forever.
      */
     const reservedFor = (
@@ -793,7 +793,7 @@ export function layoutPages(
         // for: the line that brings them travels to where they both fit, which
         // is what LibreOffice did with a note of one line. Notes that would
         // NOT fit anywhere are given the room below the text instead, and what
-        // is left of them is carried overleaf — where a page that kept holding
+        // is left of them is carried overleaf -- where a page that kept holding
         // out for room it can never have would move the line forever.
         return wanted <= contentHeight() ? wanted : Math.max(0, pageFoot() - atY);
     };
@@ -831,12 +831,12 @@ export function layoutPages(
     /**
      * Finish the open box, if there is one.
      *
-     * A box always CLOSES where it stops — at the end of its run of
+     * A box always CLOSES where it stops -- at the end of its run of
      * paragraphs, and at a page or column break alike. Measured against
      * LibreOffice: a bordered paragraph split over two pages drew FOUR rules on
      * each of them, a complete box either side, not one outline left open at
      * the foot and picked up at the head. The tempting analogy is a table row,
-     * which splits without drawing the edge between its halves — a paragraph's
+     * which splits without drawing the edge between its halves -- a paragraph's
      * border does not behave like one, and reading it that way leaves the two
      * inner edges undrawn.
      */
@@ -854,8 +854,8 @@ export function layoutPages(
     /**
      * The room a side takes outside the text: its space plus its whole width.
      *
-     * The rule is centred half a width outside the box, so its OUTER edge —
-     * what the text above or below has to clear — is a full width out.
+     * The rule is centred half a width outside the box, so its OUTER edge --
+     * what the text above or below has to clear -- is a full width out.
      * Measured off LibreOffice, where a bordered paragraph under an ordinary
      * one stepped 12.5pt instead of 11.5 for a one-point rule, and 18.5 once
      * six points of `w:space` were added.
@@ -877,7 +877,7 @@ export function layoutPages(
      * Line by line rather than paragraph by paragraph, because a paragraph can
      * span two pages and the two halves of its box are drawn in different
      * places. The edges are the LINE BOX's own, with each rule centred half a
-     * width outside and `w:space` pushing it further out again — measured off
+     * width outside and `w:space` pushing it further out again -- measured off
      * LibreOffice, where six points of space moved the box six points out on
      * every side and left the text exactly where it was.
      */
@@ -936,7 +936,7 @@ export function layoutPages(
     /**
      * Move on when what is being placed will not fit below the cursor.
      *
-     * The next COLUMN, if the section has one left — a page break only comes
+     * The next COLUMN, if the section has one left -- a page break only comes
      * once the last column is full. That is the whole of what makes a
      * multi-column section: everything else measures against the column it is
      * in, and nothing else needs to know how many there are.
@@ -969,7 +969,7 @@ export function layoutPages(
      * the wrong height wraps around the wrong part of a picture.
      *
      * A line sits at `startY` plus the heights of the lines BEFORE it, which
-     * the breaker knows by the time it asks — it used to be `N * lineHeight`,
+     * the breaker knows by the time it asks -- it used to be `N * lineHeight`,
      * and a paragraph whose first line carried a picture then walked the band
      * three times too fast.
      *
@@ -980,7 +980,7 @@ export function layoutPages(
      * into it, where the nominal over-states the reach.
      *
      * A paragraph that breaks across a page displaces the lines after the break
-     * by their position in the PARAGRAPH rather than on the page — a float is
+     * by their position in the PARAGRAPH rather than on the page -- a float is
      * anchored near its paragraph's start, so its band reaches the next page
      * only when it is nearly a page tall.
      */
@@ -1039,7 +1039,7 @@ export function layoutPages(
      *
      * `w:keepNext` binds a paragraph to the block after it, and consecutive
      * flagged paragraphs CHAIN, so the group runs on until a block that carries
-     * no keep of its own ends it. It is not symmetric — measured against
+     * no keep of its own ends it. It is not symmetric -- measured against
      * LibreOffice, every BOUND paragraph moves whole while the block that ends
      * the group need only get its FIRST line onto the page, or its first row
      * when it is a table. A heading kept with a long paragraph therefore needs
@@ -1050,7 +1050,7 @@ export function layoutPages(
      * beside it even where the subheading ends the document.
      *
      * The measurement cannot see floats the group has yet to anchor, since none
-     * of it is placed yet — a keep group that also carries a floating picture
+     * of it is placed yet -- a keep group that also carries a floating picture
      * can still be split.
      */
     const keepGroup = (from: number, atY: number): KeepGroup => {
@@ -1062,7 +1062,7 @@ export function layoutPages(
         while (end + 1 < blocks.length) {
             const next = blocks[end + 1]!;
             // A table carries no keep of its own, and a block that opens a page
-            // of its own cannot be pulled back onto this one — either ends it.
+            // of its own cannot be pulled back onto this one -- either ends it.
             if (isTable(next) || !next.style.keepWithNext || next.style.pageBreakBefore) {
                 break;
             }
@@ -1116,7 +1116,7 @@ export function layoutPages(
      * Flow a table's rows onto pages.
      *
      * A row moves WHOLE. Word can split a row across a page boundary, and this
-     * does not yet — so a table with very tall rows leaves more white space
+     * does not yet -- so a table with very tall rows leaves more white space
      * here than in the .docx. It never loses content, and a row taller than a
      * page is placed anyway rather than looping forever.
      */
@@ -1180,7 +1180,7 @@ export function layoutPages(
             }
 
             // Every horizontal rule of a table sits in a gap of its OWN
-            // width, between the content above it and the content below —
+            // width, between the content above it and the content below --
             // outer rules and inner ones alike. Measured: a three-row table of
             // 11.5pt lines and one-point rules ran 38.5pt from the line above
             // it to the line below, which is 3 x 11.5 plus 4 x 1.
@@ -1200,7 +1200,7 @@ export function layoutPages(
         };
 
         const repeatHeaders = (rowIndex: number): void => {
-            // Headers repeat on the continuation — but never in front of
+            // Headers repeat on the continuation -- but never in front of
             // themselves, and never where the page could not then hold the
             // START of the row they head. A header filling the page on its own
             // would push the table forward a row at a time and never finish.
@@ -1269,8 +1269,8 @@ export function layoutPages(
                  * pages, and LibreOffice fills each of them in turn, repeating
                  * the header above every one.
                  *
-                 * `splitRow` answers null when it can gain nothing — every line
-                 * fits, or none does — so this ends whatever the room.
+                 * `splitRow` answers null when it can gain nothing -- every line
+                 * fits, or none does -- so this ends whatever the room.
                  */
             const spill = (first: typeof row): void => {
                 let rest = first;
@@ -1321,7 +1321,7 @@ export function layoutPages(
             // A row that refuses to be split and cannot FIT asks for something
             // no page can give. Measured: LibreOffice broke a
             // 150-line `w:cantSplit` row across three pages, repeating the
-            // header above each — so where the flag cannot be obeyed it is set
+            // header above each -- so where the flag cannot be obeyed it is set
             // aside rather than run off the page.
             spill(row);
         });
@@ -1335,7 +1335,7 @@ export function layoutPages(
      * Two paragraphs do not add their spacing up: the gap between them is the
      * LARGER of the first's `w:spacing/@w:after` and the second's `@w:before`.
      * Measured against LibreOffice with the two set differently in
-     * both orders — 10 after then 20 before, and 20 after then 10 — and the gap
+     * both orders -- 10 after then 20 before, and 20 after then 10 -- and the gap
      * came out 20.00 both times, which only `max` explains. Adding them put
      * every spaced paragraph in every document further down its page than the
      * file asks, and the page count follows.
@@ -1354,7 +1354,7 @@ export function layoutPages(
         const available = contentWidth() - style.indentLeftPx - style.indentRightPx;
 
         // The page break and the space before it both move the cursor, and a
-        // float is placed against the paragraph's TOP — so nothing about this
+        // float is placed against the paragraph's TOP -- so nothing about this
         // paragraph can be measured until they have happened.
         if (style.pageBreakBefore && !isEmpty()) {
             newPage();
@@ -1392,9 +1392,9 @@ export function layoutPages(
             endBorderRun();
         } else if (undefined !== style.borders.insideH) {
             // The box goes on, with a rule across it. LibreOffice took the
-            // rule's whole width AND its space out of the flow — an 11.5pt
+            // rule's whole width AND its space out of the flow -- an 11.5pt
             // step became 14.5 for a three-point rule and 20.5 once six points
-            // of space were added — but drew the rule half a width below the
+            // of space were added -- but drew the rule half a width below the
             // text ABOVE it either way, at 787.989 both times. The space is
             // all below the rule, not split round it, which a fixture stating
             // no space could not have shown.
@@ -1409,13 +1409,13 @@ export function layoutPages(
         }
 
         // A field in the BODY is answered by the page it lands ON, and every
-        // break that could move it has now been taken — its own
+        // break that could move it has now been taken -- its own
         // `pageBreakBefore`, and the one a `keepNext` group above it forced.
         // Resolving before those read the page the paragraph was LEAVING, and
         // a three-page fixture printed 1, 1, 2.
         //
         // It must still happen before the paragraph is measured, because `9`
-        // and `10` are not the same width — which is the same reason the
+        // and `10` are not the same width -- which is the same reason the
         // furniture path resolves early.
         const paragraph = hasField(block)
             ? resolveFields([block], {
@@ -1434,7 +1434,7 @@ export function layoutPages(
         }
 
         // A paragraph is broken at the width of ONE column, and the lines it
-        // carries into the next are drawn at that width — off the right edge
+        // carries into the next are drawn at that width -- off the right edge
         // of a narrower one, and off the paper. So where the next column is a
         // different width, a paragraph that will not fit whole is moved to it
         // entire and broken again there.
@@ -1497,11 +1497,11 @@ export function layoutPages(
                 // with it, and the rule has to land inside the writing area.
                 // Measured against LibreOffice: a box needing 11.5pt of line
                 // and 13 of rule either side stayed on a page with 65 filler
-                // lines and moved off one with 66 — which is the boundary the
+                // lines and moved off one with 66 -- which is the boundary the
                 // bottom room decides, and nothing else does.
                 // Every line, not just the paragraph's last: the box closes
                 // at a page break too, so any line may be the one whose bottom
-                // rule has to fit. Measured — a box needing 25pt below it took
+                // rule has to fit. Measured -- a box needing 25pt below it took
                 // two lines onto a page that would have held four without.
                 const rulePx = roomFor(style.borders?.bottom);
                 const ahead = { notes: [...notes, ...brought], carriedPx: current().carriedPx };
@@ -1540,7 +1540,7 @@ export function layoutPages(
             let count = fitting(placed);
 
             if (0 === count) {
-                // Nothing fits here. Move on, unless the page is already empty —
+                // Nothing fits here. Move on, unless the page is already empty --
                 // in which case the paragraph is taller than a page and must be
                 // placed anyway or this loops forever.
                 if (!isEmpty()) {
@@ -1568,7 +1568,7 @@ export function layoutPages(
                 }
                 const firstLine = 0 === lineIndex;
                 // The first line is narrower by its own indent, so that is the
-                // width its alignment is measured against — not the column's.
+                // width its alignment is measured against -- not the column's.
                 const indent = firstLine ? style.indentFirstLinePx : 0;
                 // The same box the line was BROKEN at, which means the same
                 // top: the heights of the lines before it, added the same way.
@@ -1651,8 +1651,8 @@ export function layoutPages(
             // the paper.
             lines: stacked.lines.map(
                 (line) => translateLine(line, geometry.marginLeftPx, topPx)),
-            // A header may hold a table of its own — a logo beside an address
-            // is one — and dropping it would take the whole thing off the page.
+            // A header may hold a table of its own -- a logo beside an address
+            // is one -- and dropping it would take the whole thing off the page.
             rows: stacked.rows.map((row) => translateRow(row, geometry.marginLeftPx, topPx)),
             paragraphBorders: stacked.borders.map((box) => ({
                 ...box,
@@ -1823,7 +1823,7 @@ export function layoutPages(
  * Lay out a document whose sections have different paper.
  *
  * Each section is flowed on its own, because a section break STARTS A NEW
- * PAGE by definition — there is no continuity of cursor to preserve across
+ * PAGE by definition -- there is no continuity of cursor to preserve across
  * one. What does have to be preserved is the block numbering: a placed line
  * reports its index in the WHOLE document, so a caller can map it back to the
  * block it came from without knowing which section that was.
@@ -1847,7 +1847,7 @@ export function layoutSections(sections: readonly Section[], options: LayoutOpti
     // document's. That is the common case, and it costs nothing.
     // A single-section document never needs the second pass for its FURNITURE:
     // the count `layoutPages` used was its own page count, which for one
-    // section IS the document's. Its BODY is another matter — a body field is
+    // section IS the document's. Its BODY is another matter -- a body field is
     // answered while the flow is running, when only the pages laid so far
     // exist, so `page 1 of 3` came out `1 of 1` on the first page of a
     // one-section document.
@@ -1951,7 +1951,7 @@ function layoutRun(sections: readonly Section[], options: LayoutOptions): Page[]
                 rows: page.rows.map((row) => ({ ...row, blockIndex: row.blockIndex + offset })),
                 geometry: section.geometry,
                 // Resolved per page rather than once per section, because a
-                // section's own paper is what it is measured against — and the
+                // section's own paper is what it is measured against -- and the
                 // blank page inserted for an odd-page start carries none, the
                 // same as it carries no header.
                 ...(undefined === section.pageBorders
@@ -1969,7 +1969,7 @@ function layoutRun(sections: readonly Section[], options: LayoutOptions): Page[]
 
 /**
  * Stack blocks into a column of unbounded height and say how tall they came
- * out — what a header, a footer or a table cell is.
+ * out -- what a header, a footer or a table cell is.
  *
  * Tables are skipped: a header containing one is rare, and guessing its
  * height would move the body text by an amount nobody could account for.
@@ -1985,7 +1985,7 @@ export function stackBlocks(
  * Move a placed line into another coordinate space.
  *
  * The marker moves WITH it. Spreading the line and overriding only `xPx` leaves
- * the bullet behind in the space the line was stacked in — which is what both
+ * the bullet behind in the space the line was stacked in -- which is what both
  * of the callers used to do, and it put the marker a whole page margin away
  * from its text inside a table cell.
  */
@@ -2001,7 +2001,7 @@ function measureParagraph(
     availableWidth: number,
     boxOf?: (lineIndex: number, topPx: number) => LineBox,
 ): { lines: Line[]; lineHeight: number; metrics: readonly LineMetrics[] } {
-    // A paragraph with NO runs draws nothing — not even an empty line. The
+    // A paragraph with NO runs draws nothing -- not even an empty line. The
     // reader makes one only for a piece of a paragraph a page break split off
     // with nothing in it, which LibreOffice gives no room on either side of the
     // break. It still carries its `pageBreakBefore`, which is the
@@ -2016,10 +2016,10 @@ function measureParagraph(
     const style = paragraph.style;
     // Where the line about to be broken STARTS, measured from the paragraph's
     // own top. The lines before it are already broken, so their heights are
-    // known exactly — counting them and multiplying by a nominal height is what
+    // known exactly -- counting them and multiplying by a nominal height is what
     // walked a float's band at the wrong speed.
-    // None of them is the paragraph's LAST — there is always another coming,
-    // which is the one being broken — so none gives back what the last does.
+    // None of them is the paragraph's LAST -- there is always another coming,
+    // which is the one being broken -- so none gives back what the last does.
     const topOf = (linesSoFar: readonly Line[]): number => linesSoFar
         .reduce((total, line) => total + lineMetrics(line, paragraph, false).heightPx, 0);
     const widthOf = (lineIndex: number, linesSoFar: readonly Line[]): number =>
@@ -2036,8 +2036,8 @@ function measureParagraph(
                     ? {}
                     : { decimalSymbol: style.decimalSymbol }),
                 defaultPx: style.defaultTabPx ?? DEFAULT_TAB_PX,
-                // Stops are measured from the MARGIN — the left edge of the
-                // column this paragraph sits in — and NOT from the paragraph's
+                // Stops are measured from the MARGIN -- the left edge of the
+                // column this paragraph sits in -- and NOT from the paragraph's
                 // own indent (a stop at 80pt under a 36pt indent
                 // printed at 80pt from the margin, not 116pt). So the origin
                 // is everything between that edge and where this line starts:
@@ -2065,14 +2065,14 @@ function measureParagraph(
  * Measured against LibreOffice: a paragraph whose first line carries
  * a 36pt picture printed that line 38.10 tall and every line after it 11.50,
  * and moving the picture into the middle of the same paragraph moved the tall
- * line with it. So a picture makes ITS line taller and no other — the box
+ * line with it. So a picture makes ITS line taller and no other -- the box
  * belongs to the line, not to the paragraph that owns it.
  *
- * A paragraph that states its own `w:spacing` is a FLOOR and not a ceiling —
+ * A paragraph that states its own `w:spacing` is a FLOOR and not a ceiling --
  * see {@link boxHeightPx}, which is where that was measured.
  */
 function lineMetrics(line: Line, paragraph: Paragraph, isLast: boolean): LineMetrics {
-    // An empty line has nothing to measure but is still a line — its height is
+    // An empty line has nothing to measure but is still a line -- its height is
     // the paragraph mark's own, which is what the runs say.
     const natural = naturalBox(0 === line.pieces.length ? paragraph.runs : line.pieces);
     const rule = paragraph.style.lineRule ?? 'auto';
@@ -2084,7 +2084,7 @@ function lineMetrics(line: Line, paragraph: Paragraph, isLast: boolean): LineMet
         heightPx,
         baselinePx: baselineOffsetPx({
             // A grid measures its leading against the PITCH, which the box may
-            // be a multiple of — a 1.5-spaced line on an 18pt grid is 27.00
+            // be a multiple of -- a 1.5-spaced line on an 18pt grid is 27.00
             // deep and still has its natural line centred in 18.
             lineHeightPx: 'grid' === rule
                 ? paragraph.style.gridPitchPx ?? declaredPx ?? heightPx
@@ -2094,7 +2094,7 @@ function lineMetrics(line: Line, paragraph: Paragraph, isLast: boolean): LineMet
             // descender except where a turned picture has moved the baseline
             // inside a box the picture set.
             descentPx: natural.belowPx,
-            // ON a grid, every rule centres its natural line in a unit — the
+            // ON a grid, every rule centres its natural line in a unit -- the
             // pitch for the rest, its own declared height for `exact`, which
             // printed 15.62 down a 24pt line where the flat ratio this engine
             // uses off a grid gives 19.20.
@@ -2111,7 +2111,7 @@ function lineMetrics(line: Line, paragraph: Paragraph, isLast: boolean): LineMet
  *
  * Measured against LibreOffice with the same 18x36 picture under four
  * spacings. `exact` at 12pt kept its 12.00 and let the picture overflow into
- * the paragraph above — that is what "exactly" means, and the only case where
+ * the paragraph above -- that is what "exactly" means, and the only case where
  * the declared height wins outright. `atLeast` at 12pt grew to 38.10, the
  * picture's own box, with the baseline 36.00 down and the picture standing on
  * it: a floor is a floor.
@@ -2119,7 +2119,7 @@ function lineMetrics(line: Line, paragraph: Paragraph, isLast: boolean): LineMet
  * ## `auto` ADDS its leading rather than replacing the line
  *
  * A proportional height is a multiple of the FONT's line and of nothing else,
- * so what it contributes is the leading — the same number on every line of the
+ * so what it contributes is the leading -- the same number on every line of the
  * paragraph, added to whatever that line happens to hold. At 1.5 over a 11.50pt
  * font that is 5.75, and the picture's line printed 43.85 rather than the 38.10
  * it takes unspaced, while the plain lines beside it printed 17.25.
@@ -2127,14 +2127,14 @@ function lineMetrics(line: Line, paragraph: Paragraph, isLast: boolean): LineMet
  * The same arithmetic explains a paragraph of MIXED sizes, which is what pinned
  * it down: at 1.5 over a paragraph whose tallest run is 23.00, the leading is
  * 11.50, and its 10pt first line printed 23.00 deep where the line carrying the
- * 20pt word printed 34.50. Neither is a multiple of its own line — both are
+ * 20pt word printed 34.50. Neither is a multiple of its own line -- both are
  * their own line plus the paragraph's leading. Subtracting rather than clamping
  * is what keeps spacing below single spacing compressing, which is its purpose.
  *
  * ## A grid line takes whole grid lines
  *
- * On an 18pt `w:docGrid`, the same picture's line printed 54.00 deep — three
- * pitches — with its baseline 36.00 from the top, so the line sits flush with
+ * On an 18pt `w:docGrid`, the same picture's line printed 54.00 deep -- three
+ * pitches -- with its baseline 36.00 from the top, so the line sits flush with
  * the top of the group and the spare room falls below it. A grid keeps its
  * rhythm by spending several of its own lines rather than by growing one.
  */
@@ -2154,7 +2154,7 @@ function boxHeightPx(
 
     if ('grid' === rule) {
         // The room the paragraph asked of the grid, against the whole pitches
-        // its own text needs — a 1.5-spaced line asks 27.00 of an 18pt grid and
+        // its own text needs -- a 1.5-spaced line asks 27.00 of an 18pt grid and
         // a line carrying a 36pt picture needs 54.00, and the line takes
         // whichever is larger.
         const pitchPx = paragraph.style.gridPitchPx ?? declaredPx;
@@ -2167,7 +2167,7 @@ function boxHeightPx(
     }
 
     // The leading the multiple asked for, which the reader worked out against
-    // the paragraph's tallest FONT — so taking that back off leaves the leading
+    // the paragraph's tallest FONT -- so taking that back off leaves the leading
     // alone, whatever this line turned out to hold.
     return Math.max(0, natural.heightPx + declaredPx - naturalBox(paragraph.runs).textPx);
 }
@@ -2178,14 +2178,14 @@ function boxHeightPx(
  * A paragraph spaced above the grid's own pitch does not simply take that room
  * for every line: measured against LibreOffice on an 18pt grid over
  * an 11.50pt font, paragraphs at 1.5 lines totalled 23.75, 77.75 and 131.75 at
- * one, three and five lines — `N x 27.00` less a constant 3.25 — and at 2.0
+ * one, three and five lines -- `N x 27.00` less a constant 3.25 -- and at 2.0
  * lines the constant was 6.50 instead. That is `(multiple - 1)` times the
  * grid's own leading, spent once at the foot of the paragraph, and it is
  * nothing at all where the paragraph asks for no more than the pitch: a plain
  * grid paragraph and an `atLeast` one both totalled exactly `N x 18.00`.
  *
  * What LibreOffice is doing with that room is not clear from six numbers, and
- * this does not pretend otherwise — it reproduces the measurement rather than
+ * this does not pretend otherwise -- it reproduces the measurement rather than
  * explaining it. The `exact` rule is untouched, having no multiple to speak of.
  */
 function paragraphEndTrimPx(natural: NaturalBox, paragraph: Paragraph, rule: LineRule): number {
@@ -2200,13 +2200,13 @@ function paragraphEndTrimPx(natural: NaturalBox, paragraph: Paragraph, rule: Lin
 }
 
 /**
- * How tall a line of this paragraph is NOMINALLY — before the breaking says
+ * How tall a line of this paragraph is NOMINALLY -- before the breaking says
  * which of its runs landed on which line.
  *
  * Separate from the measuring because a float has to know it BEFORE the lines
  * are broken: which lines a float displaces depends on where they sit, and
  * where they sit depends on their height. It does not depend on the breaking,
- * so there is no circle — only an order.
+ * so there is no circle -- only an order.
  *
  * A paragraph carrying a picture is taller here than most of its lines will
  * turn out to be. That over-estimates which lines a float displaces, and is
@@ -2222,7 +2222,7 @@ function paragraphLineHeight(paragraph: Paragraph): number {
  *
  * ## The offset is from an ORIGIN the document names
  *
- * `column` and `margin` both mean the writing area here — they differ only in
+ * `column` and `margin` both mean the writing area here -- they differ only in
  * a multi-column layout, which this engine does not do. `page` is the paper's
  * own corner. Vertically, `paragraph` means the top of the paragraph the float
  * is anchored to, which is the common case and the only one whose origin is
@@ -2281,7 +2281,7 @@ function placeFloat(
  * What a placed float carries: the picture, or the box's own lines.
  *
  * A box is laid out HERE, at the moment it is placed, because that is the
- * first point at which its width is a number rather than a promise — and the
+ * first point at which its width is a number rather than a promise -- and the
  * lines come back already at page coordinates, so nothing downstream has to
  * know a float can hold text at all.
  *
@@ -2293,8 +2293,8 @@ function placeFloat(
  * the frame's own edge on both axes. Those are the 0.1in and 0.05in the format
  * defines, so the file is believed and the defaults come from the spec.
  *
- * The lines then step exactly as they would outside a box — 11.50 apart for
- * the 10pt text that was probed, the body's own step — so a box needs nothing
+ * The lines then step exactly as they would outside a box -- 11.50 apart for
+ * the 10pt text that was probed, the body's own step -- so a box needs nothing
  * of its own beyond the width it breaks at.
  */
 function floatContent(
@@ -2342,11 +2342,11 @@ function deepestDescent(items: readonly BoxItem[]): number {
  * Number the body lines of every page, in place.
  *
  * After the pages are laid rather than during, because the count depends on
- * where the page breaks fell — and `restart: continuous` depends on every page
+ * where the page breaks fell -- and `restart: continuous` depends on every page
  * before this one, which a single page cannot see.
  *
  * `page.lines` is the body alone: a table's text lives in `page.rows` and a
- * note's in `page.footnotes`, so both are left unnumbered without a word — and
+ * note's in `page.footnotes`, so both are left unnumbered without a word -- and
  * that is what LibreOffice printed, a table's line passing over silently while
  * an empty paragraph took a number of its own.
  */
@@ -2370,8 +2370,8 @@ function numberLines(pages: readonly Page[], sections: readonly Section[]): Page
         const rightPx = page.geometry.marginLeftPx - numbering.distancePx;
         const numbers: PlacedLineNumber[] = [];
 
-        // An EMPTY paragraph is a line and takes a number — measured, it took
-        // the third of five — but it holds no piece to take a font from. The
+        // An EMPTY paragraph is a line and takes a number -- measured, it took
+        // the third of five -- but it holds no piece to take a font from. The
         // page's own text stands in, which is the same font in every document
         // that does not change it mid-page.
         const fallback = page.lines
@@ -2395,7 +2395,7 @@ function numberLines(pages: readonly Page[], sections: readonly Section[]): Page
             }
 
             // Drawn in the font of the line it stands beside, which is what
-            // LibreOffice used — the digits came out the body's own size.
+            // LibreOffice used -- the digits came out the body's own size.
             const piece = line.line.pieces[0] ?? fallback;
             if (undefined === piece) {
                 continue;
@@ -2410,7 +2410,7 @@ function numberLines(pages: readonly Page[], sections: readonly Section[]): Page
             numbers.push({
                 run,
                 // Right-aligned: a two-digit number reaches further left, which
-                // is how 6 and 8 stood at 4.90 and 10 at −0.65.
+                // is how 6 and 8 stood at 4.90 and 10 at -0.65.
                 xPx: rightPx - widthPx,
                 baselinePx: line.yPx + line.baselinePx,
             });
@@ -2426,7 +2426,7 @@ function numberLines(pages: readonly Page[], sections: readonly Section[]): Page
  * The `w:space` is the clear gap between the rule and what it is measured
  * from, so the rule's CENTRE is half a width further on: a three-point border
  * 24 points from the paper's edge drew at 25.5, and the same border measured
- * from a 28.35pt margin drew at 2.85 — outside the text by the same 24.
+ * from a 28.35pt margin drew at 2.85 -- outside the text by the same 24.
  */
 export function placePageBorder(
     declared: PageBorders,
@@ -2475,7 +2475,7 @@ function footnotesOn(line: Line): number[] {
  *
  * A cell is a little page of its own, so a reference can be as deep inside one
  * as the document nests tables. Without this the MARK is drawn and the note it
- * points at never reaches a page — a reference to nothing, which is worse than
+ * points at never reaches a page -- a reference to nothing, which is worse than
  * no reference at all.
  */
 function footnotesInRow(row: { cells: readonly {
@@ -2507,7 +2507,7 @@ function footnotesInRow(row: { cells: readonly {
  * Adjust a split so it strands no single line.
  *
  * Returns how many lines to place on the current page, or 0 meaning "none of
- * it — start the paragraph on the next page".
+ * it -- start the paragraph on the next page".
  */
 function applyWidowOrphan(
     count: number,
@@ -2555,8 +2555,8 @@ function applyWidowOrphan(
  * baseline it reaches.
  *
  * Two numbers rather than one because a picture can move the baseline without
- * changing the height. Everything that stands ON the baseline — text, an
- * upright picture, a shape — keeps the box's foot one font descender below it,
+ * changing the height. Everything that stands ON the baseline -- text, an
+ * upright picture, a shape -- keeps the box's foot one font descender below it,
  * so the two are the same question there and a single height answered both
  * until a TURNED picture arrived.
  */
@@ -2595,7 +2595,7 @@ interface BoxItem {
  * the baseline, and how far below it their box goes.
  *
  * Tallest rather than first, because one larger word on a line makes the whole
- * line taller — a line whose height came from its first run would overlap the
+ * line taller -- a line whose height came from its first run would overlap the
  * line below wherever a bigger font appears mid-sentence.
  *
  * ##  Each SIDE of the baseline is maxed on its own
@@ -2629,13 +2629,13 @@ function naturalBox(items: readonly BoxItem[]): NaturalBox {
     for (const run of items) {
         // A run moved off the baseline takes the line with it: measured
         // against LibreOffice, an 11.5pt line holding a run raised 6.9 stepped
-        // 18.4 — the whole raise on top of the line it left.
+        // 18.4 -- the whole raise on top of the line it left.
         // A boxed run keeps its room above and below as well: an 11.5pt line
         // holding one came out 13.5, 17.5 and 21.5 for room of 1, 3 and 5.
         // A `w:ruby` gloss is a second line ABOVE this one, and the line grows
         // by the whole of it: measured, a 5pt gloss over a 10pt base
         // printed a 17.25 line where the same text unglossed prints 11.50, and
-        // the baseline sank from 9.38 to 15.13 — the gloss's own 5.75, all of
+        // the baseline sank from 9.38 to 15.13 -- the gloss's own 5.75, all of
         // it above. So it behaves exactly like a run raised off the baseline,
         // which is the term beside it.
         // `naturalLineHeight - descent` is the run's ascender plus its line
@@ -2682,7 +2682,7 @@ function naturalBox(items: readonly BoxItem[]): NaturalBox {
                 ? run.image.heightPx + ascentPx
                 : run.image.heightPx;
         // The box keeps one descender below the PICTURE's foot however the
-        // picture sits in it — measured, a centred picture overhangs its own
+        // picture sits in it -- measured, a centred picture overhangs its own
         // line rather than making it taller. `stacked` is the exception,
         // because there the whole text line is below the picture.
         const boxPx = run.image.heightPx + descentPx

@@ -83,7 +83,7 @@ describe('paginateFlow', () => {
 
         it('points at the first character of the page, in the caller\'s coordinates', () => {
             // Each line is 20 characters plus the space that separated it, so
-            // page two starts at offset 5 * 21 = 105 — and at position 1 + 105
+            // page two starts at offset 5 * 21 = 105 -- and at position 1 + 105
             // in the caller's document, because its text began at 1.
             const { pageStarts } = flow([block(12)]);
 
@@ -112,7 +112,7 @@ describe('paginateFlow', () => {
 
     describe('mapping offsets back to the caller\'s positions', () => {
         it('walks the SPANS, so inline content between them is not skipped', () => {
-            // The gap between span positions is the editor's own — an image or a
+            // The gap between span positions is the editor's own -- an image or a
             // field chip occupying a position and no text. Adding the text
             // offset to the block's start would drift past every one of them.
             const blocks: FlowBlock[] = [{
@@ -132,7 +132,7 @@ describe('paginateFlow', () => {
             const { pageStarts } = flow(blocks);
 
             // Page two starts at text offset 105, which is the first character
-            // of the sixth span — position 601, NOT 1 + 105.
+            // of the sixth span -- position 601, NOT 1 + 105.
             expect(pageStarts[0]!.textOffset).toBe(105);
             expect(pageStarts[0]!.at).toBe(601);
         });
@@ -157,7 +157,7 @@ describe('paginateFlow', () => {
 
             expect(pageStarts.length).toBeGreaterThan(0);
             expect(pageStarts[0]!.at).toBeNull();
-            // The text offset is still known — only the caller's coordinate is not.
+            // The text offset is still known -- only the caller's coordinate is not.
             expect(pageStarts[0]!.textOffset).toBe(105);
         });
     });
@@ -560,7 +560,7 @@ describe('a table nested inside an editor cell', () => {
     };
 
     it('lays the nested table out instead of losing it', () => {
-        // A `.docx` cell may hold a table and an editor's may too — a grid
+        // A `.docx` cell may hold a table and an editor's may too -- a grid
         // inside a grid is how a page layout is built in one.
         const table = tableOf(outer([inner('deep')]));
         const held = table?.rows[0]!.cells[0]!.paragraphs[0];
@@ -590,12 +590,12 @@ describe('a table nested inside an editor cell', () => {
 
     it('finds a row position inside a nested table', () => {
         // The position wanted is the EARLIEST in the row, however deep it is
-        // written — an editor pointing a caret at the row needs the innermost
+        // written -- an editor pointing a caret at the row needs the innermost
         // handle, not the table's own.
         const { pageStarts } = paginateFlow(
             [
-                // Exactly a page of text — the column holds two of these
-                // words to a line — so the next page BEGINS at the table
+                // Exactly a page of text -- the column holds two of these
+                // words to a line -- so the next page BEGINS at the table
                 // rather than part-way through the paragraph.
                 { spans: Array.from({ length: 10 }, () => ({ text: 'xxxxxxxxxx ' })) },
                 outer([inner('deep', 42)]),
@@ -650,7 +650,7 @@ describe('a block that boxes itself', () => {
 
     it('takes the room out of the page, so the BREAK moves', () => {
         // Measured against LibreOffice: a bordered paragraph steps 12.5pt
-        // where a plain one steps 11.5, and more again with `w:space` — here
+        // where a plain one steps 11.5, and more again with `w:space` -- here
         // ten points either side, which is a whole line of this page. Five
         // plain blocks fit; with one of them boxed, the fifth is pushed over.
         expect(flow(blocks(5, true)).pages).toHaveLength(1);
@@ -703,14 +703,14 @@ describe('the seam the editor paginates through', () => {
         // neither numbers lines nor has a way to say this.
         suppressLineNumbers: 'read from the file only',
 
-        // A section's `w:docGrid`, which DOES decide where breaks fall — under
-        // an 18pt grid a 1.5-spaced paragraph steps 27.00 rather than 17.25 —
+        // A section's `w:docGrid`, which DOES decide where breaks fall -- under
+        // an 18pt grid a 1.5-spaced paragraph steps 27.00 rather than 17.25 --
         // and which the editor has no way to say: a ProseMirror
         // document is not ruled to a pitch. So it is neither of the two the
         // seam had, and saying so is the point: a field the editor
         // cannot fill is worse invented than left where it is.
         gridPitchPx: 'read from the file only',
-        // Which KIND of gridded height this is — a floor or a multiple. Read
+        // Which KIND of gridded height this is -- a floor or a multiple. Read
         // with the pitch and belonging to it; a ProseMirror paragraph has
         // neither to give.
         gridFloor: 'read from the file only',
@@ -727,8 +727,8 @@ describe('the seam the editor paginates through', () => {
      * The same watch over a TABLE, which the seam also carries.
      *
      * `borders` was missing here for the same reason it was missing from
-     * `BlockStyle`: it looks like ink. It is room — every horizontal rule sits
-     * in a gap of its own width — so a twenty-row table
+     * `BlockStyle`: it looks like ink. It is room -- every horizontal rule sits
+     * in a gap of its own width -- so a twenty-row table
      * paginated without it drifts by nearly two lines.
      */
     const TABLE_SEAM: Record<keyof Table, 'carried' | 'drawn by the editor' | 'read from the file only'> = {
@@ -738,8 +738,8 @@ describe('the seam the editor paginates through', () => {
         spaceAfterPx: 'carried',
         pageBreakBefore: 'carried',
         // CARRIED, but NOT to be combined with a padding that already includes
-        // them. The admin editor measures `cellBoxPx` off a real cell — "padding
-        // PLUS borders" — and passes it as `cellPaddingPx`, so wiring `borders`
+        // them. The admin editor measures `cellBoxPx` off a real cell -- "padding
+        // PLUS borders" -- and passes it as `cellPaddingPx`, so wiring `borders`
         // through from the same CSS would count them twice. It does not today;
         // this is here because the next person to look will be tempted.
         //
@@ -773,7 +773,7 @@ describe('the seam the editor paginates through', () => {
         borders: 'drawn by the editor',
         shadingFill: 'drawn by the editor',
         verticalAlign: 'drawn by the editor',
-        // `w:tcMar` narrows a cell's text column, so it WOULD move a break —
+        // `w:tcMar` narrows a cell's text column, so it WOULD move a break --
         // but a ProseMirror cell has no per-cell padding to say it with, and
         // inventing one the editor cannot fill is worse than the gap. Recorded
         // rather than carried; the uniform `cellPaddingPx` covers the case the
@@ -788,7 +788,7 @@ describe('the seam the editor paginates through', () => {
      * And the third seam: a SPAN, which becomes a run on a line.
      *
      * `TextSpan` carries six of `StyledRun`'s fifteen. Most of the rest is ink
-     * the editor paints itself — but three of them move a BREAK, and those are
+     * the editor paints itself -- but three of them move a BREAK, and those are
      * the ones worth saying out loud rather than leaving to be rediscovered a
      * fourth time.
      */
@@ -807,7 +807,7 @@ describe('the seam the editor paginates through', () => {
         // `letterSpacingPx` changes an advance, so it changes where a line
         // wraps: an editor tracking a heading would paginate wide. A run
         // `border` keeps `space + width` clear on all four sides.
-        // `baselineShiftPx` grows the line by the shift — though the
+        // `baselineShiftPx` grows the line by the shift -- though the
         // editor's superscript is a smaller `fontSizePx`, which it CAN say,
         // and at 0.58 of the size the shift stays inside the line anyway.
         //
@@ -820,7 +820,7 @@ describe('the seam the editor paginates through', () => {
 
         // A fourth that moves a break, and the widest of them: kerning `AV`
         // pairs is worth 11.60pt over ten characters. A ProseMirror
-        // span cannot say `w:kern` either — but unlike the three above, the
+        // span cannot say `w:kern` either -- but unlike the three above, the
         // ABSENT case is the common one and is what this engine now does, so
         // an editor span silently gets the right answer for once.
         kerned: 'read from the file only',
@@ -835,7 +835,7 @@ describe('the seam the editor paginates through', () => {
         shape: 'read from the file only',
         // A `w:ruby` gloss makes its line taller by a whole second line and
         // can decide the run's advance, so it moves a break twice
-        // over — and a ProseMirror span has no gloss to hand across.
+        // over -- and a ProseMirror span has no gloss to hand across.
         ruby: 'read from the file only',
     };
 
@@ -851,7 +851,7 @@ describe('the seam the editor paginates through', () => {
 
     it('keeps room for a table’s rules, so the BREAK moves', () => {
         // Five one-line rows fit this page. Give the table one-point rules and
-        // it needs six gaps of its own width on top — enough to push the last
+        // it needs six gaps of its own width on top -- enough to push the last
         // row over, which is the whole of what the editor has to agree with.
         const side: BorderSide = {
             widthPx: LINE / 2, style: 'single' as BorderStyle, colorHex: '#000000',

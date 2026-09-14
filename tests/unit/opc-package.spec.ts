@@ -39,8 +39,8 @@ interface HandBuiltZip {
 /**
  * Build a single-entry archive by hand.
  *
- * Real `.docx` files are well-behaved — no comments, no local extra fields, no
- * encryption — so they cannot exercise the format rules that exist for the
+ * Real `.docx` files are well-behaved -- no comments, no local extra fields, no
+ * encryption -- so they cannot exercise the format rules that exist for the
  * files that are not. Every option below is legal zip that a producer may emit
  * and that a reader has to survive.
  */
@@ -239,7 +239,7 @@ describe('OpcPackage', () => {
         });
 
         it('keeps the ORIGINAL COMPRESSED BYTES of every untouched part', async () => {
-            // Not merely equivalent content — the same bytes. Re-compressing
+            // Not merely equivalent content -- the same bytes. Re-compressing
             // would change every part of the file even where nothing changed,
             // which throws away exactly what the XML layer's byte-exact surgery
             // is for.
@@ -314,7 +314,7 @@ describe('OpcPackage', () => {
         });
 
         it('reads back a replacement without saving first', async () => {
-            // The editor changes a part and then reads it again — through the
+            // The editor changes a part and then reads it again -- through the
             // same open package. Returning the file's original content there
             // would silently discard the edit.
             const opc = OpcPackage.open(file(LEASE));
@@ -334,7 +334,7 @@ describe('OpcPackage', () => {
 
         it('refuses to add a part it cannot declare a content type for', async () => {
             // A part added without a [Content_Types].xml entry is invisible to
-            // Word — a silent no-op that looks like it worked.
+            // Word -- a silent no-op that looks like it worked.
             const opc = OpcPackage.open(file(LEASE));
 
             expect(() => opc.replace('word/brand-new.xml', '<a/>')).toThrow(/has no such part/);

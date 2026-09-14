@@ -55,7 +55,7 @@ describe('XmlDocument', () => {
             expect(originalAt).toBeGreaterThan(0);
 
             // Everything before the edited element, and everything after it,
-            // must be identical — compared against the ORIGINAL source, not
+            // must be identical -- compared against the ORIGINAL source, not
             // against another serialisation of the same tree.
             expect(output.slice(0, originalAt)).toBe(source.slice(0, originalAt));
             expect(output.slice(originalAt + '<w:t xml:space="preserve">REPLACED</w:t>'.length))
@@ -161,7 +161,7 @@ describe('XmlDocument', () => {
             // Two of the seven paragraphs above are empty because their whole
             // content is a page break, and one carries bookmarks around its
             // run. A text-only view of this document reports five paragraphs
-            // and no page breaks — which is how "3 pages on 1 page" happens.
+            // and no page breaks -- which is how "3 pages on 1 page" happens.
             const document = parse(fixture('phpword.document.xml'));
 
             const breaks = document.root.descendants('w:br')

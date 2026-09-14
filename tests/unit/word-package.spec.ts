@@ -112,7 +112,7 @@ describe('openWordFile', () => {
     it('paginates by the writing area the furniture leaves', async () => {
         // Two documents with the same body: one header fits its margin and one
         // does not. LibreOffice makes them three and four pages, and so must
-        // this — ignoring the header gives three for both.
+        // this -- ignoring the header gives three for both.
         const short = await openWordFile(file('with-header.docx'), FONTS);
         const tall = await openWordFile(file('tall-header.docx'), FONTS);
 
@@ -150,7 +150,7 @@ describe('openWordFile', () => {
 
     it('reads a w:orient that CONTRADICTS the page size the way LibreOffice does', async () => {
         // PHPWord writes orient="portrait" beside landscape dimensions. The
-        // dimensions win — w:w and w:h are the page, and w:orient is a note
+        // dimensions win -- w:w and w:h are the page, and w:orient is a note
         // about them. Honouring the flag would rotate the page back.
         const opened = await openWordFile(file('sections.docx'), FONTS);
         const landscape = opened.document.sections[1]!;
@@ -184,7 +184,7 @@ describe('openWordFile', () => {
 
     it('inserts the blank page an oddPage break needs, as LibreOffice does', async () => {
         // Chapter two must open on a right-hand page. Chapter one ends on page
-        // one, so page two is blank and chapter two starts on page three —
+        // one, so page two is blank and chapter two starts on page three --
         // three pages for two chapters that would otherwise take two.
         const opened = await openWordFile(file('odd-page-break.docx'), FONTS);
         const pages = layoutSections(opened.document.sections);
@@ -225,7 +225,7 @@ describe('openWordFile', () => {
 
     it('follows a package that names its main part something else', async () => {
         // The conventional path is a convention, not a rule. This rewrites the
-        // package to use a different name and expects it to open regardless —
+        // package to use a different name and expects it to open regardless --
         // which is the only way to prove the relationship is really followed.
         const original = OpcPackage.open(file('lease-landscape.docx'));
         const relationships = await original.text('_rels/.rels');
@@ -309,13 +309,13 @@ describe('openWordFile', () => {
 describe('page furniture, end to end', () => {
     // Both fixtures were printed through LibreOffice and read back page by
     // page; the expectations below ARE that output. A rule this engine got
-    // wrong for a whole slice — which header an even page of a later section
-    // draws — is one an assertion written from the code would have agreed with.
+    // wrong for a whole slice -- which header an even page of a later section
+    // draws -- is one an assertion written from the code would have agreed with.
 
     it('draws the header LibreOffice draws, on every page', async () => {
         // Five pages, three sections' worth of rules interacting: `w:titlePg`
         // on both sections, `w:evenAndOddHeaders` document-wide, and section
-        // two opening on document page four — its own first page AND an even
+        // two opening on document page four -- its own first page AND an even
         // one. LibreOffice prints FIRST-B there.
         const opened = await openWordFile(file('title-page-parity.docx'), FONTS);
         const pages = layoutSections(opened.document.sections);
@@ -358,7 +358,7 @@ describe('page furniture, end to end', () => {
         const [page] = layoutSections(opened.document.sections);
         const { heightPx } = page!.geometry;
 
-        // Half an inch in from each edge — `w:header` and `w:footer` are both
+        // Half an inch in from each edge -- `w:header` and `w:footer` are both
         // 708 twips in this document.
         expect(page!.header!.topPx).toBeCloseTo(twipsToPx(708), 6);
         expect(page!.footer!.topPx + page!.footer!.heightPx)
@@ -375,11 +375,11 @@ describe('alignment, end to end', () => {
 
     it('starts each line where LibreOffice starts it', async () => {
         // A4, one-inch margins: the column runs 72pt to 523.28pt. The numbers
-        // below were read out of LibreOffice's own PDF — the `Td` operand of
-        // each line's text block — not computed from this engine.
+        // below were read out of LibreOffice's own PDF -- the `Td` operand of
+        // each line's text block -- not computed from this engine.
         //
         // LibreOffice insets every line by a further 0.1pt, which is why there
-        // is a tolerance at all — `toBeCloseTo(x, 0)` allows half a point. The
+        // is a tolerance at all -- `toBeCloseTo(x, 0)` allows half a point. The
         // measured gaps are 0.10, 0.12 and 0.01; a misread alignment would be
         // out by a hundred.
         const opened = await openWordFile(file('alignment.docx'), FONTS);
@@ -466,7 +466,7 @@ describe('baselines, end to end', () => {
         //
         // The expected numbers are LibreOffice's own, read off the `Td` operand
         // of each line and converted from its bottom-left origin. They are NOT
-        // computed from this engine — the three rules were fitted to them.
+        // computed from this engine -- the three rules were fitted to them.
         //
         // LibreOffice insets every line by a constant ~0.02pt here, hence the
         // tolerance; the rules themselves differ by whole points.
@@ -487,7 +487,7 @@ describe('baselines, end to end', () => {
 
     it('puts the EXACT baseline in the same place whatever the font', async () => {
         // Liberation Serif and Liberation Sans have different natural baselines,
-        // and at the same exact height LibreOffice gives them the same one —
+        // and at the same exact height LibreOffice gives them the same one --
         // which is why the exact rule is a proportion rather than a metric.
         const opened = await openWordFile(file('baseline-fonts.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -512,7 +512,7 @@ describe('drawing a page, end to end', () => {
         // The whole chain, ending in coordinates: zip, XML, styles, fonts,
         // measurement, breaking, pagination, alignment, baselines, draw ops.
         //
-        // Both numbers per line are LibreOffice's own — the `Td` operand of
+        // Both numbers per line are LibreOffice's own -- the `Td` operand of
         // each text block, converted from its bottom-left origin. LibreOffice
         // insets every line by ~0.1pt across and ~0.03pt down, which is the
         // whole of the tolerance; a misplaced line would be out by tens.
@@ -523,7 +523,7 @@ describe('drawing a page, end to end', () => {
         const at = (index: number): [number, number] =>
             [toPoints(ops[index]!.xPx), toPoints(ops[index]!.yPx)];
 
-        // Left, centred and right — three alignments, three baselines.
+        // Left, centred and right -- three alignments, three baselines.
         expect(at(0)[0]).toBeCloseTo(72.10, 0);
         expect(at(0)[1]).toBeCloseTo(841.9 - 760.489, 0);
         expect(at(1)[0]).toBeCloseTo(279.15, 0);
@@ -558,14 +558,14 @@ describe('drawing a page, end to end', () => {
         const drawn = (index: number): string =>
             textOps(renderPage(pages[index]!).ops).map((op) => op.text).join('');
 
-        // Furniture first, body last — and the fields answered per page.
+        // Furniture first, body last -- and the fields answered per page.
         expect(drawn(0)).toBe('H1Page 1 of 3One');
         expect(drawn(2)).toBe('H3Page 3 of 3Three');
     });
 
     it('serialises a real document to SVG with none of its text lost', async () => {
         // Round-tripped through this package's own XML parser and compared with
-        // the page — a count would pass while quietly dropping a run, and this
+        // the page -- a count would pass while quietly dropping a run, and this
         // fixture is Cyrillic, so it also states that the escaping survives
         // non-Latin text.
         const opened = await openWordFile(file('lease-landscape.docx'), FONTS);
@@ -592,7 +592,7 @@ describe('table borders, end to end', () => {
         // can be confused for one another.
         //
         // The pairs below are LibreOffice's own stroke operators for this very
-        // file — `RG` for the colour, `w` for the width, `d` for the dash — read
+        // file -- `RG` for the colour, `w` for the width, `d` for the dash -- read
         // out of its PDF, not computed from this engine.
         const opened = await openWordFile(file('table-borders.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -669,7 +669,7 @@ describe('pictures, end to end', () => {
         // LibreOffice's own numbers, from the image's `cm` matrix and the `Td`
         // of the text either side of it: the picture is 144x72pt at x=104.2 with
         // its BOTTOM at the text baseline, the text resumes at 248.3, and the
-        // next paragraph's baseline is 155.5pt down the page — which is only
+        // next paragraph's baseline is 155.5pt down the page -- which is only
         // possible if the line grew to hold the picture.
         const opened = await openWordFile(file('inline-image.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -719,7 +719,7 @@ describe('highlighting, end to end', () => {
             toPoints(fills[index]!.heightPx),
         ];
 
-        // x, bottom edge, height — each against LibreOffice's own.
+        // x, bottom edge, height -- each against LibreOffice's own.
         expect(box(0)[0]).toBeCloseTo(97, 0);
         expect(box(0)[1]).toBeCloseTo(758.44, 0);
         expect(box(0)[2]).toBeCloseTo(11.45, 0);
@@ -750,7 +750,7 @@ describe('shared table edges, end to end', () => {
      * The rules, with each shared edge counted once.
      *
      * Both cells that meet on an edge draw it, and after resolution they draw
-     * the SAME one — so every disputed edge appears twice, identically. That is
+     * the SAME one -- so every disputed edge appears twice, identically. That is
      * deliberate: a table breaking across a page has one cell on each sheet,
      * and giving the edge to only one of them would leave the other bare.
      */
@@ -776,7 +776,7 @@ describe('shared table edges, end to end', () => {
     it('settles a disputed VERTICAL edge the way LibreOffice settles it', async () => {
         // Three pairs of neighbouring cells: different weights, a tie, and the
         // same tie with the colours swapped. LibreOffice draws 4pt red, then
-        // blue, then red — which is heavier-wins with the RIGHT cell taking a
+        // blue, then red -- which is heavier-wins with the RIGHT cell taking a
         // tie, and rules out any rule about colour.
         const rules = await rulesOf('border-conflict.docx');
         const middle = rules.filter((op) => op.x1Px === op.x2Px
@@ -788,15 +788,15 @@ describe('shared table edges, end to end', () => {
 
     it('settles a disputed HORIZONTAL edge the same way', async () => {
         // The rows disagree about the rule between them. LibreOffice draws 4pt
-        // magenta, then blue, then red — heavier wins, and the LOWER row takes
+        // magenta, then blue, then red -- heavier wins, and the LOWER row takes
         // a tie.
         const rules = await rulesOf('border-conflict-v.docx');
         const disputed = rules
             .filter((op) => op.y1Px === op.y2Px && '#C0C0C0' !== op.color);
 
         expect(distinct(disputed)).toEqual(['#FF00FF 4', '#0000FF 2', '#FF0000 2']);
-        // And each is drawn ONCE. This used to assert six — each edge drawn
-        // twice, once by each neighbour — which described what we did rather
+        // And each is drawn ONCE. This used to assert six -- each edge drawn
+        // twice, once by each neighbour -- which described what we did rather
         // than what LibreOffice does: it printed 63 rules for the 62 rows on
         // the first page of a split table, and 9 for the 8 on the second, one
         // per row plus a top on each part.
@@ -822,8 +822,8 @@ describe('floating pictures, end to end', () => {
     it('wraps the text the way LibreOffice wraps it', async () => {
         // A 2x1 inch picture anchored half an inch into the column, with square
         // wrapping. LibreOffice draws it with the matrix `144 0 0 72 108
-        // 697.939` and starts SEVEN lines at x=261.1 — the picture's right edge
-        // at 252 plus the 9pt `distR` — before line eight takes the column back
+        // 697.939` and starts SEVEN lines at x=261.1 -- the picture's right edge
+        // at 252 plus the 9pt `distR` -- before line eight takes the column back
         // at 72.1.
         const opened = await openWordFile(file('floating-image.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -856,7 +856,7 @@ describe('tab alignment, end to end', () => {
     const toPoints = (px: number): number => px * 72 / 96;
 
     it('ranges the text against the stop the way LibreOffice does', async () => {
-        // One stop three inches into the column — 288pt from the paper's edge —
+        // One stop three inches into the column -- 288pt from the paper's edge --
         // with the SAME text after it in every paragraph, so the alignment is
         // the only thing that can move it. The numbers are LibreOffice's own.
         const opened = await openWordFile(file('tab-alignment.docx'), FONTS);
@@ -883,8 +883,8 @@ describe('tab leaders, end to end', () => {
     it('fills each tab the way LibreOffice fills it', async () => {
         // A contents page: a heading, a leadered tab, and a page number ranged
         // right at the margin. LibreOffice starts the dots at 127.00, the
-        // hyphens at 125.90 and the underscores at 133.10 — each immediately
-        // after its own heading — and puts every page number at 512.30.
+        // hyphens at 125.90 and the underscores at 133.10 -- each immediately
+        // after its own heading -- and puts every page number at 512.30.
         const opened = await openWordFile(file('tab-leader.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
         const ops = renderPage(page!).ops
@@ -902,7 +902,7 @@ describe('tab leaders, end to end', () => {
 
     it('keeps the page number on the same line as its heading', async () => {
         // The stop sits at exactly the writing width, and the two are computed
-        // by different routes — so an exact comparison put every page number on
+        // by different routes -- so an exact comparison put every page number on
         // a line of its own. Four headings, four lines.
         const opened = await openWordFile(file('tab-leader.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -921,8 +921,8 @@ describe('field numbering switches, end to end', () => {
     it('numbers each field the way LibreOffice numbers it', async () => {
         // A footer carrying the same PAGE field under six switches, over three
         // pages. LibreOffice prints i/ii/iii for `roman`, I/II/III for `ROMAN`,
-        // a/b/c and A/B/C for the alphabetics, digits for `MERGEFORMAT` — which
-        // is not a numbering switch — and `iii` for NUMPAGES on every page.
+        // a/b/c and A/B/C for the alphabetics, digits for `MERGEFORMAT` -- which
+        // is not a numbering switch -- and `iii` for NUMPAGES on every page.
         const opened = await openWordFile(file('field-switches.docx'), FONTS);
         const drawn = layoutSections(opened.document.sections).map((page) =>
             (page.footer?.lines ?? [])
@@ -956,7 +956,7 @@ describe('underlining, end to end', () => {
     });
 
     it('runs each rule the width LibreOffice runs it', async () => {
-        // 35.5pt at ten point and 71.1 at twenty — the run's own width, which
+        // 35.5pt at ten point and 71.1 at twenty -- the run's own width, which
         // is the one thing a decoration must never get wrong.
         const opened = await openWordFile(file('underline.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -1102,7 +1102,7 @@ describe('vertical alignment and row height, end to end', () => {
         expect(at('Atop')).toBeCloseTo(at('A1'), 6);
 
         // Centred lands on the middle line of the three beside it, bottomed on
-        // the last — relative to the neighbour, because a shift that moved
+        // the last -- relative to the neighbour, because a shift that moved
         // BOTH cells would keep the absolute figure right and the layout wrong.
         expect(at('Bctr')).toBeCloseTo(AT(729.79), 1);
         expect(at('Bctr')).toBeCloseTo(at('B2'), 6);
@@ -1240,7 +1240,7 @@ describe('nested tables, end to end', () => {
         const at = (text: string, nth = 0) =>
             pt(ops.filter((op) => op.text.trim() === text)[nth]);
 
-        // A line, the nested table's two rows, then a line — all in one cell.
+        // A line, the nested table's two rows, then a line -- all in one cell.
         expect(at('above').y).toBeCloseTo(AT(775.79), 1);
         expect(at('i1').y).toBeCloseTo(AT(764.29), 1);
         expect(at('i3').y).toBeCloseTo(AT(752.79), 1);
@@ -1249,7 +1249,7 @@ describe('nested tables, end to end', () => {
         expect(at('side').y).toBeCloseTo(AT(775.79), 1);
 
         // The nested table starts at the HOLDING cell's content origin, so its
-        // own cell margin is the whole of the step in — the same margin the
+        // own cell margin is the whole of the step in -- the same margin the
         // outer table put between the page edge and 'above'.
         //
         // Not the absolute figure: this uses Word's documented 0.08in default
@@ -1286,7 +1286,7 @@ describe('nested tables, end to end', () => {
 
         expect(opened.document.diagnostics.map((entry) => entry.detail))
             .not.toContain('a table nested inside a cell was skipped');
-        // Paragraph, table, paragraph — in the order the file has them.
+        // Paragraph, table, paragraph -- in the order the file has them.
         expect(held.map(isTable)).toEqual([false, true, false]);
     });
 });
@@ -1313,7 +1313,7 @@ describe('columns, end to end', () => {
         const page = pages[0];
         const at = (index: number): number => (page!.lines[index]?.xPx ?? 0) * 72 / 96;
 
-        // LibreOffice printed 28.45 and 315.45 — it insets every line by a
+        // LibreOffice printed 28.45 and 315.45 -- it insets every line by a
         // tenth of a point, which is why the STEP across is asserted rather
         // than the two edges: a 251.6pt column and a 35.4pt gap, and the inset
         // cancels itself out of the difference.
@@ -1386,7 +1386,7 @@ describe('footnotes, end to end', () => {
             && op.x2Px - op.x1Px === page!.footnotes!.separatorWidthPx)).toBe(true);
 
         // And it is a HAIRLINE. The print draws this rule from
-        // 28.350 to 172.350 — two inches exactly, which the test above pins —
+        // 28.350 to 172.350 -- two inches exactly, which the test above pins --
         // at a width of 0.100, the thinnest LibreOffice will draw. This was a
         // whole pixel, 0.75pt: seven and a half times too heavy for a rule
         // whose only job is to separate. Its place, its length and its height
@@ -1498,7 +1498,7 @@ describe('character spacing, end to end', () => {
 
 describe('endnotes, end to end', () => {
     it('lays endnotes.docx out the way LibreOffice does', async () => {
-        // Two references, then the body's last line, then the notes — all in
+        // Two references, then the body's last line, then the notes -- all in
         // the ordinary flow at the end of the document.
         const opened = await openWordFile(file('endnotes.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -1531,7 +1531,7 @@ describe('endnotes, end to end', () => {
 
 describe('paragraph borders, end to end', () => {
     // Every number below was read out of the PDF LibreOffice printed from
-    // THIS fixture, off the content stream's `re` and `m … l` operators —
+    // THIS fixture, off the content stream's `re` and `m ... l` operators --
     // rules are invisible to text extraction, so the geometry has to come from
     // the drawing operators themselves.
     //
@@ -1548,7 +1548,7 @@ describe('paragraph borders, end to end', () => {
     const edgesOf = (box: PlacedParagraphBorder): number[] =>
         [pt(box.leftPx), pt(box.rightPx), pt(box.topPx), pt(box.bottomPx)];
 
-    /** The same, as LibreOffice printed them — its y counts from the FOOT. */
+    /** The same, as LibreOffice printed them -- its y counts from the FOOT. */
     const printed = (
         left: number, right: number, top: number, bottom: number,
     ): number[] => [left, right, PAGE_HEIGHT_PT - top, PAGE_HEIGHT_PT - bottom];
@@ -1590,7 +1590,7 @@ describe('paragraph borders, end to end', () => {
 
     it('rules between two paragraphs of one box, where w:between asks for it', async () => {
         // A three-point `w:between` inside a one-point box. LibreOffice drew
-        // the outline once — top at 801.489, bottom at 774.539 — and a single
+        // the outline once -- top at 801.489, bottom at 774.539 -- and a single
         // rule across it at 787.989, which is halfway through the three points
         // it took out of the flow. The step from `one` to `two` was 14.5pt
         // against the 11.5 an unruled pair steps.
@@ -1609,8 +1609,8 @@ describe('paragraph borders, end to end', () => {
     });
 
     it('leaves the text exactly where LibreOffice left it', async () => {
-        // The box moves the paragraphs down — 12.5pt where an unbordered pair
-        // steps 11.5, and 18.5 with six points of space — but never sideways.
+        // The box moves the paragraphs down -- 12.5pt where an unbordered pair
+        // steps 11.5, and 18.5 with six points of space -- but never sideways.
         const opened = await openWordFile(file('paragraph-borders.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
         const steps = page!.lines.slice(1).map(
@@ -1626,7 +1626,7 @@ describe('paragraph borders, end to end', () => {
 
 describe('table width, indent and alignment, end to end', () => {
     // Read off the PDF LibreOffice printed from these fixtures, from the
-    // content stream's own line operators — the numbers are the CENTRES of the
+    // content stream's own line operators -- the numbers are the CENTRES of the
     // one-point rules the tables draw, which is where our own edges sit too.
     // The text column runs from 28.35pt to 566.93 on A4 with 567-twip margins,
     // and every table states a 115-twip cell margin so both engines measure
@@ -1656,13 +1656,13 @@ describe('table width, indent and alignment, end to end', () => {
 
     it('sizes a table with no w:tblW from its grid alone', async () => {
         // The control: 4000 + 4000 twips is 400pt, and LibreOffice printed
-        // 27.9 to 427.9 — the left border hanging half its width outside the
+        // 27.9 to 427.9 -- the left border hanging half its width outside the
         // margin, which is what a table starting AT the margin does.
         near(edgesOf(await pageOf('table-width.docx'), 0), [27.9, 427.9]);
     });
 
     it('resolves a percentage width against the text column', async () => {
-        // 2500 fiftieths is half, and half of a 538.58pt column is 269.29 —
+        // 2500 fiftieths is half, and half of a 538.58pt column is 269.29 --
         // which is exactly what 297.2 minus 27.9 comes to.
         near(edgesOf(await pageOf('table-width.docx'), 1), [27.9, 297.2]);
     });
@@ -1677,7 +1677,7 @@ describe('table width, indent and alignment, end to end', () => {
 
     it('indents to the CELL TEXT, so the border lands a cell margin further left', async () => {
         // Half an inch of `w:tblInd` against a 5.75pt cell margin: LibreOffice
-        // put the border at 58.6 — 30.25pt in, not 36 — and the text at the
+        // put the border at 58.6 -- 30.25pt in, not 36 -- and the text at the
         // full 64.45, which IS 28.35 plus 36. The hang is gone with it.
         near(edgesOf(await pageOf('table-width.docx'), 4), [58.6, 458.7]);
     });
@@ -1703,8 +1703,8 @@ describe('table width, indent and alignment, end to end', () => {
     });
 
     it('leaves percentage columns alone when the table declares no width', async () => {
-        // Nothing to resolve them against. LibreOffice printed the GRID —
-        // 27.9 to 427.9, the untouched 400pt — and so does this.
+        // Nothing to resolve them against. LibreOffice printed the GRID --
+        // 27.9 to 427.9, the untouched 400pt -- and so does this.
         near(edgesOf(await pageOf('table-width-edges.docx'), 0), [27.9, 427.9]);
     });
 
@@ -1718,7 +1718,7 @@ describe('table width, indent and alignment, end to end', () => {
     });
 
     it('keeps the cell-margin pull for an indent it cannot resolve', async () => {
-        // A percentage indent came to nothing in LibreOffice — but the table
+        // A percentage indent came to nothing in LibreOffice -- but the table
         // still moved LEFT by the cell margin, to 22.6 from 27.9, putting its
         // text on the margin. Present and unresolvable is nought, not absent.
         near(edgesOf(await pageOf('table-width-edges.docx'), 2), [22.6, 422.7]);
@@ -1727,7 +1727,7 @@ describe('table width, indent and alignment, end to end', () => {
 
 describe('w:tcMar, end to end', () => {
     // Off the PDF again. Every table states a 115-twip (5.75pt) cell margin,
-    // so each override is read against a known control on the same page — and
+    // so each override is read against a known control on the same page -- and
     // the heights are compared as DIFFERENCES from that control, which is what
     // makes them independent of whose font metrics decide the line.
     const TOLERANCE_PT = 0.12;
@@ -1771,7 +1771,7 @@ describe('w:tcMar, end to end', () => {
     it('grows the row by a stated bottom margin and leaves the text alone', async () => {
         // 800 twips is 40pt: LibreOffice's row went from 12.5pt to 52.5, and
         // the text stayed at the top of it where the control put it. The
-        // control is the other fixture's first row — a single line under the
+        // control is the other fixture's first row -- a single line under the
         // same table margins, which is what makes the two comparable.
         const control = (await pageOf('cell-margins.docx')).rows[0]!;
         const padded = (await pageOf('cell-margins-edges.docx')).rows[2]!;
@@ -1795,7 +1795,7 @@ describe('w:tcMar, end to end', () => {
     it('leaves the cell beside it on the table’s own margin', async () => {
         // The override is the CELL'S. LibreOffice put the second cell's text
         // at 252.95 when that cell declared 500 twips, and its neighbour stayed
-        // at 33.70 — the table's 5.75 off a cell edge of 27.9.
+        // at 33.70 -- the table's 5.75 off a cell edge of 27.9.
         const page = await pageOf('cell-margins-edges.docx');
         const row = page.rows[3]!;
 
@@ -1824,14 +1824,14 @@ describe('w:position, end to end', () => {
      * How far the middle run sits ABOVE the plain run beside it, in points.
      *
      * Straight off the shift, because that is what the renderer adds to the
-     * line's own baseline — `display-list` draws at `baseline + shift`, so a
+     * line's own baseline -- `display-list` draws at `baseline + shift`, so a
      * piece with no shift is the line and the difference is the whole story.
      */
     const riseOf = (pieces: LinePiece[]): number => -pt(pieces[1]!.baselineShiftPx ?? 0);
 
     it('raises a run by half a point of the LINE for each unit', async () => {
         // Twelve units came out at 6.90pt, not the 6.00 that half-points of
-        // the point size would give — the line stands 1.15 times the size, and
+        // the point size would give -- the line stands 1.15 times the size, and
         // the raise is measured in that.
         const lines = await drawn('run-position.docx');
 
@@ -1852,7 +1852,7 @@ describe('w:position, end to end', () => {
 
     it('WINS over w:vertAlign, size and all, where a run states both', async () => {
         // Measured: a run with both came out at the hand-set height and at
-        // full size — its neighbour started exactly where the plain line's
+        // full size -- its neighbour started exactly where the plain line's
         // did, which a shrunken run's would not.
         const lines = await drawn('run-position.docx');
 
@@ -1865,7 +1865,7 @@ describe('w:position, end to end', () => {
     });
 
     it('scales with the units asked for and NOT with the font size', async () => {
-        // 2, 6, 12 and 24 units came out at 1.15, 3.45, 6.90 and 13.85 — and
+        // 2, 6, 12 and 24 units came out at 1.15, 3.45, 6.90 and 13.85 -- and
         // twelve units at twice the size came out at 6.85, the same raise.
         const lines = await drawn('run-position-scale.docx');
 
@@ -1879,7 +1879,7 @@ describe('w:position, end to end', () => {
 
     it('takes the whole raise out of the LINE, which grows to hold it', async () => {
         // LibreOffice's baselines stepped 18.40pt where a raised run was
-        // involved, against 11.50 for an ordinary pair — the whole 6.90 on top
+        // involved, against 11.50 for an ordinary pair -- the whole 6.90 on top
         // of the line. Asserted as HEIGHTS rather than steps, because `yPx` is
         // a line's top: the gap between two tops is the height of the FIRST of
         // them, and reading it as the second's is off by one line.
@@ -1926,7 +1926,7 @@ describe('w:pgBorders, end to end', () => {
     };
 
     it('measures a `page` border from the edge of the PAPER', async () => {
-        // 24 points of clear paper, then the rule — whose centre is half a
+        // 24 points of clear paper, then the rule -- whose centre is half a
         // width further in, at 25.5. LibreOffice drew 25.5, 569.75, 816.489
         // and 25.539.
         near(edges(await borderOf('page-border-from-page.docx')),
@@ -1935,7 +1935,7 @@ describe('w:pgBorders, end to end', () => {
 
     it('measures a `text` border from the WRITING AREA, outward', async () => {
         // The same border against a 28.35pt margin: 24 points clear OUTSIDE
-        // the text, so the rule centre lands at 2.85 — 22.6pt from where the
+        // the text, so the rule centre lands at 2.85 -- 22.6pt from where the
         // page-relative one went, which is why the default matters.
         near(edges(await borderOf('page-border-from-text.docx')),
             [2.9, 592.45, 838.989, 2.839]);
@@ -1958,7 +1958,7 @@ describe('w:pgBorders, end to end', () => {
 
     it('draws four rules, mitred at the corners like any other box', async () => {
         // The same drawing path a paragraph border goes through: LibreOffice
-        // ran the top from 24.0 to 571.25 against sides at 25.5 and 569.75 —
+        // ran the top from 24.0 to 571.25 against sides at 25.5 and 569.75 --
         // half a width past each end, both ways.
         const opened = await openWordFile(file('page-border-from-page.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -1978,7 +1978,7 @@ describe('w:pgBorders, end to end', () => {
 describe('w:lnNumType, end to end', () => {
     // A4, 567-twip margins, 10pt text. LibreOffice's x is where each number's
     // glyphs BEGIN, so a two-digit number starts further left than a one-digit
-    // one — which is what says they are right-aligned.
+    // one -- which is what says they are right-aligned.
     const TOLERANCE_PT = 0.12;
     const pt = (px: number): number => px * 72 / 96;
 
@@ -2013,7 +2013,7 @@ describe('w:lnNumType, end to end', () => {
     });
 
     it('puts each number’s RIGHT edge the stated distance in from the text', async () => {
-        // 360 twips is 18pt, and the writing area starts at 28.35 — so the
+        // 360 twips is 18pt, and the writing area starts at 28.35 -- so the
         // right edge lands at 10.35, where LibreOffice drew 10.45.
         const [page] = await numbered('line-numbers.docx');
         const first = page!.lineNumbers[0]!;
@@ -2023,7 +2023,7 @@ describe('w:lnNumType, end to end', () => {
     });
 
     it('right-aligns them, so a two-digit number reaches further left', async () => {
-        // 6 and 8 began at 4.90 and 10 at −0.65: the same right edge, a wider
+        // 6 and 8 began at 4.90 and 10 at -0.65: the same right edge, a wider
         // number. Left-align them and all three would start together.
         const [page] = await numbered('line-numbers-every-two.docx');
         const [six, eight, ten] = page!.lineNumbers;
@@ -2035,7 +2035,7 @@ describe('w:lnNumType, end to end', () => {
 
     it('adds w:start to the count rather than starting at it', async () => {
         // `start=5` with `countBy=2` printed 6, 8, 10 against lines one, three
-        // and five — so the first line is start + 1, and a number is printed
+        // and five -- so the first line is start + 1, and a number is printed
         // where the count divides by countBy.
         const [page] = await numbered('line-numbers-every-two.docx');
         const baselines = page!.lineNumbers.map((n) => n.baselinePx);
@@ -2104,7 +2104,7 @@ describe('w:lnNumType, end to end', () => {
 
 describe('w:bdr, drawn end to end', async () => {
     // A4, 567-twip margins, 10pt Liberation Serif. Each line holds a plain
-    // run, a BOXED run, and a plain run — so the box's edges and the advance
+    // run, a BOXED run, and a plain run -- so the box's edges and the advance
     // it costs are both on the page beside a control.
     const TOLERANCE_PT = 0.15;
     const pt = (px: number): number => px * 72 / 96;
@@ -2151,7 +2151,7 @@ describe('w:bdr, drawn end to end', async () => {
 
     it('grows the box a point for every point of space, on each side', async () => {
         // LibreOffice's four boxes measured 19.25, 23.25, 27.25 and 25.25.
-        // 19.25, 23.25, 27.25 for spaces of 0, 2 and 4 — twice the space, and
+        // 19.25, 23.25, 27.25 for spaces of 0, 2 and 4 -- twice the space, and
         // the same 25.25 for a three-point rule at space 2 as the arithmetic
         // says it must be.
         const [page] = await laid('run-border.docx');
@@ -2196,7 +2196,7 @@ describe('w:bdr, drawn end to end', async () => {
         // The defect this closes: the box used to hug the LINE, so a 10pt
         // boxed run beside a 20pt one drew a box grown to the 20pt line.
         // LibreOffice drew 18.45pt either way, and in the same place relative
-        // to the boxed run's OWN baseline — 12.9 above it and 5.55 below.
+        // to the boxed run's OWN baseline -- 12.9 above it and 5.55 below.
         const [page] = await laid('run-border-tall-neighbour.docx');
         const rules = renderPage(page!).ops.filter((op): op is LineOp => 'line' === op.kind);
         const boxes: { top: number; bottom: number }[] = [];
@@ -2225,7 +2225,7 @@ describe('w:bdr, drawn end to end', async () => {
     });
 
     it('draws a COMPLETE box on every line a boxed run breaks over', async () => {
-        // Three lines, three closed boxes — not one outline left open at the
+        // Three lines, three closed boxes -- not one outline left open at the
         // end of a line and picked up on the next.
         const [page] = await laid('run-border-wrapped.docx');
 
@@ -2235,7 +2235,7 @@ describe('w:bdr, drawn end to end', async () => {
 
     it('stands the rules above and below the TEXT, not outside the room', async () => {
         // LibreOffice's boxes measured 12.45, 16.45, 20.45 and 18.45pt tall
-        // for rooms of 1, 3, 5 and 5 — the line box plus a standoff at each
+        // for rooms of 1, 3, 5 and 5 -- the line box plus a standoff at each
         // end, NOT the whole line the room had already grown.
         const [page] = await laid('run-border.docx');
         const rules = renderPage(page!).ops.filter((op): op is LineOp => 'line' === op.kind);
@@ -2254,7 +2254,7 @@ describe('w:bdr, drawn end to end', async () => {
 
     it('runs each rule half the crossing rule past the corner', async () => {
         // LibreOffice's space-nought box ran its top from 35.600 to 55.850
-        // against sides at 36.100 and 55.350 — half a width past, both ends.
+        // against sides at 36.100 and 55.350 -- half a width past, both ends.
         const [page] = await laid('run-border.docx');
         const [top, , left, right] = renderPage(page!).ops
             .filter((op): op is LineOp => 'line' === op.kind).slice(0, 4);
@@ -2315,7 +2315,7 @@ describe('what the tidy fixtures could not see', () => {
 
     it('keeps a bordered paragraph’s bottom rule INSIDE the writing area', async () => {
         // The boundary, built to sit on it: 11.5pt lines in a 785.16pt column,
-        // and a box needing its line plus 13pt of rule and space either side —
+        // and a box needing its line plus 13pt of rule and space either side --
         // 37.5 in all. LibreOffice kept it on a page holding 65 filler lines
         // and moved it off one holding 66. Reserve only the TOP room, as this
         // did, and 66 keeps it: the rule then prints below the foot.
@@ -2332,7 +2332,7 @@ describe('what the tidy fixtures could not see', () => {
 
     it('leaves the rule of the one that FITS clear of the foot', async () => {
         // LibreOffice printed its bottom rule with an outer edge at 29.539
-        // against a writing area ending at 28.35 — inside it, with a point to
+        // against a writing area ending at 28.35 -- inside it, with a point to
         // spare, which is the whole of what the reserve buys.
         const opened = await openWordFile(file('border-at-page-foot-65.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -2346,8 +2346,8 @@ describe('what the tidy fixtures could not see', () => {
     it('splits a box into two COMPLETE boxes, and reserves for both', async () => {
         // The fixture is built to sit on the boundary: 64 filler lines, then a
         // paragraph boxed with nothing above it and 25pt of rule and space
-        // below. LibreOffice took TWO of its lines onto page one — four would
-        // have fitted with no reserve at all — and drew four rules on each
+        // below. LibreOffice took TWO of its lines onto page one -- four would
+        // have fitted with no reserve at all -- and drew four rules on each
         // page, top and bottom either side of the break.
         const opened = await openWordFile(file('border-split-at-foot.docx'), FONTS);
         const pages = layoutSections(opened.document.sections);
@@ -2370,7 +2370,7 @@ describe('what the tidy fixtures could not see', () => {
 
     it('keeps the split box’s own bottom rule inside the page it ends', async () => {
         // Page one's bottom rule printed with its outer edge at 28.539 against
-        // a writing area ending at 28.35 — which is what the reserve buys, and
+        // a writing area ending at 28.35 -- which is what the reserve buys, and
         // what taking it only for the paragraph's LAST line would have missed.
         const opened = await openWordFile(file('border-split-at-foot.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -2384,7 +2384,7 @@ describe('what the tidy fixtures could not see', () => {
     it('draws a bordered paragraph INSIDE a cell, which used to draw nothing', async () => {
         // The gap the code itself gave away: paragraph boxes were collected by
         // the page flow, and a cell's content goes through `stackBlocks`, which
-        // collected none. LibreOffice drew the box at 33.1 to 172.55 — half a
+        // collected none. LibreOffice drew the box at 33.1 to 172.55 -- half a
         // one-point rule outside a text column running 33.65 to 172.15.
         const opened = await openWordFile(file('cell-paragraph-border.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -2402,7 +2402,7 @@ describe('what the tidy fixtures could not see', () => {
         // LibreOffice's row measured 14.5pt between the CENTRES of its own
         // rules, where a plain one measures 12.5. Those centres sit half a
         // table rule outside the row's content either end, so the content is
-        // 13.5 against a plain 11.5 — the boxed paragraph's one point of rule
+        // 13.5 against a plain 11.5 -- the boxed paragraph's one point of rule
         // above and one below. Comparing a content height to a rule-to-rule
         // distance is how this first read as a point short.
         const opened = await openWordFile(file('cell-paragraph-border.docx'), FONTS);
@@ -2435,8 +2435,8 @@ describe('what the tidy fixtures could not see', () => {
 
     it('runs ONE box round a cell’s bordered paragraphs, wraps and all', async () => {
         // Two bordered paragraphs in a cell, the second wrapping onto a third
-        // line. LibreOffice drew a single outline 37.45pt tall — three 11.5pt
-        // lines and a 1.5 standoff either end — with NO rule between the two
+        // line. LibreOffice drew a single outline 37.45pt tall -- three 11.5pt
+        // lines and a 1.5 standoff either end -- with NO rule between the two
         // paragraphs, exactly as it does on the page. A three-point rule, so
         // the standoff is wider than the tolerance that let the last fixture
         // pass a box drawn without one.
@@ -2454,7 +2454,7 @@ describe('what the tidy fixtures could not see', () => {
 
     it('stands a cell’s box off its text on BOTH sides', async () => {
         // LibreOffice drew the sides at 32.1 and 173.55.
-        // 32.1 and 173.55 against a text column running 33.65 to 172.15 — a
+        // 32.1 and 173.55 against a text column running 33.65 to 172.15 -- a
         // point and a half outside it either way, which is half the rule.
         const opened = await openWordFile(file('cell-paragraph-border-run.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -2468,8 +2468,8 @@ describe('what the tidy fixtures could not see', () => {
         // The same blind spot as a cell's, one level over: a header is stacked
         // by the code a cell is stacked by, and the boxes it gathered were
         // dropped where the furniture was placed. LibreOffice drew this one
-        // 14.45pt tall — an 11.5pt line and a 1.5 standoff either end for a
-        // three-point rule — with its sides at 70.5 and 524.75.
+        // 14.45pt tall -- an 11.5pt line and a 1.5 standoff either end for a
+        // three-point rule -- with its sides at 70.5 and 524.75.
         const opened = await openWordFile(file('header-paragraph-border.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
         const header = page!.header!;
@@ -2510,7 +2510,7 @@ describe('what the tidy fixtures could not see', () => {
         // Probed rather than reasoned about, and the answer went the other way
         // from the header and the cell: LibreOffice drew ONE rule on the page
         // and it was the footnote separator. No box, and no room taken either
-        // — the note's text printed at exactly the place it does without the
+        // -- the note's text printed at exactly the place it does without the
         // border. So this is not a gap; building it would make us diverge.
         //
         // Asserted because the absence is now load-bearing: notes are stacked
@@ -2522,7 +2522,7 @@ describe('what the tidy fixtures could not see', () => {
         const rules = renderPage(page!).ops
             .filter((op): op is LineOp => 'line' === op.kind);
 
-        // The border IS in the file and IS read — without this the test would
+        // The border IS in the file and IS read -- without this the test would
         // pass just as well on a fixture that never had one.
         const declared = [...opened.document.footnotes.values()][0]![0]!;
         expect(isTable(declared) ? undefined : declared.style.borders?.top).toBeDefined();
@@ -2542,7 +2542,7 @@ describe('what the tidy fixtures could not see', () => {
         // an empty list and never added to it, so `w:between` inside a cell
         // drew nothing. LibreOffice draws it at 786.989 inside a box running
         // 800.489 to 773.539, and steps the pair 14.5pt where an unruled pair
-        // steps 11.5 — the three-point rule's whole width out of the flow.
+        // steps 11.5 -- the three-point rule's whole width out of the flow.
         const opened = await openWordFile(
             file('cell-paragraph-border-between.docx'), FONTS);
         const [page] = layoutSections(opened.document.sections);
@@ -2555,7 +2555,7 @@ describe('what the tidy fixtures could not see', () => {
 
         // Asserted against the cell's OWN lines rather than the page, because
         // a cell's content sits about a point higher here than LibreOffice
-        // puts it — a separate defect, recorded on its own, which an absolute
+        // puts it -- a separate defect, recorded on its own, which an absolute
         // assertion would fold into this one and hide.
         expect(pt(box!.innerYPx[0]! - (first.yPx + first.heightPx)))
             .toBeCloseTo(1.5, 1);
@@ -2582,7 +2582,7 @@ describe('what the tidy fixtures could not see', () => {
 
     it('puts a SPACED w:between half a rule below the text above it', async () => {
         // With six points of space and a three-point rule, LibreOffice still
-        // drew the rule at 787.989 — half a width below the upper line — and
+        // drew the rule at 787.989 -- half a width below the upper line -- and
         // put the whole six points BELOW it, stepping the pair 20.5pt apart
         // where an unspaced pair steps 14.5. The earlier fixture stated no
         // space at all, where `width / 2` and `space + width / 2` agree.
@@ -2600,8 +2600,8 @@ describe('what the tidy fixtures could not see', () => {
 
     it('measures w:tblInd against the LEADING CELL’s own margin', async () => {
         // The first cell overrides its left margin to 500 twips. LibreOffice
-        // put the table's border at 39.4 — margin plus indent less the CELL's
-        // 25pt — where the table's own 5.75 would have given 58.6. The text
+        // put the table's border at 39.4 -- margin plus indent less the CELL's
+        // 25pt -- where the table's own 5.75 would have given 58.6. The text
         // still lands on margin plus indent either way, which is why a fixture
         // without the override cannot tell the two apart.
         const page = await pageOf('table-indent-cell-margin.docx');
@@ -2627,7 +2627,7 @@ describe('the room a table keeps for its rules', () => {
 
     it('keeps a whole rule-width between the text above and the first row', async () => {
         // The line above ends at 801.97 and the first row's text begins at
-        // 800.97 — a gap of one point for a one-point rule, which is drawn
+        // 800.97 -- a gap of one point for a one-point rule, which is drawn
         // down the middle of it at 801.489.
         const page = await laid();
         const above = page.lines[0]!;
@@ -2660,7 +2660,7 @@ describe('the room a table keeps for its rules', () => {
 
     it('adds up: 38.5pt for three lines and four rules', async () => {
         // The whole table, from the bottom of the line above to the top of the
-        // line below — 3 x 11.5 plus 4 x 1, which is what says every rule has
+        // line below -- 3 x 11.5 plus 4 x 1, which is what says every rule has
         // a gap and no rule has two.
         const page = await laid();
         const above = page.lines[0]!;
@@ -2690,7 +2690,7 @@ describe('the room a table keeps for its rules', () => {
 
     it('takes the gap from a CELL’s own border where the table declares none', async () => {
         // No `w:tblBorders` at all, and one cell asking for a six-point top.
-        // LibreOffice left six points — and moved the cell BESIDE it down with
+        // LibreOffice left six points -- and moved the cell BESIDE it down with
         // it, because the gap belongs to the row and not to the cell.
         const opened = await openWordFile(file('table-rule-gap-from-cell.docx'), FONTS);
         const page = layoutSections(opened.document.sections)[0]!;
@@ -2703,7 +2703,7 @@ describe('the room a table keeps for its rules', () => {
 
     it('grows a MERGED cell’s box by the rules its span swallows', async () => {
         // A cell merged over three 11.5pt rows: LibreOffice drew its box from
-        // 801.489 to 763.989, which is 37.5pt — 34.5 of text, the TWO
+        // 801.489 to 763.989, which is 37.5pt -- 34.5 of text, the TWO
         // one-point inside rules the merge crosses, and half a rule outside at
         // either end. Sum the rows alone and the box stops 2pt above its foot.
         const opened = await openWordFile(file('vmerge-rule-gaps.docx'), FONTS);
@@ -2729,7 +2729,7 @@ describe('the room a table keeps for its rules', () => {
             .filter((op) => op.y1Px > page.rows[0]!.yPx
                 && op.y1Px < page.rows[2]!.yPx + page.rows[2]!.heightPx);
 
-        // TWO rules, by position — each is emitted twice, once as the upper
+        // TWO rules, by position -- each is emitted twice, once as the upper
         // row's bottom and once as the lower row's top. That duplication is
         // older than this slice and was invisible while rows abutted; it is
         // recorded on its own rather than papered over here.
@@ -2745,8 +2745,8 @@ describe('the room a table keeps for its rules', () => {
     it('draws ONE rule per shared edge — a row per rule, plus a top', async () => {
         // LibreOffice printed 63 horizontal rules for the 62 rows on the first
         // page of this table and 9 for the 8 on the second: one per row, and
-        // one more for the top of each part. Drawing each shared edge twice —
-        // once as the upper row's bottom and once as the lower row's top —
+        // one more for the top of each part. Drawing each shared edge twice --
+        // once as the upper row's bottom and once as the lower row's top --
         // gives twice that, which is what this used to do.
         const opened = await openWordFile(file('table-split-rules.docx'), FONTS);
         const pages = layoutSections(opened.document.sections);
@@ -2761,7 +2761,7 @@ describe('the room a table keeps for its rules', () => {
 
     it('gives the half overleaf a top of its OWN', async () => {
         // A table split across pages is closed on both, the way a paragraph's
-        // box is — the second page opens with a rule rather than
+        // box is -- the second page opens with a rule rather than
         // carrying on from the first.
         const opened = await openWordFile(file('table-split-rules.docx'), FONTS);
         const pages = layoutSections(opened.document.sections);
@@ -2775,7 +2775,7 @@ describe('the room a table keeps for its rules', () => {
     });
 
     it('draws each rule DOWN THE MIDDLE of the gap it kept', async () => {
-        // 801.489, 788.989, 776.489 and 763.989 — each half a point outside
+        // 801.489, 788.989, 776.489 and 763.989 -- each half a point outside
         // the content either side of it.
         const page = await laid();
         const rules = [...new Set(renderPage(page).ops
@@ -2794,7 +2794,7 @@ describe('w:docGrid, end to end', () => {
     // A section's typesetting grid. East Asian in origin and it moves LATIN
     // text: LibreOffice stepped 18pt for a 360-twip pitch where the same four
     // paragraphs ungridded step 11.5, and put the first baseline at 800.89
-    // against 804.14 — 3.25 lower, which is half the 6.5 the grid added.
+    // against 804.14 -- 3.25 lower, which is half the 6.5 the grid added.
     const PAGE_HEIGHT_PT = 841.861;
     const TOLERANCE_PT = 0.12;
     const at = (px: number): number => PAGE_HEIGHT_PT - px * 72 / 96;
@@ -2845,7 +2845,7 @@ describe('w:docGrid, end to end', () => {
     });
 
     it('treats `linesAndChars` as `lines` for Latin text', async () => {
-        // Same 18pt step, and its `w:charSpace` of 400 changed nothing —
+        // Same 18pt step, and its `w:charSpace` of 400 changed nothing --
         // character gridding is for the scripts this engine does not shape.
         expect(await stepsOf('doc-grid-lines-and-chars.docx')).toEqual([18, 18, 18]);
     });
@@ -2870,8 +2870,8 @@ describe('w:docGrid, end to end', () => {
 describe('w:textDirection, end to end', () => {
     // Measured through LibreOffice. `cell-text-turned.docx` is one turned cell
     // beside three upright paragraphs; `-wrapped` is a longer turned run beside
-    // four. Both printed every glyph with the text matrix [0 1 -1 0] — a
-    // quarter turn anticlockwise — which is what `btLr` means.
+    // four. Both printed every glyph with the text matrix [0 1 -1 0] -- a
+    // quarter turn anticlockwise -- which is what `btLr` means.
     const PAGE_HEIGHT_PT = 841.861; // A4, from the printed MediaBox.
     const pt = (px: number): number => px * 72 / 96;
     const upFromFoot = (px: number): number => PAGE_HEIGHT_PT - pt(px);
@@ -2908,7 +2908,7 @@ describe('w:textDirection, end to end', () => {
     });
 
     it('stacks turned lines across the cell, one printed x each', async () => {
-        // Printed x: 43.15, 55.35, 67.55 — a 12.2pt line pitch running left to
+        // Printed x: 43.15, 55.35, 67.55 -- a 12.2pt line pitch running left to
         // right, because the anticlockwise turn puts later lines to the RIGHT.
         const rendered = renderPage(await pageOf('cell-text-turned-wrapped.docx')).ops
             .filter((op): op is TextOp => 'text' === op.kind)
@@ -2920,7 +2920,7 @@ describe('w:textDirection, end to end', () => {
 
     it('starts every turned line at the row’s foot, climbing the page', async () => {
         // Printed: all three lines begin at y=751.64, measured up from the foot
-        // of the page — a turned line runs bottom to top, so its start is the
+        // of the page -- a turned line runs bottom to top, so its start is the
         // BOTTOM of the cell and each glyph after it is higher.
         const rendered = renderPage(await pageOf('cell-text-turned-wrapped.docx')).ops
             .filter((op): op is TextOp => 'text' === op.kind)
@@ -2953,7 +2953,7 @@ describe('w:textDirection, end to end', () => {
 
     it('leaves a cell upright when no upright neighbour sets a height', async () => {
         // There is no measurement to copy here: LibreOffice prints
-        // `cell-text-turned-alone.docx` as a blank page — no text, not even the
+        // `cell-text-turned-alone.docx` as a blank page -- no text, not even the
         // table's rules. Upright is this engine's answer to a
         // question the reference declines to answer, and it keeps the text.
         const cell = await turnedCellOf('cell-text-turned-alone.docx');
@@ -2991,7 +2991,7 @@ describe('w:textDirection, end to end', () => {
      * The word is `abcdef` and the first LINE of it is what starts at the foot:
      * both fixtures narrow the line enough that LibreOffice chops the word, and
      * this engine chops it in the same place. Matching on the whole word found
-     * nothing once that landed — and had been hiding the chop in the printed
+     * nothing once that landed -- and had been hiding the chop in the printed
      * page all along.
      */
     const startOfTurnedRun = async (name: string): Promise<number> => {
@@ -3004,7 +3004,7 @@ describe('w:textDirection, end to end', () => {
 
     it('starts the turned line a BOTTOM CELL MARGIN above the cell’s foot', async () => {
         // `-inset` sets w:tcMar top and bottom to 283 twips (14.15pt). Printed:
-        // the row's bottom rule at y=734.889 and the run starting at 749.69 —
+        // the row's bottom rule at y=734.889 and the run starting at 749.69 --
         // 14.8 above it, the margin plus the same 0.65 the unmargined fixture
         // shows between a rule and the text it bounds.
         expect(Math.abs(await startOfTurnedRun('cell-text-turned-inset.docx') - 749.69))
@@ -3013,7 +3013,7 @@ describe('w:textDirection, end to end', () => {
 
     it('starts it an INDENT above the foot, because the indent runs along the height', async () => {
         // `-indent` sets w:ind left to 200 twips (10pt) on the turned
-        // paragraph. Printed: bottom rule at 763.189, run starting at 773.84 —
+        // paragraph. Printed: bottom rule at 763.189, run starting at 773.84 --
         // 10.65 above it. An indent in a turned cell moves text along the row's
         // height, not across its width.
         expect(Math.abs(await startOfTurnedRun('cell-text-turned-indent.docx') - 773.84))
@@ -3030,8 +3030,8 @@ describe('w:textDirection, end to end', () => {
 
     it('will not grow the row for turned lines that overflow the cell', async () => {
         // `-overflow` is 18 words turned in a 900-twip cell beside three
-        // upright paragraphs. Printed: the row stayed 37.6pt — exactly the
-        // three paragraphs — and the FOURTH turned line was drawn at x=78.70,
+        // upright paragraphs. Printed: the row stayed 37.6pt -- exactly the
+        // three paragraphs -- and the FOURTH turned line was drawn at x=78.70,
         // past the cell's right edge at 72.90, with the rest of the text drawn
         // nowhere at all. LibreOffice overflows and then gives up; it never
         // makes the row taller to win back the room.
@@ -3051,8 +3051,8 @@ describe('w:textDirection, end to end', () => {
     it('will not grow the row even when the turned cell is WIDE and its neighbour short', async () => {
         // The case that separates `the row's height' from `whatever the turned
         // text needs': a 4000-twip turned cell of eighteen words beside a
-        // single upright paragraph. Printed: the row is 13.2pt — that one
-        // paragraph — and the turned text ran to SEVENTEEN lines, the last at
+        // single upright paragraph. Printed: the row is 13.2pt -- that one
+        // paragraph -- and the turned text ran to SEVENTEEN lines, the last at
         // x=233.70, past the cell's own right edge at 227.90. A turned cell
         // spills sideways out of the table before it makes its row any taller.
         const page = await pageOf('cell-text-turned-wide.docx');
@@ -3068,7 +3068,7 @@ describe('w:textDirection, end to end', () => {
     });
 
     it('paints a turned highlight as the upright box with its sides swapped', async () => {
-        // Printed: `re 33.600 763.739 12.150 14.250` — 12.15 across, which is
+        // Printed: `re 33.600 763.739 12.150 14.250` -- 12.15 across, which is
         // the LINE's height, by 14.25 along, which is the highlighted run's own
         // length. A quarter turn leaves a rectangle axis-aligned.
         const [box] = renderPage(await pageOf('cell-text-turned-decorated.docx')).ops
@@ -3084,7 +3084,7 @@ describe('w:textDirection, end to end', () => {
     it('rules a turned underline BESIDE the baseline, running with the text', async () => {
         // LibreOffice draws this one inside the rotation: `0 -1.1 l 14.2 -1.1`,
         // the run's own length at the font's offset from the baseline. Turned,
-        // that offset lands on X — the descender side, which for an
+        // that offset lands on X -- the descender side, which for an
         // anticlockwise turn is to the RIGHT of the text.
         const drawn = renderPage(await pageOf('cell-text-turned-decorated.docx')).ops
             .filter((op): op is LineOp => 'line' === op.kind)
@@ -3097,7 +3097,7 @@ describe('w:textDirection, end to end', () => {
     });
 
     it('turns tbRl the OTHER way, as a mirror of btLr', async () => {
-        // Printed with the matrix [-0 -1 1 -0] — a quarter turn clockwise,
+        // Printed with the matrix [-0 -1 1 -0] -- a quarter turn clockwise,
         // where btLr printed [0 1 -1 0]. The two are mirror images, not the
         // same placement with a different sign.
         const cell = await turnedCellOf('cell-text-turned-clockwise.docx');
@@ -3119,7 +3119,7 @@ describe('w:textDirection, end to end', () => {
 
     it('stacks clockwise lines from the cell’s RIGHT edge', async () => {
         // Printed: the baseline at x=112.50, in a cell whose inner right edge
-        // is 122.05 — the line hangs off the right, where btLr hangs off the
+        // is 122.05 -- the line hangs off the right, where btLr hangs off the
         // left. Measuring from the left edge would have put it at 43.15.
         const [drawn] = renderPage(await pageOf('cell-text-turned-clockwise.docx')).ops
             .filter((op): op is TextOp => 'text' === op.kind)
@@ -3154,12 +3154,12 @@ describe('w:textDirection, end to end', () => {
         // A quarter turn leaves a rectangle axis-aligned, so the box is the
         // upright one with its axes exchanged. Printed: the rules of
         // a box round a single turned line at x=77.80 and 98.25, from y=717.94
-        // to 762.39 — 20.45 across, which is the line's 11.50 with `w:space`
+        // to 762.39 -- 20.45 across, which is the line's 11.50 with `w:space`
         // 4pt and half a point of rule either side, by 44.45 along, which is
         // the row's 35.50 with the same at each end.
         //
         // `placeRow` handed a turned cell's `paragraphBorders` back EMPTY until
-        // this row, so the box was placed and never drawn — the defect the
+        // this row, so the box was placed and never drawn -- the defect the
         // placed-and-never-drawn guard exists for, in the one place that guard
         // cannot see, because a cell's boxes are not the page's.
         const page = await pageOf('cell-turned-extras.docx');
@@ -3169,7 +3169,7 @@ describe('w:textDirection, end to end', () => {
         expect(Math.abs(pt(box!.leftPx) - 77.80)).toBeLessThan(0.5);
         expect(Math.abs(pt(box!.rightPx) - 98.25)).toBeLessThan(0.5);
         // The along-axis edges carry the row's own height, and ours is 34.50
-        // where LibreOffice prints 35.50 — the table rule-room difference this
+        // where LibreOffice prints 35.50 -- the table rule-room difference this
         // arc has measured before, not a fault in the turn.
         expect(Math.abs(upFromFoot(box!.bottomPx) - 717.94)).toBeLessThan(1);
         expect(Math.abs(upFromFoot(box!.topPx) - 762.39)).toBeLessThan(1);
@@ -3181,13 +3181,13 @@ describe('w:textDirection, end to end', () => {
 
     it('charges a turned line a SHAPE’s height, as it does a picture’s', async () => {
         // Measured: a 36x18 shape in a turned cell started the text
-        // after it 18.05 above the row's foot — its height, not the 36.00 of
+        // after it 18.05 above the row's foot -- its height, not the 36.00 of
         // its width, which is the rule measured for pictures and which
         // `turnPictures` was applying to pictures alone.
         //
         // ACROSS the line it is still wrong and now stated: LibreOffice printed
         // the text at x=108.95, 31.70 from the cell's inner edge, where we put
-        // it at 113.25 — the shape's whole 36.00, standing on the baseline.
+        // it at 113.25 -- the shape's whole 36.00, standing on the baseline.
         // 31.70 is neither that nor the 22.69 a picture's centring would give,
         // and one measurement is not a rule.
         const page = await pageOf('cell-turned-extras.docx');
@@ -3202,16 +3202,16 @@ describe('w:textDirection, end to end', () => {
     it('charges nothing for a shape too LONG for its turned line', async () => {
         // The fourth table's shape is 36x40 in a row 35.5pt tall. Printed: the
         // text after it begins 0.60 above the row's foot, which is where a
-        // turned line with nothing reserved begins — the same "gives up rather
+        // turned line with nothing reserved begins -- the same "gives up rather
         // than reserving what it has" measured for pictures,
         // now measured for shapes rather than carried over on the strength of
         // the resemblance. A mutation charging what is LEFT survived until this
         // table existed.
         //
         // Across the line it is 63.45 from the cell's inner edge where we put
-        // it at 113.25 — 27.45 out, and a second unexplained cross-axis number
+        // it at 113.25 -- 27.45 out, and a second unexplained cross-axis number
         // for shapes beside the 4.30 above. Two measurements, no rule.
-        // The 0.60 is LibreOffice's own inset — every turned line gets it, and
+        // The 0.60 is LibreOffice's own inset -- every turned line gets it, and
         // it is not room the shape asked for (the picture rule reads the same
         // fixture family the same way). What is asserted is the RESERVATION:
         // nought.
@@ -3227,7 +3227,7 @@ describe('w:textDirection, end to end', () => {
 
     it('draws NOTHING for a table nested in a turned cell, where LibreOffice draws it', async () => {
         // Measured and NOT built: LibreOffice prints a nested table
-        // inside a turned cell — its `N1` turned at x=87.65, inside rules
+        // inside a turned cell -- its `N1` turned at x=87.65, inside rules
         // 13.50 across by 36.50 along. We drop the whole thing.
         //
         // The difference from the paragraph box above is a tree: turning a row
@@ -3242,7 +3242,7 @@ describe('w:textDirection, end to end', () => {
     });
 
     it('draws NO picture in a turned cell, which is what LibreOffice does', async () => {
-        // Not a gap — parity. The same fixture with the turn taken off prints
+        // Not a gap -- parity. The same fixture with the turn taken off prints
         // the picture at 18.00 x 9.00, so the drawing is valid and the media
         // part intact; with `btLr` on the cell, LibreOffice prints the text and
         // no image at all. Verified with tools/probes/pdf-images.py, which
@@ -3251,7 +3251,7 @@ describe('w:textDirection, end to end', () => {
         const drawn = renderPage(page).ops.filter((op) => 'image' === op.kind);
 
         expect(drawn).toHaveLength(0);
-        // The picture is still a piece of the line — it is undrawn, not gone.
+        // The picture is still a piece of the line -- it is undrawn, not gone.
         expect(page.rows[0]!.cells[0]!.lines[0]!.line.pieces
             .some((piece) => undefined !== piece.image)).toBe(true);
     });
@@ -3259,7 +3259,7 @@ describe('w:textDirection, end to end', () => {
     it('charges the turned line the picture’s HEIGHT, as LibreOffice does', async () => {
         // Measured over five sizes in one conversion: ALONG a turned
         // line a picture reserves its height. 18x9 and 36x9 both reserved
-        // 9.00; 18x18 and 9x18 both 18.00 — doubling the width moved nothing.
+        // 9.00; 18x18 and 9x18 both 18.00 -- doubling the width moved nothing.
         //
         // The constant comes from the same document: 36x36 in a 35.5pt row
         // cannot fit, reserves nothing, and still started its text 0.60 above
@@ -3267,7 +3267,7 @@ describe('w:textDirection, end to end', () => {
         // plus a 9.00 reservation, and 9.00 is the number to match.
         //
         // ACROSS the line it is CENTRED rather than reserved, which is a
-        // different rule in a different place — see the cross-axis tests below.
+        // different rule in a different place -- see the cross-axis tests below.
         const page = await pageOf('cell-picture-turned.docx');
         const foot = upFromFoot(page.rows[0]!.yPx + page.rows[0]!.heightPx);
         const [text] = renderPage(page).ops
@@ -3282,7 +3282,7 @@ describe('w:textDirection, end to end', () => {
         // The control that proved that null, kept as a fixture because it
         // is the only picture in a table CELL that is not turned. Printed: the
         // picture at 18.00 x 9.00 with its left edge on the cell's inner edge
-        // at 77.25, and the text after it at 95.35 — an advance of 18.10, the
+        // at 77.25, and the text after it at 95.35 -- an advance of 18.10, the
         // picture's WIDTH. Exchanging a picture's sides here would move it.
         const page = await pageOf('cell-picture-upright.docx');
         const [text] = renderPage(page).ops
@@ -3319,8 +3319,8 @@ describe('w:textDirection, end to end', () => {
         // Four sizes, exact, with width varied to prove it is the height.
         expect(reserved.slice(0, 4)).toEqual([9, 9, 18, 18]);
         // The fifth cannot fit: 36x36 in a 35.5pt row. LibreOffice gives up
-        // rather than reserving what it has — its text starts 0.60 above the
-        // foot, exactly like a line with no picture — so nothing is charged.
+        // rather than reserving what it has -- its text starts 0.60 above the
+        // foot, exactly like a line with no picture -- so nothing is charged.
         expect(reserved[4]).toBe(0);
     });
 
@@ -3335,7 +3335,7 @@ describe('w:textDirection, end to end', () => {
         // 9.40 of the ascent alone where the picture is narrower than it and
         // asks for no room. Standing the picture on the baseline, which is
         // what an upright line does and what we did until now, puts the first
-        // two at 18.00 and 36.00 — out by more than four points.
+        // two at 18.00 and 36.00 -- out by more than four points.
         //
         // The fifth is the 36x36 that cannot fit its line, and it is the one
         // case that is NOT centred: 45.40 is the whole picture and then the
@@ -3356,14 +3356,14 @@ describe('w:textDirection, end to end', () => {
     });
 
     it('keeps the descender below the PICTURE’s foot, not below the baseline', async () => {
-        // A single-line cell cannot see a line's BOX at all — it shows where
+        // A single-line cell cannot see a line's BOX at all -- it shows where
         // one baseline landed and no more, which is why an earlier probe read
         // three baselines and could not tell a placement from a box. Each
         // turned cell here wraps over two lines, so the second baseline
         // reports the first line's whole height.
         //
         // Printed in one conversion, four turned cells whose inner edge is at
-        // 77.25 — no picture, then 18x9, 36x9 and 36x36:
+        // 77.25 -- no picture, then 18x9, 36x9 and 36x36:
         //
         //   no picture     86.65, 98.15
         //   18 across      90.95, 106.75
@@ -3371,14 +3371,14 @@ describe('w:textDirection, end to end', () => {
         //   36, too long  122.65, 134.15
         //
         // The second line of each carries no picture, so it is a plain line
-        // whose baseline sits one ascent — 9.40, which the first row prints
-        // outright — below the first line's foot. That makes the first line's
+        // whose baseline sits one ascent -- 9.40, which the first row prints
+        // outright -- below the first line's foot. That makes the first line's
         // box 11.50, 20.10, 38.10 and 47.50: the PICTURE plus one descender,
         // even though the baseline sits at 13.70 and 22.70 inside it.
         // LibreOffice keeps the descender under the picture's own foot rather
         // than under the baseline, so a centred picture overhangs its line.
-        // Sizing the box from the baseline instead — the obvious reading of
-        // "centred", and the one this fixture exists to refuse — makes it
+        // Sizing the box from the baseline instead -- the obvious reading of
+        // "centred", and the one this fixture exists to refuse -- makes it
         // 15.80 and 24.80, wrong by a third.
         const page = await pageOf('cell-picture-turned-wrapped.docx');
 
@@ -3400,7 +3400,7 @@ describe('w:textDirection, end to end', () => {
         // The second line of each cell carries no picture, so it is an
         // ordinary 11.50 line: printed at 98.15, 106.75, 124.75 and 134.15.
         //
-        // This test was written as a DIVERGENCE — ours were 98.13, 111.06,
+        // This test was written as a DIVERGENCE -- ours were 98.13, 111.06,
         // 138.06 and 170.13, because a line's box was measured per paragraph
         // and the picture on the first line made every line after it as tall.
         // Making the box per line flipped it to parity without the test being
@@ -3458,16 +3458,16 @@ describe('a line box belongs to its LINE, end to end', () => {
         // Printed baselines, measured up from the foot of the page:
         //
         //   gap0    760.49
-        //   line 1  722.39   38.10 below gap0 — the picture's line
-        //   line 2  710.89   11.50 below it — an ordinary line
+        //   line 1  722.39   38.10 below gap0 -- the picture's line
+        //   line 2  710.89   11.50 below it -- an ordinary line
         //   gap1    699.39
-        //   line 1  687.89   11.50 — ordinary, the picture is not on it
-        //   line 2  649.79   38.10 — the tall line MOVED with the picture
+        //   line 1  687.89   11.50 -- ordinary, the picture is not on it
+        //   line 2  649.79   38.10 -- the tall line MOVED with the picture
         //   gap2    638.29   11.50
-        //   line 1  626.79 · line 2  615.29 · end  603.79
+        //   line 1  626.79 - line 2  615.29 - end  603.79
         //
         // So the picture makes ITS line taller and no other. Measuring the box
-        // per paragraph — what this engine used to do — spaces every
+        // per paragraph -- what this engine used to do -- spaces every
         // line of a paragraph by its largest thing, which puts the second line
         // of the first paragraph 27pt low and pushes the rest of the page down
         // with it.
@@ -3491,8 +3491,8 @@ describe('a line box belongs to its LINE, end to end', () => {
         // The fifth table of `cell-picture-turned-wrapped.docx` is an UPRIGHT
         // cell whose 18x36 picture is pushed onto the SECOND line by the text
         // in front of it. That is the one case a cell fixture with its picture
-        // on the first line cannot see — there the paragraph's nominal height
-        // and the first line's own are the same number — and it is why a
+        // on the first line cannot see -- there the paragraph's nominal height
+        // and the first line's own are the same number -- and it is why a
         // mutation stacking a cell's lines by the nominal height survived the
         // first pass. The table was added to kill it.
         //
@@ -3520,10 +3520,10 @@ describe('a line box belongs to its LINE, end to end', () => {
         // begins with an inline 18x36 picture, so its first line is 38.10 tall
         // where every other line in the document is 11.50.
         //
-        // Printed — a displaced line starts at x=153.10, a clear one
+        // Printed -- a displaced line starts at x=153.10, a clear one
         // at 72.10:
         //
-        //   float only     153.10 x7, then 72.10  — seven lines beside it
+        //   float only     153.10 x7, then 72.10  -- seven lines beside it
         //   tall first     171.10, 153.10 x3, then 72.10 x3
         //
         // The first line of the second paragraph starts at 171.10 because the
@@ -3531,8 +3531,8 @@ describe('a line box belongs to its LINE, end to end', () => {
         // against seven here, and the difference is entirely the tall line
         // eating 38.10 of a 72pt band.
         //
-        // Walking the band by line INDEX — `startY + N * lineHeight` with the
-        // paragraph's nominal height, which is what this engine did — steps
+        // Walking the band by line INDEX -- `startY + N * lineHeight` with the
+        // paragraph's nominal height, which is what this engine did -- steps
         // 38.10 a line through that second paragraph and clears the float
         // after two, so lines three and four are broken at the full 201pt and
         // drawn over the picture.
@@ -3558,7 +3558,7 @@ describe('a line box belongs to its LINE, end to end', () => {
 
     it('stands the picture on the baseline of the line it landed on', async () => {
         // Printed by pdf-images.py: the two pictures at y=722.44 and 649.84,
-        // which are their own lines' baselines — an inline picture stands on
+        // which are their own lines' baselines -- an inline picture stands on
         // the baseline whichever line it ends up on.
         const opened = await openWordFile(file('inline-picture-wrapped.docx'), FONTS);
         const page = layoutSections(opened.document.sections)[0]!;
@@ -3599,13 +3599,13 @@ describe('w:spacing against what the line actually holds, end to end', () => {
         //   auto 1.5  602.29 | 564.19  546.94   then end at 529.69
         //
         // `exact` keeps its 12.00 and lets the picture overflow into the
-        // paragraph above — 11.70 from the line before it, where an unspaced
+        // paragraph above -- 11.70 from the line before it, where an unspaced
         // picture line takes 38.10. Nothing else clips: `atLeast` grows to the
         // picture's own 38.10, and `auto` to 43.85, which is that box plus the
         // 5.75 of leading its multiple adds to every line of the paragraph.
         //
         // Before this was measured we gave the `auto` line a 17.25 box with its
-        // baseline 36.00 inside it — the baseline BELOW the box's own foot, so
+        // baseline 36.00 inside it -- the baseline BELOW the box's own foot, so
         // the second line was drawn above the first.
         const printed = [
             760.49, 722.39, 710.89,
@@ -3628,7 +3628,7 @@ describe('w:spacing against what the line actually holds, end to end', () => {
         // `line-spacing-multiple-mixed.docx` at 1.5 lines over a paragraph
         // whose tallest run is 23.00, so the leading is 11.50. Printed: the
         // 10pt first line 23.00 deep and the line carrying the 20pt word 34.50
-        // — each its own box plus that same 11.50, and neither one a multiple
+        // -- each its own box plus that same 11.50, and neither one a multiple
         // of anything. Baselines 687.89 and 655.54, with `end` at 630.39.
         //
         // Taking the multiple against the LINE would give 17.25 and 34.50, and
@@ -3649,13 +3649,13 @@ describe('w:spacing against what the line actually holds, end to end', () => {
         // Word writes the off form freely, so a gridded document is likely to
         // hold some, and a reader that ignores it lays them on a grid the file
         // says to keep them off. Printed under an 18pt grid: the
-        // paragraph that says no steps 11.50 — the font's own line — where its
+        // paragraph that says no steps 11.50 -- the font's own line -- where its
         // neighbour on the grid steps 18.00, and its baselines sit at 688.49
         // and 676.99 against 739.24 and 721.24.
         //
         // The grid does not re-snap afterwards either: `end` prints at 662.24,
         // which is one grid line below where the off-grid paragraph stopped
-        // rather than the next multiple of the pitch — the same thing measured
+        // rather than the next multiple of the pitch -- the same thing measured
         // after an `exact` paragraph.
         const ours = await linesOf('doc-grid-snap.docx');
         const printed = [757.24, 739.24, 721.24, 703.24, 688.49, 676.99, 662.24];
@@ -3673,7 +3673,7 @@ describe('w:spacing against what the line actually holds, end to end', () => {
         // over a font whose natural line is 11.50. Printed steps:
         //
         //   none          18.00   the pitch
-        //   exact 14pt    14.00   itself — the one rule the grid does not touch
+        //   exact 14pt    14.00   itself -- the one rule the grid does not touch
         //   atLeast 12pt  18.00   max(12, PITCH)
         //   auto 1.5      27.00   1.5 x PITCH, not 1.5 x the font's 11.50
         //   exact 24pt    24.00   itself
@@ -3708,7 +3708,7 @@ describe('w:spacing against what the line actually holds, end to end', () => {
         // natural line says (24 - 11.50) / 2 + 9.38 = 15.63. Printed, in a
         // paragraph placed FIRST so nothing unexplained sits above it: 15.62.
         //
-        // Off a grid the ratio stands — it was verified in two fonts whose
+        // Off a grid the ratio stands -- it was verified in two fonts whose
         // natural baselines differ, and both printed the same 19.18 of a 24pt
         // line, which centring could not do.
         const ours = await linesOf('doc-grid-spacing-ends.docx');
@@ -3721,7 +3721,7 @@ describe('w:spacing against what the line actually holds, end to end', () => {
     it('gives back (multiple − 1) leadings at the FOOT of a gridded paragraph', async () => {
         // `doc-grid-spacing-ends.docx` runs the same 18pt grid over paragraphs
         // at 1.5 lines of one, three and five lines, and one at 2.0 lines.
-        // Printed totals — measured gap-to-gap, so they include
+        // Printed totals -- measured gap-to-gap, so they include
         // whatever the paragraph does at its foot:
         //
         //   1.5, 1 line     23.75   = 1 x 27.00 - 3.25
@@ -3735,7 +3735,7 @@ describe('w:spacing against what the line actually holds, end to end', () => {
         // half-leading, which is what it looked like at first.
         //
         // The plain and atLeast paragraphs of the fixture above give nothing
-        // back — both total exactly N x 18.00 — which is the same rule at a
+        // back -- both total exactly N x 18.00 -- which is the same rule at a
         // multiple of one.
         const ours = await linesOf('doc-grid-spacing-ends.docx');
         const printed = [
@@ -3757,14 +3757,14 @@ describe('w:spacing against what the line actually holds, end to end', () => {
 
     it('spends WHOLE grid lines on a line too tall for one', async () => {
         // `doc-grid-picture.docx`: an 18pt `w:docGrid` holding the same 18x36
-        // picture. Printed — 757.24, then 715.89 for the picture's line, then
+        // picture. Printed -- 757.24, then 715.89 for the picture's line, then
         // 685.24, 667.24 and 649.24, every one of those 18.00 apart.
         //
         // That puts the picture's line 54.00 deep, three pitches, with its
         // baseline 36.00 from the top: the line sits FLUSH with the top of the
         // group and the spare room falls below it, where a grid line that fits
         // its pitch is centred in it. Halving a negative leading put
-        // our baseline 25.94 down a box of 18 — above its own box, over the
+        // our baseline 25.94 down a box of 18 -- above its own box, over the
         // paragraph before it.
         const ours = await linesOf('doc-grid-picture.docx');
         const printed = [757.24, 715.89, 685.24, 667.24, 649.24];
@@ -3796,13 +3796,13 @@ describe('a table cell is NOT on the section’s grid, end to end', () => {
     it('steps a cell’s paragraphs by the FONT where the body steps by the pitch', async () => {
         // `onGrid` has skipped tables since the grid was first read, on the
         // stated grounds that "the grid is the SECTION's line, and a cell is
-        // not on it" — asserted, never measured, and this arc has found that
+        // not on it" -- asserted, never measured, and this arc has found that
         // shape of claim wrong more than once (the spacing claim above was
         // one).
         //
         // This time it is right. Printed on an 18pt grid: the body
         // paragraph above the table sits at 757.24 and the cell's three
-        // paragraphs at 741.49, 729.99 and 718.49 — steps of 11.50, the font's
+        // paragraphs at 741.49, 729.99 and 718.49 -- steps of 11.50, the font's
         // own line, where every body paragraph in the same section steps 18.00.
         const ours = await cellOf('doc-grid-cell.docx', 0, 0);
 
@@ -3814,7 +3814,7 @@ describe('a table cell is NOT on the section’s grid, end to end', () => {
 
     it('resolves a cell’s own multiple against the font, not the pitch', async () => {
         // The same table's second cell asks for 1.5 lines. On the body that
-        // would be 27.00 — one and a half PITCHES — and in the cell
+        // would be 27.00 -- one and a half PITCHES -- and in the cell
         // LibreOffice printed 741.49, 724.24, 706.99: steps of 17.25, which is
         // one and a half of the font's 11.50. A cell is off the grid for the
         // multiple as well as for the default.
@@ -3829,14 +3829,14 @@ describe('a table cell is NOT on the section’s grid, end to end', () => {
     it('gives up an atLeast floor in a GRIDDED cell, as the print does', async () => {
         // Once "small and strange", and pinned with OUR numbers for three
         // slices. A cell paragraph asking `atLeast` 12pt over an 11.50pt font
-        // prints its lines 12.00 apart with no grid in the section — 694.74,
+        // prints its lines 12.00 apart with no grid in the section -- 694.74,
         // 682.74, 670.74, and `cell-spacing-nogrid` keeps proving it. Put a
         // grid on the section and LibreOffice drops the floor to 688.74,
         // 677.24, 665.74: steps of 11.50, LESS than the paragraph asked for
         // and nothing to do with the 18.00 pitch.
         //
-        // Asking the same question four floors wide — in the body and in a
-        // cell, with the grid and without — explained it: a cell under a grid
+        // Asking the same question four floors wide -- in the body and in a
+        // cell, with the grid and without -- explained it: a cell under a grid
         // takes the font's own line and ignores the pitch AND the floor. That
         // is built, so these are now the PRINT's numbers rather than ours, and
         // the pair of fixtures is what keeps the two cases apart.
@@ -3867,8 +3867,8 @@ describe('the run children that break a line, end to end', () => {
     };
 
     it('breaks the line at a w:cr, as it does at a w:br', async () => {
-        // `w:cr` was in no branch of the run reader — not handled, not
-        // reported, just passed over — so the text either side of one ran
+        // `w:cr` was in no branch of the run reader -- not handled, not
+        // reported, just passed over -- so the text either side of one ran
         // together on a single line. Measured: `cc` printed at 714.49
         // and `dd` at 702.99, a step of 11.50, which is exactly what `aa` and
         // `bb` do either side of the `w:br` in the paragraph above.
@@ -3882,17 +3882,17 @@ describe('the run children that break a line, end to end', () => {
     });
 
     it('chops a word too long for its line at the last character that FITS', async () => {
-        // `word-chop.docx` puts two words in two measures each. Printed — the
+        // `word-chop.docx` puts two words in two measures each. Printed -- the
         // same 16 letters, chopped where the width runs out:
         //
-        //   gggggggghhhhhhhh in 51.3pt   ggggggggh · hhhhhhh
-        //   gggggggghhhhhhhh in 31.3pt   ggggg · ggghh · hhhhh · h
-        //   WWWWiiiiWWWWiiii in 51.3pt   WWWWiiii · WWWWiiii
-        //   WWWWiiiiWWWWiiii in 31.3pt   WWW · WiiiiW · WWWi · iii
+        //   gggggggghhhhhhhh in 51.3pt   ggggggggh - hhhhhhh
+        //   gggggggghhhhhhhh in 31.3pt   ggggg - ggghh - hhhhh - h
+        //   WWWWiiiiWWWWiiii in 51.3pt   WWWWiiii - WWWWiiii
+        //   WWWWiiiiWWWWiiii in 31.3pt   WWW - WiiiiW - WWWi - iii
         //
         // The MIXED word is what proves the cut is fitted and not counted: the
         // measure that takes nine of the even word takes eight of it, and the
-        // narrow one takes three, six, four and three — every line as many
+        // narrow one takes three, six, four and three -- every line as many
         // letters as its own width allows.
         const drawn = await drawnOf('word-chop.docx');
         // Half a point either side, because our baselines sit that far from
@@ -3910,7 +3910,7 @@ describe('the run children that break a line, end to end', () => {
     it('declines the offer where the whole word fits, and draws nothing', async () => {
         // `soft-hyphen-fit.docx`, first paragraph: a measure wide enough for
         // the word. Printed: `eeeeeeee` at 72.10 and `ffffffff` at
-        // 116.55 — one line, no hyphen, and 44.45 between them, which is the
+        // 116.55 -- one line, no hyphen, and 44.45 between them, which is the
         // eight letters alone. The character takes no width where the offer is
         // declined, which is why measuring it as the glyph most fonts keep at
         // U+00AD would push every such word 3.3pt wide.
@@ -3924,8 +3924,8 @@ describe('the run children that break a line, end to end', () => {
 
     it('will not take an offer whose HYPHEN does not fit', async () => {
         // The same word in a 46pt measure: eight letters fit at 44.45 and the
-        // hyphen they would owe does not. Printed: `eeeeeee` —
-        // SEVEN — then `e` at 72.10 and `ffffffff` at 77.65 on the next line,
+        // hyphen they would owe does not. Printed: `eeeeeee` --
+        // SEVEN -- then `e` at 72.10 and `ffffffff` at 77.65 on the next line,
         // with no hyphen anywhere. LibreOffice declines the offer and chops one
         // letter short of it rather than draw a hyphen past the margin.
         //
@@ -3947,7 +3947,7 @@ describe('the run children that break a line, end to end', () => {
     it('charges the hyphen only to a line that ENDS at the offer', async () => {
         // A 68pt measure: the word is 66.65 and the hyphen it would owe at the
         // offer is another 3.33. Printed: one line, `eeeeeeee` at
-        // 72.10 and `ffffffff` at 116.55, no hyphen — carrying ON past an offer
+        // 72.10 and `ffffffff` at 116.55, no hyphen -- carrying ON past an offer
         // costs nothing, and only ending there costs the hyphen.
         //
         // Both halves of that are needed and the fixtures now say so
@@ -3965,14 +3965,14 @@ describe('the run children that break a line, end to end', () => {
     it('breaks AT a w:softHyphen and draws the hyphen there', async () => {
         // A soft hyphen is an offer of a break and no ink until it is taken.
         // Printed: `eeeeeeee` then a `-` at x=116.55 ending that
-        // line, with `ffffffff` beginning the next — where the same word
+        // line, with `ffffffff` beginning the next -- where the same word
         // without one is chopped where the width runs out, `ggggggggh` /
         // `hhhhhhh`, and nothing is drawn.
         //
         // 116.55 is 44.45 past the margin at 72.10, which is exactly eight of
         // those letters: our own line begins at the same margin with the same
-        // eight before the hyphen. This was pinned as a divergence first — the
-        // character was in no branch of the reader — and chopping is what made
+        // eight before the hyphen. This was pinned as a divergence first -- the
+        // character was in no branch of the reader -- and chopping is what made
         // the FIT tractable: ending a line at the offer costs the hyphen,
         // carrying on past it costs nothing, and a segment already knew those
         // as two separate widths.
@@ -4008,7 +4008,7 @@ describe('what the reader used to pass over, end to end', () => {
 
     it('drops a w:vanish run entirely — its ink AND its room', async () => {
         // Printed: `one ` at 72.10 and `two` at 91.55, with the
-        // hidden run between them nowhere on the page and taking none of it —
+        // hidden run between them nowhere on the page and taking none of it --
         // 19.45 apart, which is the first word's own advance. Making it
         // invisible would leave the gap; the property means the text is not
         // there at all, and a reader that ignores it prints what was hidden.
@@ -4021,7 +4021,7 @@ describe('what the reader used to pass over, end to end', () => {
 
     it('takes the LARGER of space-after and space-before, not their sum', async () => {
         // Ten points either side of a paragraph boundary: printed 21.50 apart,
-        // which is the 11.50 line and ONE ten — not two. And the asymmetric
+        // which is the 11.50 line and ONE ten -- not two. And the asymmetric
         // pairs settle which ten: 10 after then 20 before gives 31.50, and 20
         // after then 10 before gives 31.50 as well, so it is the larger of the
         // two and not one side of it.
@@ -4037,7 +4037,7 @@ describe('what the reader used to pass over, end to end', () => {
         // Printed: the flagged pair sits 11.50 apart where the
         // identical pair without the flag sits 21.50, and the space goes
         // against a PLAIN neighbour of the same style as readily as against
-        // another flagged one — so the flag belongs to the paragraph giving up
+        // another flagged one -- so the flag belongs to the paragraph giving up
         // its own space rather than to the pair.
         //
         // Word's list styles set it as a matter of course. Until this was read
@@ -4053,7 +4053,7 @@ describe('what the reader used to pass over, end to end', () => {
         // And the rule is SAME-STYLE, which needed a second paragraph style in
         // the fixture to see at all: `otherStyle` is `Probe` and spends nothing
         // below itself, so the only thing that could close the gap under it is
-        // the flag — and the gap stands at 21.50. The identical pair with one
+        // the flag -- and the gap stands at 21.50. The identical pair with one
         // style either side closes to 11.50. Without both, a rule that dropped
         // the space against ANY neighbour passed every assertion above.
         expect(Math.abs(at('otherStyle') - at('ctxC') - 21.50)).toBeLessThan(0.5);
@@ -4062,7 +4062,7 @@ describe('what the reader used to pass over, end to end', () => {
 
     it('leaves a w:suppressLineNumbers paragraph OUT of the count', async () => {
         // Printed: `numbered` takes 10, `quiet` takes none, and `end` takes 11
-        // — the line is not counted rather than counted and left blank, so
+        // -- the line is not counted rather than counted and left blank, so
         // every number after it is one lower than it would otherwise be. The
         // whole page's numbering is asserted, because getting the skip right
         // and the count after it wrong is the failure this invites.
@@ -4084,7 +4084,7 @@ describe('w:pgNumType, end to end', () => {
 
     it('numbers a section’s pages the way the SECTION asks, not always in digits', async () => {
         // `w:pgNumType/@w:fmt` is how a document asks for roman front matter,
-        // and it is far commoner than a `PAGE \* roman` switch on each field —
+        // and it is far commoner than a `PAGE \* roman` switch on each field --
         // which was all this engine read. Printed: `front i`,
         // `front ii`, then `body 1` where the next section restarts in digits.
         //
@@ -4106,7 +4106,7 @@ describe('a page COUNT written in the body, end to end', () => {
         // NUMPAGES` in its own text. Printed: `page 1 of 3`, `page 2
         // of 3`, `page 3 of 3`.
         //
-        // Ours said `1 of 1`, `1 of 1`, `2 of 2` — two faults at once, both
+        // Ours said `1 of 1`, `1 of 1`, `2 of 2` -- two faults at once, both
         // uncovered by answering body fields at all. The page NUMBER was read
         // before the paragraph's own `pageBreakBefore` was taken, so
         // it named the page being left; and the COUNT was the pages laid so
@@ -4141,8 +4141,8 @@ describe('w:tblStyle, end to end', () => {
         // Printed by LibreOffice: a table naming a style that draws
         // `w:sz="12"` and declaring nothing itself came out with rules 1.500
         // wide, all round and between. Nothing here read `w:tblStyle` at all,
-        // so a table authored in Word — where "Table Grid" is the default and
-        // the grid lives in the style — came out completely bare.
+        // so a table authored in Word -- where "Table Grid" is the default and
+        // the grid lives in the style -- came out completely bare.
         const { tables } = await drawnBy();
 
         expect(tables).toHaveLength(6);
@@ -4165,7 +4165,7 @@ describe('w:tblStyle, end to end', () => {
     it('merges the two per SIDE, rather than one replacing the other', async () => {
         // The case that decided the shape of this. A table naming the same
         // 1.5pt style and declaring only its own `insideH` at 3pt printed the
-        // middle rule at 3.000 and the four outer ones at 1.500 — so the
+        // middle rule at 3.000 and the four outer ones at 1.500 -- so the
         // table's element does not replace the style's, and each side is
         // answered by the last level that names it.
         const { tables } = await drawnBy();
@@ -4178,7 +4178,7 @@ describe('w:tblStyle, end to end', () => {
     it('lets a style BASED ON another override it, side by side', async () => {
         // How Word writes almost every table style. A leaf restating five
         // sides at half a point over a root drawing one and a half printed
-        // exactly that — 0.500 round the outside and between the rows, and
+        // exactly that -- 0.500 round the outside and between the rows, and
         // 1.500 for the inside vertical the leaf leaves alone.
         const { tables } = await drawnBy();
 
@@ -4190,7 +4190,7 @@ describe('w:tblStyle, end to end', () => {
     it('takes the CELL MARGINS from the style too', async () => {
         // Printed by LibreOffice: a style carrying `w:tblCellMar` of
         // 400 twips either side put the text at 91.85, where the table naming
-        // no style at all put it at 77.50 — twenty points in from the page
+        // no style at all put it at 77.50 -- twenty points in from the page
         // margin rather than the format's default 5.4.
         const { page } = await drawnBy();
         const textOf = (tag: string): number => renderPage(page).ops
@@ -4206,7 +4206,7 @@ describe('w:tblStyle, end to end', () => {
 describe('what an inline VML box takes, at three widths', () => {
     // `text-box-inline-vml-widths.docx`, printed by LibreOffice. Shapes
     // stating 30, 90 and 180pt each took the stated width plus **18.0** of
-    // the line, and their words sit **13.2** in from the box's left edge —
+    // the line, and their words sit **13.2** in from the box's left edge --
     // a constant, not a proportion, confirmed again beside a wrapping
     // paragraph.
     //
@@ -4217,7 +4217,7 @@ describe('what an inline VML box takes, at three widths', () => {
     // That number was mis-read TWICE before it was measured: 17.50 first and
     // 16.40 next, both times because the box's start was estimated from the
     // width of the text before it instead of computed from the face.
-    // `P-before` is 34.43, not the 36 that was assumed — a subtraction now
+    // `P-before` is 34.43, not the 36 that was assumed -- a subtraction now
     // vendored as `tools/probes/run-width.mjs`. The page never moved.
     //
     // Still NOT built: this engine drops an inline VML box and says so. The
@@ -4231,7 +4231,7 @@ describe('what an inline VML box takes, at three widths', () => {
             .map((op) => op.text.trim());
 
         // The words inside the boxes are the boxes' names, and each is now
-        // drawn — where for a long time none was.
+        // drawn -- where for a long time none was.
         expect(drawn).toContain('P');
         expect(drawn).toContain('S');
         expect(opened.document.diagnostics).toEqual([]);
@@ -4242,7 +4242,7 @@ describe('what LibreOffice paints for an inline VML shape', () => {
     const pt = (px: number): number => px * 72 / 96;
 
     // `vml-shape-geometryless.docx`, printed by LibreOffice: a
-    // `v:rect`, a `v:rect` holding text, and a bare `v:shape` — all 90x36pt,
+    // `v:rect`, a `v:rect` holding text, and a bare `v:shape` -- all 90x36pt,
     // the first and last carrying the SAME loud attributes (red fill, blue
     // stroke, 3pt of it).
     //
@@ -4271,7 +4271,7 @@ describe('what LibreOffice paints for an inline VML shape', () => {
     it('reads the wrap distance the room is made of, and its default', async () => {
         // `vml-wrap-distance.docx`. Four 90pt rects: default, both
         // distances 0, both 20pt, and 20pt on the left alone. The print starts
-        // the run after each at 189.55, 171.55, 211.55 and 191.55 — a box
+        // the run after each at 189.55, 171.55, 211.55 and 191.55 -- a box
         // beginning at 81.54, so 90 plus 18.0, 0, 40.0 and 20.0.
         //
         // This is the slice that turned the arc's oldest unexplained number
@@ -4297,7 +4297,7 @@ describe('what LibreOffice paints for an inline VML shape', () => {
     it('gives every one of them the same room, whatever it holds', async () => {
         // `vml-inline-extra-room.docx`: six lines, each `L-` then a
         // 90pt shape then a marker. Default box, inset 0, inset 20pt, a 6pt
-        // stroke, no stroke, and a shape with NO text box — and the print
+        // stroke, no stroke, and a shape with NO text box -- and the print
         // starts all six markers at exactly 189.55.
         //
         // So the 18.0 of extra room belongs to the SHAPE and not to the text
@@ -4331,29 +4331,29 @@ describe('the inside of an inline VML box', () => {
     // top of the 9.0 of wrap distance either side.
     //
     // **Where the words start: 13.2 from the shape's origin.** Measured at
-    // 90pt/10pt, 150pt/10pt and 90pt/20pt — 13.21, 13.21, 13.22. It follows
+    // 90pt/10pt, 150pt/10pt and 90pt/20pt -- 13.21, 13.21, 13.22. It follows
     // neither the font (double the size, same offset) nor the box width, so
     // it is furniture. 13.2 is the 9.0 of wrap plus the 4.25 of inset.
     //
-    // **How wide the words may run: the stated width less 8.5** — the inset,
+    // **How wide the words may run: the stated width less 8.5** -- the inset,
     // twice. Two rules survived every earlier probe, `stated - 13.2` (76.8 in
     // a 90pt box) and `stated - 8.5` (81.5), because every wrap measured so
-    // far fell outside the gap between them. A string built to land IN it —
-    // `alpha beta gammaw`, 79.97 by `run-width.mjs` — stayed on its line, so
+    // far fell outside the gap between them. A string built to land IN it --
+    // `alpha beta gammaw`, 79.97 by `run-width.mjs` -- stayed on its line, so
     // 76.8 is refuted. With `alpha beta gamma delta` (94.68) wrapping at the
     // same width, and `alpha beta` (81.62 at 20pt) wrapping too, the content
     // width is bracketed to **[79.97, 81.62)**. 81.5 sits inside; 76.8 does not.
     //
     // **Where the first line sits: 4.25 below the box's top, plus the line's
     // own rise.** Box top less first baseline printed 13.55 at 10pt and 22.90
-    // at 20pt, which look unrelated until the rise is taken off — this
+    // at 20pt, which look unrelated until the rise is taken off -- this
     // engine's `lineHeight - descent`, 9.30 and 18.65. Both leave 4.25. The
     // inset arrived at from the side and from above, separately, and agreed.
     //
     // NOT built, deliberately: the words are still dropped and still said to
     // be. What stands between this and a build is the work of stacking blocks
     // into an `InlineShape`, which is already done for the DrawingML
-    // spelling — not another number.
+    // spelling -- not another number.
     it('puts the words where the print puts them, and wraps where it wraps', async () => {
         // Built in the slice after the one that measured it.
         const opened = await openWordFile(file('vml-box-content-width.docx'), FONTS);
@@ -4368,7 +4368,7 @@ describe('the inside of an inline VML box', () => {
         expect(pt(at('gammaw').yPx)).toBeCloseTo(pt(at('alpha').yPx), 6);
         expect(pt(at('zeta').yPx)).toBeGreaterThan(pt(at('alpha').yPx));
 
-        // 13.2 from the shape's origin — the line starts at 72.00 and `L-` is
+        // 13.2 from the shape's origin -- the line starts at 72.00 and `L-` is
         // 9.44 of it, so 81.44 plus the 9.0 of wrap and the 4.25 of inset.
         expect(pt(at('alpha').xPx) - (72 + 9.44)).toBeCloseTo(13.25, 0);
 
@@ -4382,11 +4382,11 @@ describe('the inside of an inline VML box', () => {
     it('takes the inset off BOTH sides, which only the 20pt box can show', async () => {
         // `vml-box-inner-offset.docx`, third line: a 90pt box at 20pt text,
         // where the print puts `alpha`, `beta` and `gamma` each on a line of
-        // their own — `alpha beta` is 81.62 and does not fit.
+        // their own -- `alpha beta` is 81.62 and does not fit.
         //
         // This exists because a mutation charging the inset ONCE survived the
         // whole suite. 90 - 4.25 is 85.75, which is outside the measured
-        // bracket of [79.97, 81.62) — but the only fixture that can tell 85.75
+        // bracket of [79.97, 81.62) -- but the only fixture that can tell 85.75
         // from 81.5 is this one, and nothing read it. The measurement was
         // vendored a slice before anything asserted it.
         const opened = await openWordFile(file('vml-box-inner-offset.docx'), FONTS);
@@ -4409,8 +4409,8 @@ describe('the height an inline VML box gives its line', () => {
     // between plain paragraphs that act as controls.
     //
     // **The rule: `max(natural line, box height + the font's DESCENT)`.** The
-    // box's bottom sits ON the baseline — it takes the whole ascent side of
-    // the line — and the line keeps its descent underneath. A box shorter than
+    // box's bottom sits ON the baseline -- it takes the whole ascent side of
+    // the line -- and the line keeps its descent underneath. A box shorter than
     // the line it sits in disappears into it: the 6pt box stepped a plain
     // 11.55 at 10pt text and a plain 23.00 at 20pt.
     //
@@ -4423,7 +4423,7 @@ describe('the height an inline VML box gives its line', () => {
     // so.** The extra scales with the text, which already ruled out box
     // furniture. Liberation Serif is what separates the two candidates: its
     // descent is 4.33 at 20pt and its descent + gap is 5.18, against a
-    // measured 4.35. Carlito could never have shown it — its line gap is 0,
+    // measured 4.35. Carlito could never have shown it -- its line gap is 0,
     // so both candidates predict its 5.37 against a measured 5.40. A control
     // font was not a formality here; it was the whole experiment.
     //
@@ -4441,13 +4441,13 @@ describe('the height an inline VML box gives its line', () => {
     // line steps 11.55" as an unexplained number blocking the build. It was neither
     // unexplained nor blocking: an inline VML shape is dropped only from the
     // FLOAT path, then falls through to the ordinary inline-shape path and
-    // reserves its stated size — and this engine's inline-shape line rule is
+    // reserves its stated size -- and this engine's inline-shape line rule is
     // already box-height-plus-descent. The steps below are the engine's, and
     // they are LibreOffice's to a fiftieth of a point.
     //
     // So the measurement stands and the conclusion drawn from it did not.
-    // What it settles is CONFORMANCE — LibreOffice treats a VML text box's
-    // line exactly as this engine treats any inline shape — which is worth
+    // What it settles is CONFORMANCE -- LibreOffice treats a VML text box's
+    // line exactly as this engine treats any inline shape -- which is worth
     // more than the missing rule it was mistaken for.
     //
     // The extra WIDTH is built now, the 18.0 having turned out to be 9pt of
@@ -4465,7 +4465,7 @@ describe('the height an inline VML box gives its line', () => {
             .filter((op): op is TextOp => 'text' === op.kind)
             .map((op) => op.text.trim());
 
-        // The controls print, and so does the word inside every box — one `x`
+        // The controls print, and so does the word inside every box -- one `x`
         // per box, four boxes.
         expect(drawn).toContain('p1');
         expect(drawn.filter((text) => 'x' === text)).toHaveLength(4);
@@ -4506,7 +4506,7 @@ describe('the height an inline VML box gives its line', () => {
 
     it('keeps the wrap distance either side of the box, as the print does', async () => {
         // `text-box-inline-vml-wrap.docx`: `L-`, a 90pt box, then `-R`. The
-        // print starts `-R` at 189.55 — 81.54 in, plus the stated 90, plus the
+        // print starts `-R` at 189.55 -- 81.54 in, plus the stated 90, plus the
         // 9pt of wrap distance either side.
         //
         // This was pinned as a SHORTFALL for two slices, asserting the gap was
@@ -4525,24 +4525,24 @@ describe('the height an inline VML box gives its line', () => {
 
 describe('a table nested inside a TURNED cell', () => {
     // `cell-turned-nested-table.docx`, printed by LibreOffice: one
-    // row, two cells holding the same three things — a paragraph, a bordered
-    // one-cell table, another paragraph — with the left cell turned `btLr`.
+    // row, two cells holding the same three things -- a paragraph, a bordered
+    // one-cell table, another paragraph -- with the left cell turned `btLr`.
     //
     // **The print DROPS the nested table's words in the turned cell.** Upright,
     // `Ubefore`, `Uin` and `Uafter` all come out. Turned, `Tbefore` and
-    // `Tafter` come out on their sides — `[0 1 -1 0]`, a quarter turn — and
+    // `Tafter` come out on their sides -- `[0 1 -1 0]`, a quarter turn -- and
     // `Tin` appears nowhere on the page. It is not drawn small or off the
     // edge; `pdf-positions.py` lists the whole page and it is absent.
     //
     // **And this engine already does the same**, which the arc had carried as
-    // an unbuilt pin rather than a conformance — the second time in this arc
+    // an unbuilt pin rather than a conformance -- the second time in this arc
     // that a standing "not built" turned out to be behaviour already in place.
     // Check the code before believing the pin.
     //
     // What DOES differ is the room the vanished table keeps. The print puts
     // `Tafter` 25.10 along the turned line from `Tbefore`; this engine puts it
     // 22.99 along. Both keep room for a thing neither draws, and ours is 2.11
-    // short — pinned below, unexplained, and too small to guess at.
+    // short -- pinned below, unexplained, and too small to guess at.
     it('drops the nested table in the turned cell and keeps it upright', async () => {
         const opened = await openWordFile(file('cell-turned-nested-table.docx'), FONTS);
         const pt = (px: number): number => px * 72 / 96;
@@ -4552,7 +4552,7 @@ describe('a table nested inside a TURNED cell', () => {
             .map((op) => [op.text.trim(), op]));
 
         // Turned: the paragraphs either side survive, the nested table's word
-        // does not — exactly as the print has it.
+        // does not -- exactly as the print has it.
         expect(at.has('Tbefore')).toBe(true);
         expect(at.has('Tafter')).toBe(true);
         expect(at.has('Tin')).toBe(false);
@@ -4575,12 +4575,12 @@ describe('the cell floor two prints cannot agree on', () => {
     // 18.00 grid, then 12 and 20 under a 24.00 one, over 9pt text whose
     // natural line is 10.35.
     //
-    // The print steps 18.00, 18.00, 20.00, 24.00 | 24.00, 24.00 — exactly
+    // The print steps 18.00, 18.00, 20.00, 24.00 | 24.00, 24.00 -- exactly
     // `max(floor, PITCH)`, tracking the pitch and not a number that happened
     // to be 18. Four floors and two pitches, and it looked settled.
     //
     // It is not. `doc-grid-cell.docx` has the SAME 18.00 pitch and the SAME
-    // 12.00 floor and prints 11.50 — LibreOffice going UNDER the floor, which
+    // 12.00 floor and prints 11.50 -- LibreOffice going UNDER the floor, which
     // stood unexplained through two passes.
     //
     // **It is not the font, and that claim stood here for two slices.** This
@@ -4604,7 +4604,7 @@ describe('the cell floor two prints cannot agree on', () => {
     //
     // **Which turns this fixture into the suspect one.** `grid-cell-floor.docx`
     // is hand-built and carries no settings part, so its tidy
-    // `max(floor, pitch)` — the rule nearly built from it — is the behaviour of
+    // `max(floor, pitch)` -- the rule nearly built from it -- is the behaviour of
     // a file no real producer emits. Word and LibreOffice both always write
     // one. `doc-grid-cell-no-settings.docx` is vendored as the control that
     // says so: the real document, stripped, snapping to the grid it ignored.
@@ -4621,7 +4621,7 @@ describe('the cell floor two prints cannot agree on', () => {
     //
     // Without a grid the floor is honoured everywhere, cells included, so it
     // was never "a cell ignores atLeast". WITH a grid, a cell ignores the grid
-    // AND the floor and takes the font's own line — at 20 and 24, well clear
+    // AND the floor and takes the font's own line -- at 20 and 24, well clear
     // of 11.55, so this is not the floor quietly losing to something taller.
     // That is `doc-grid-cell.docx`'s 11.50 under a 12.00 floor, exactly.
     //
@@ -4657,7 +4657,7 @@ describe('the cell floor two prints cannot agree on', () => {
     it('gives every gridded cell the natural line, whatever floor it states', async () => {
         // `grid-cell-floor-modern.docx`: the table above, in a
         // document WITH a settings part and an 18pt grid. The print gives
-        // every cell 11.55 — the font's own line — whatever floor it states.
+        // every cell 11.55 -- the font's own line -- whatever floor it states.
         //
         // Pinned as a SHORTFALL when it was measured, so it would fail on the
         // day the rule was built. It failed one slice later, which
@@ -4671,7 +4671,7 @@ describe('the cell floor two prints cannot agree on', () => {
 
         const step = (name: string): number => at.get(`${name}b`)! - at.get(`${name}a`)!;
 
-        // Every cell takes the natural line — at floors of 20 and 24, well
+        // Every cell takes the natural line -- at floors of 20 and 24, well
         // clear of 11.55, so this cannot be the floor quietly losing to a font
         // that happens to be tall.
         for (const name of ['C8', 'C12', 'C20', 'C24']) {
@@ -4689,14 +4689,14 @@ describe('the cell floor two prints cannot agree on', () => {
     it('reads the ablated twin, so the pair cannot drift apart', async () => {
         // `doc-grid-cell-no-settings.docx` is `doc-grid-cell.docx` with its
         // `word/settings.xml` taken out and the part's declaration and
-        // relationship taken out with it — an undeclared part prints EMPTY
+        // relationship taken out with it -- an undeclared part prints EMPTY
         // rather than differently, which would read exactly like the
         // ablation having worked.
         //
         // Asserted here so the pair stays a pair: the twin must keep parsing,
         // and it must still be the same six paragraphs in the same two cells.
         // The 18.00 it PRINTS is not asserted, because this engine does not
-        // build the snap yet — that is the open question above.
+        // build the snap yet -- that is the open question above.
         const opened = await openWordFile(file('doc-grid-cell-no-settings.docx'), FONTS);
         const page = layoutSections(opened.document.sections)[0]!;
         const drawn = renderPage(page).ops
@@ -4704,7 +4704,7 @@ describe('the cell floor two prints cannot agree on', () => {
             .map((op) => op.text.trim());
 
         // Arial is not in this repository's manifest, so the reader says it
-        // substituted — and nothing else, which is the point: stripping the
+        // substituted -- and nothing else, which is the point: stripping the
         // part left a file with no other complaint.
         expect(opened.document.diagnostics.map((entry) => entry.kind)).toEqual(['font-substituted']);
         for (const name of ['p1', 'p2', 'p3', 'q1', 'q2', 'q3']) {
@@ -4751,8 +4751,8 @@ describe('atLeast in a gridded section, and in a gridded CELL', () => {
     it('gives a floor ABOVE the pitch the whole of what it asked for', async () => {
         // BUILT. The print steps 24.00 and this engine stepped
         // 21.45, because a gridded paragraph gives leading back at its foot in
-        // proportion to the MULTIPLE it asked for — `(24/18 - 1)` of the
-        // grid's own leading, 2.55 — and a floor is not a multiple. 24.00 on
+        // proportion to the MULTIPLE it asked for -- `(24/18 - 1)` of the
+        // grid's own leading, 2.55 -- and a floor is not a multiple. 24.00 on
         // an 18.00 grid is not 1.33 of anything.
         //
         // The rule still says `grid`, because the baseline still sits in the
@@ -4766,7 +4766,7 @@ describe('atLeast in a gridded section, and in a gridded CELL', () => {
 
     //  Read this beside the print that measured a cell OFF the grid: its
     // paragraphs stepped the font's own 11.50 under an 18.00 pitch, and one
-    // asking for 1.5 lines took 17.25 — one and a half of the FONT. The two
+    // asking for 1.5 lines took 17.25 -- one and a half of the FONT. The two
     // prints split the question rather than contradicting each other: a cell
     // is off the grid for the STEP it takes and, by the case below, on it for
     // the FLOOR a paragraph may not fall below. One printed case is a
@@ -4774,7 +4774,7 @@ describe('atLeast in a gridded section, and in a gridded CELL', () => {
     // for a pitch that is not 18.00 before writing a rule from it.
     it('MEASURED, NOT BUILT: a CELL is on the section’s pitch', async () => {
         // The other half, still pinned. The print steps 18.00 for a floor of
-        // 12.00 inside a cell — the section's pitch, reaching in — where this
+        // 12.00 inside a cell -- the section's pitch, reaching in -- where this
         // engine steps the 12.00 it was asked for, a cell being off the grid
         // for its own line rule. That a cell is off the grid in one sense and
         // on it in another is a rule about where the grid REACHES, and wants
@@ -4792,7 +4792,7 @@ describe('atLeast in a gridded section, and in a gridded CELL', () => {
 describe('a table inside an INLINE text box', () => {
     // `text-box-inline-table.docx`, printed by LibreOffice. The two
     // slices before this one met here and lost something between them: one
-    // gave an inline box its own lines, the next let a box hold a table — and
+    // gave an inline box its own lines, the next let a box hold a table -- and
     // an inline box carrying only lines dropped that table SILENTLY, since the
     // reader had stopped reporting what it no longer discards.
     const pt = (px: number): number => Math.round(px * 72 / 96 * 100) / 100;
@@ -4819,7 +4819,7 @@ describe('a TABLE inside a text box', () => {
     // VML box at 180pt, with a paragraph under it and body text beside it.
     // The reader dropped every such table and said so, because "a placed float
     // carries lines, and rows would want the renderer's row path as well as
-    // its line path" — which turned out to be one call.
+    // its line path" -- which turned out to be one call.
     const pt = (px: number): number => Math.round(px * 72 / 96 * 100) / 100;
 
     const drawn = async () => {
@@ -4856,9 +4856,9 @@ describe('a TABLE inside a text box', () => {
     it('puts it where this engine puts everything else in a VML box', async () => {
         // 258.70 against the print's 255.80, and the 2.90 is the VML inset's
         // pinned divergence rather than anything this slice did: LibreOffice
-        // lays a VML box's content out on an inset of its own — 4.25, which it
+        // lays a VML box's content out on an inset of its own -- 4.25, which it
         // uses
-        // even for a box stating `inset="0,0,0,0"` — where this engine honours
+        // even for a box stating `inset="0,0,0,0"` -- where this engine honours
         // the 0.1in the format states. The table lands exactly where the box's
         // own paragraphs land, which is the thing to hold on to.
         const { verticals } = await drawn();
@@ -4869,7 +4869,7 @@ describe('a TABLE inside a text box', () => {
 
 describe('an INLINE text box, which sits in the line rather than beside it', () => {
     // `text-box-inline.docx`, printed by LibreOffice. The reader has
-    // carried a note for a long time — an inline text box "sits in the line
+    // carried a note for a long time -- an inline text box "sits in the line
     // like a picture rather than beside the text, and no measurement covers
     // it, so it returns null and the caller says so". This is the measurement
     // that note was waiting for.
@@ -4913,17 +4913,17 @@ describe('an INLINE text box, which sits in the line rather than beside it', () 
 
     it('gives the box its extent and draws the words inside it', async () => {
         // BUILT on the measurement above. A 90x36pt inline box takes
-        // exactly its stated `wp:extent`: the print draws its word at 115.35 —
-        // the box's own left edge plus the 7.20 body inset — and the text
+        // exactly its stated `wp:extent`: the print draws its word at 115.35 --
+        // the box's own left edge plus the 7.20 body inset -- and the text
         // after it at 198.20, which is 90.00 past where the box begins.
         //
         // It is a SHAPE with words: the piece already measured its own width
         // and grew its line, and only the words needed somewhere to live. They
-        // are stacked when the box is READ, which a float's cannot be — an
+        // are stacked when the box is READ, which a float's cannot be -- an
         // inline box's inner width is settled by its extent before anything
         // knows where the box lands.
-        // Its words WRAP at the box's own inner width — 90.00 less the 7.20
-        // inset on either side — which is the only thing that says they were
+        // Its words WRAP at the box's own inner width -- 90.00 less the 7.20
+        // inset on either side -- which is the only thing that says they were
         // stacked to the box rather than to the page: the print breaks
         // `INSIDE THE BOX` after `THE`, putting both lines at 115.35 and the
         // second 11.55 under the first.
@@ -4939,22 +4939,22 @@ describe('an INLINE text box, which sits in the line rather than beside it', () 
         // The WORDS are still not built, and are still said to be dropped.
         //
         // The room is. This once read "nothing in the file
-        // accounts for the extra 17.50" — and something did: the shape's wrap
+        // accounts for the extra 17.50" -- and something did: the shape's wrap
         // distance, 9pt a side by default, which the file leaves unstated
         // because that IS the default. So the run after it moved 18.0 right,
         // from 197.54 to 215.54, and that is the constant being built rather
         // than a regression.
         //
-        // It was reaching the float reader once — a VML shape with
-        // no `position:absolute` is INLINE — and came out as a float with no
+        // It was reaching the float reader once -- a VML shape with
+        // no `position:absolute` is INLINE -- and came out as a float with no
         // offsets at all, placed at the paragraph's origin with its words
         // drawn nowhere and NOTHING said about it. Now it is dropped and said,
         // and the drawn-shape path keeps the box's 90.00 plus its wrap.
         const { at, said } = await drawn();
 
         expect(at.get('B-after')).toBeCloseTo(215.54, 1);
-        // Its words are drawn now — 9.0 of wrap and 4.25 of inset
-        // in from where the box's room begins — and nothing is reported,
+        // Its words are drawn now -- 9.0 of wrap and 4.25 of inset
+        // in from where the box's room begins -- and nothing is reported,
         // because nothing is lost.
         expect(at.has('VMLIN')).toBe(true);
         expect(said).toEqual([]);
@@ -4982,7 +4982,7 @@ describe('w:object — an embedded thing, and the picture Word keeps of it', () 
         for (const op of ops) {
             if ('text' === op.kind && '' !== op.text.trim()) {
                 // The renderer splits a line at its spaces, so `A-after`
-                // arrives as `A-` then `after` — and the x that matters is
+                // arrives as `A-` then `after` -- and the x that matters is
                 // where the FIRST of them starts, which is where the print
                 // begins the whole word.
                 if (op.text.trim().endsWith('-')) {
@@ -5018,12 +5018,12 @@ describe('w:object — an embedded thing, and the picture Word keeps of it', () 
     it('keeps NO room for an object whose picture is missing, where the print keeps 78.11', async () => {
         // MEASURED, NOT BUILT. A `w:object` whose shape carries no
         // `v:imagedata` has nothing to draw, and both renderers agree there is
-        // nothing to draw — the print's page holds no image, no rule and no
+        // nothing to draw -- the print's page holds no image, no rule and no
         // fill for that row. It reserves the space anyway: its text lands at
         // 185.65 where this engine, dropping the object outright, puts it at
         // 107.54.
         //
-        // 78.11pt, and nothing in the file says 78.11 — not the shape's stated
+        // 78.11pt, and nothing in the file says 78.11 -- not the shape's stated
         // 60x30, nor the object's own `w:dxaOrig` of 1200 twips, which is the
         // same 60. A blank of a size the document does not state is not
         // something to reproduce by guessing at it, so the number is recorded
@@ -5041,7 +5041,7 @@ describe('the width of a string that is not Latin', () => {
     //
     // `real-lease.docx` is in Russian, which is why that gap could go unseen:
     // every line of it starts at the left margin and none of them wraps, so a
-    // Cyrillic glyph resolving to `.notdef` — or to the wrong glyph — would
+    // Cyrillic glyph resolving to `.notdef` -- or to the wrong glyph -- would
     // move nothing in the one fixture that carries the language.
     //
     // Right-aligned, so the x of a row IS the right margin minus its width.
@@ -5059,7 +5059,7 @@ describe('the width of a string that is not Latin', () => {
     it('measures Cyrillic and Greek as the print measures them', async () => {
         // The three rows that are one run each, so their x is directly
         // comparable. Every one lands 0.17 left of the print, which after its
-        // own 0.10 frame is 0.07pt of width across eight glyphs — under a
+        // own 0.10 frame is 0.07pt of width across eight glyphs -- under a
         // hundredth of a point each.
         const at = await drawn();
 
@@ -5071,8 +5071,8 @@ describe('the width of a string that is not Latin', () => {
     it('starts a mixed row where the print starts it', async () => {
         // `Договор Dogovor` in one run, so the two scripts are measured
         // together: 449.80 printed, and the Latin word after it at 487.75.
-        // A row of Cyrillic and a row of Latin the same length apart — 454.30
-        // against 458.20 — is what says the two are not being measured alike
+        // A row of Cyrillic and a row of Latin the same length apart -- 454.30
+        // against 458.20 -- is what says the two are not being measured alike
         // by accident.
         const at = await drawn();
 
@@ -5083,7 +5083,7 @@ describe('the width of a string that is not Latin', () => {
     it('finds every one of those code points in the face', async () => {
         // The failure this guards against does not announce itself: a missing
         // glyph is drawn as `.notdef`, which HAS a width, so the line still
-        // measures and simply comes out wrong — the same trap as a hyphen the
+        // measures and simply comes out wrong -- the same trap as a hyphen the
         // font lacked.
         const face = FONTS.resolve('Liberation Serif', false, false).font;
         const missing = [...'Договор аренды ЖЩЪЫЬЭЮЯ ийклмнопр ΑΒΓΔΕΖΗΘ']
@@ -5094,7 +5094,7 @@ describe('the width of a string that is not Latin', () => {
 });
 
 describe('the footnote separator a document tries to change', () => {
-    // `footnote-separator-emptied.docx` — `footnotes.docx` with the paragraph
+    // `footnote-separator-emptied.docx` -- `footnotes.docx` with the paragraph
     // inside its `w:separator` footnote emptied, which is what an author does
     // by deleting the separator line in Word. Printed by LibreOffice.
     //
@@ -5124,7 +5124,7 @@ describe('the footnote separator a document tries to change', () => {
         // paragraph emptied, and both separator footnotes removed outright.
         //
         // So leaving the two elements unread is right, and the engine's own
-        // rule — two inches at the margin, a hairline, 43.949 above the foot —
+        // rule -- two inches at the margin, a hairline, 43.949 above the foot --
         // is what a reader sees however the file is edited.
         const standard = await ruleOf('footnotes.docx');
         const emptied = await ruleOf('footnote-separator-emptied.docx');
@@ -5147,8 +5147,8 @@ describe('the footnote separator a document tries to change', () => {
 describe('widows, orphans, and the one default the reference disagrees about', () => {
     // `widow-orphan.docx`, printed by LibreOffice. A page holding
     // six lines, filled to a chosen depth and then given a three-line
-    // paragraph — built with explicit breaks, so the count is exact whatever
-    // the text measures — so the question is which of its lines page one keeps.
+    // paragraph -- built with explicit breaks, so the count is exact whatever
+    // the text measures -- so the question is which of its lines page one keeps.
     const pagesOf = async (): Promise<string[][]> => {
         const opened = await openWordFile(file('widow-orphan.docx'), FONTS);
 
@@ -5176,8 +5176,8 @@ describe('widows, orphans, and the one default the reference disagrees about', (
         // and three overleaf, and another ended `B-line1, B-line2` with the
         // third alone on the next page.
         //
-        // Kept as it is because the thing being modelled is WORD's layout —
-        // the format states the default is true and Word applies it — while
+        // Kept as it is because the thing being modelled is WORD's layout --
+        // the format states the default is true and Word applies it -- while
         // LibreOffice is the reference this engine can measure rather than the
         // authority on what a `.docx` means. Not one document in this corpus
         // states the element, including the Word-authored one, so the default
@@ -5197,7 +5197,7 @@ describe('widows, orphans, and the one default the reference disagrees about', (
 
     it('moves a w:keepLines paragraph whole, which both agree on', async () => {
         // E is three lines with two of them fitting, and both renderers move
-        // all three — but so does the widow rule on its own, so E cannot tell
+        // all three -- but so does the widow rule on its own, so E cannot tell
         // the two apart. G is FOUR lines with two fitting: widow and orphan
         // have nothing to say about it, and only `w:keepLines` moves it. The
         // print left its page with the fillers alone.
@@ -5211,7 +5211,7 @@ describe('widows, orphans, and the one default the reference disagrees about', (
     it('lets ONE paragraph turn the rule off while the document keeps it on', async () => {
         // The other half of "per paragraph": F states `w:widowControl="0"`
         // against a document default of on, and the print left its third line
-        // alone overleaf — the widow allowed, for that paragraph only. It is
+        // alone overleaf -- the widow allowed, for that paragraph only. It is
         // the one case that can tell a paragraph's own answer from the
         // document's, since every other section here agrees with the default.
         const pages = await pagesOf();
@@ -5224,7 +5224,7 @@ describe('widows, orphans, and the one default the reference disagrees about', (
 describe('a DOUBLE strike and a double underline', () => {
     // `decoration-double.docx`, printed by LibreOffice. `w:dstrike`
     // was in no fixture at all and a double underline had never had its gap
-    // printed — both were drawn a whole thickness apart because that reads as
+    // printed -- both were drawn a whole thickness apart because that reads as
     // two lines, which is a choice and not a measurement.
     //
     // Each decoration at 10pt and 40pt, so the answer says whether the gap
@@ -5248,7 +5248,7 @@ describe('a DOUBLE strike and a double underline', () => {
 
     it('draws the pair a whole thickness apart, where the print thins and straddles', async () => {
         // MEASURED, NOT MATCHED. The print struck 10pt text at +3.00 and +1.70
-        // with a 0.40 rule where its single is +2.60 at 0.60 — thinner than
+        // with a 0.40 rule where its single is +2.60 at 0.60 -- thinner than
         // the single, and straddling it. This engine keeps the single's
         // thickness and puts both rules to one side of it.
         //
@@ -5267,7 +5267,7 @@ describe('a DOUBLE strike and a double underline', () => {
         // The one thing both renderers agree on. At 40pt the print's pair is
         // 4.20 apart (11.80 and 7.60) where its 10pt pair is 1.30; ours is
         // 3.91 against 0.98. Four times the size, four times the gap, on both
-        // sides — so the gap is a multiple of the thickness in both, and only
+        // sides -- so the gap is a multiple of the thickness in both, and only
         // the multiple differs.
         const small = await rulesUnder('G');
         const large = await rulesUnder('H');
@@ -5282,7 +5282,7 @@ describe('a DOUBLE strike and a double underline', () => {
 
 describe('w:lvlRestart, which the reference renderer ignores', () => {
     // `list-restart.docx`, printed by LibreOffice. Three lists of the
-    // same three-level shape — `1. a) i. ii. b) ? 2. a) ?` — differing only in
+    // same three-level shape -- `1. a) i. ii. b) ? 2. a) ?` -- differing only in
     // what the third level says about restarting: nothing, `0`, and `1`.
     const markersOf = async (list: string): Promise<string[]> => {
         const opened = await openWordFile(file('list-restart.docx'), FONTS);
@@ -5296,12 +5296,12 @@ describe('w:lvlRestart, which the reference renderer ignores', () => {
 
     it('counts straight through a level that says it never restarts', async () => {
         // MEASURED AND DELIBERATELY DIFFERENT. The print numbers all three
-        // lists identically — `1. a) i. ii. b) i. 2. a) i.` — so LibreOffice
+        // lists identically -- `1. a) i. ii. b) i. 2. a) i.` -- so LibreOffice
         // ignores `w:lvlRestart` outright, in every spelling.
         //
         // We follow the FILE, as we do with the VML inset, and for a
-        // second reason: Word honours the element — it is the "restart
-        // numbering after" setting — so a document authored there reads
+        // second reason: Word honours the element -- it is the "restart
+        // numbering after" setting -- so a document authored there reads
         // correctly this way and not the other. It is how a document numbers
         // its figures 1..40 across chapters that each restart their sections.
         expect(await markersOf('B')).toEqual(
@@ -5316,7 +5316,7 @@ describe('w:lvlRestart, which the reference renderer ignores', () => {
     });
 
     it('says so where the stated restart LEVEL is not the one it applies', async () => {
-        // `w:lvlRestart="1"` names the level whose change restarts this one —
+        // `w:lvlRestart="1"` names the level whose change restarts this one --
         // level one, so a new letter should NOT restart the roman while a new
         // number should. This engine restarts under any shallower level, which
         // happens to print what LibreOffice printed and would not print what
@@ -5341,8 +5341,8 @@ describe('columns of unequal width, and the toggle that decides them', () => {
     // states `<w:cols w:num="2" w:space="708"/>` and nothing else, so the
     // equal-width arithmetic was measured and the OTHER branch never had been.
     //
-    // Four sections, each two columns stating 3000 twips, a 500 gap and 5526 —
-    // which fills the 9026 of writing width exactly — and each spelling the
+    // Four sections, each two columns stating 3000 twips, a 500 gap and 5526 --
+    // which fills the 9026 of writing width exactly -- and each spelling the
     // toggle differently. The page is short on purpose: a column holds six
     // lines, so eight paragraphs reach the second one.
     const pt = (px: number): number => Math.round(px * 72 / 96 * 100) / 100;
@@ -5368,7 +5368,7 @@ describe('columns of unequal width, and the toggle that decides them', () => {
         // 247.10 is 72 + 150 + 25: the first column's own width and the gap it
         // states. Divided evenly with the default half-inch gap it would be
         // 315.75, which is where the section that says `w:equalWidth="1"` puts
-        // it — and the whole of the difference between the two branches.
+        // it -- and the whole of the difference between the two branches.
         const at = await secondColumn();
 
         expect(at.get('A7')).toBeCloseTo(247.10, 0);
@@ -5383,8 +5383,8 @@ describe('columns of unequal width, and the toggle that decides them', () => {
         // the default decides only the case where no width is stated, which
         // this branch is never asked about.
         //
-        // Reading it as `"0"` alone — which is what Word writes, and all this
-        // engine accepted — got A and D right and B and C wrong.
+        // Reading it as `"0"` alone -- which is what Word writes, and all this
+        // engine accepted -- got A and D right and B and C wrong.
         const at = await secondColumn();
 
         expect(at.get('B7')).toBe(at.get('A7'));
@@ -5395,7 +5395,7 @@ describe('columns of unequal width, and the toggle that decides them', () => {
 
 describe('a cell that spans columns, and where a bordered table hangs', () => {
     // `cell-grid-span.docx`, printed by LibreOffice. `w:gridSpan` is
-    // read, carried across the editor seam, and was in NO vendored fixture —
+    // read, carried across the editor seam, and was in NO vendored fixture --
     // `vertical-merge.docx` covers the other axis and nothing covered this
     // one, though a merged header row is what half the tables in the world
     // look like.
@@ -5422,9 +5422,9 @@ describe('a cell that spans columns, and where a bordered table hangs', () => {
              * Which rows the rule down column `x` runs beside.
              *
              * Asked of the ROWS rather than as a length, because the two
-             * renderers mitre a corner differently — the print runs its
+             * renderers mitre a corner differently -- the print runs its
              * verticals half a horizontal rule past each end, 51.20 down the
-             * left edge against our 50.00 — and that is a question about
+             * left edge against our 50.00 -- and that is a question about
              * corners, not about spans.
              */
             beside: (x: number): number[] => page.rows
@@ -5456,8 +5456,8 @@ describe('a cell that spans columns, and where a bordered table hangs', () => {
         // 4 is the thick-bordered one, 5-6 the one with mixed borders.
         //
         // The print runs the first table's left edge past all four of its
-        // rows, its first inside boundary only beside rows two and four —
-        // 757.289 to 743.789 and 732.189 to 719.689 — and its second only
+        // rows, its first inside boundary only beside rows two and four --
+        // 757.289 to 743.789 and 732.189 to 719.689 -- and its second only
         // beside rows one and two, 768.889 to 743.789. Every spanned cell is a
         // gap in a rule that would otherwise be continuous.
         const { beside } = await drawn();
@@ -5465,14 +5465,14 @@ describe('a cell that spans columns, and where a bordered table hangs', () => {
         expect(beside(171.5)).toEqual([1, 3, 5, 6]);
         expect(beside(271.5)).toEqual([0, 1, 5, 6]);
         // The left edge has no span to interrupt it, in any table that hangs
-        // at 71.50 — which is every one whose first row states a 1pt rule.
+        // at 71.50 -- which is every one whose first row states a 1pt rule.
         expect(beside(71.5)).toEqual([0, 1, 2, 3, 5, 6]);
         expect(beside(70.5)).toEqual([4]);
     });
 
     it('hangs the table by half the rule its CELLS declare', async () => {
         // The defect this fixture found. A table hangs its left border into the
-        // margin — measured at two widths already — but the width was read off
+        // margin -- measured at two widths already -- but the width was read off
         // the TABLE's own border, and a table authored in Word carries its
         // borders on the cells.
         //
@@ -5491,7 +5491,7 @@ describe('a cell that spans columns, and where a bordered table hangs', () => {
 
     it('runs its verticals half a rule PAST the corner, not up to it', async () => {
         // The print puts this table's horizontal rules at 769.389 and
-        // 719.189 and runs its left edge from 769.889 to 718.689 — half a rule
+        // 719.189 and runs its left edge from 769.889 to 718.689 -- half a rule
         // beyond each, so the corner is filled. Stopping on the centre line,
         // which is what this engine did, leaves a quarter of every outer
         // corner unpainted.
@@ -5515,7 +5515,7 @@ describe('a cell that spans columns, and where a bordered table hangs', () => {
     it('takes the hang from the FIRST row, not the widest rule in the table', async () => {
         // Where guessing by analogy went wrong. `ruleAbove` resolves a shared
         // horizontal rule widest-wins, so the left edge looked like it should
-        // too — but a table whose first row claims 1pt and whose second claims
+        // too -- but a table whose first row claims 1pt and whose second claims
         // 3pt printed BOTH rules centred on 71.50, the first row's hang, with
         // the thicker one spilling either side of that same edge.
         //
@@ -5559,8 +5559,8 @@ describe('revision marks, and the view this engine takes of them', () => {
         // left of the text.
         //
         // That is the view a word processor gives an editor. This engine draws
-        // what the document says once the changes are accepted — the reading
-        // view, which is what a preview of an uploaded file is for — so a
+        // what the document says once the changes are accepted -- the reading
+        // view, which is what a preview of an uploaded file is for -- so a
         // deletion takes NO room and no rule is drawn for any of it.
         const { text, rules } = await linesOf();
 
@@ -5572,7 +5572,7 @@ describe('revision marks, and the view this engine takes of them', () => {
 
     it('keeps what an insertion and a hyperlink wrap', async () => {
         // The other half of the same decision: a `w:ins` is accepted text and
-        // a `w:hyperlink` only wraps runs, so both are drawn — and both agree
+        // a `w:hyperlink` only wraps runs, so both are drawn -- and both agree
         // with the print, which puts them at 100.10 like everything else here.
         const { text } = await linesOf();
 
@@ -5581,7 +5581,7 @@ describe('revision marks, and the view this engine takes of them', () => {
     });
 
     it('says that it dropped something, once', async () => {
-        // Dropping text silently is the one thing a reader must not do — the
+        // Dropping text silently is the one thing a reader must not do -- the
         // same rule that covers a character it cannot draw. Two
         // paragraphs lose text here and the notice is one, because the detail
         // is the same and `report` keeps only the first of those.
@@ -5595,7 +5595,7 @@ describe('an ALIGNED stop under an indent, and a tab in a FOOTER', () => {
     // `tab-aligned.docx`, printed by LibreOffice. Two combinations the corpus
     // had none of, both downstream of the indent work. `tab-alignment.docx`
     // has no indent in it, so a centre, right or decimal stop had only ever
-    // been measured in a paragraph starting at the margin — and an aligned
+    // been measured in a paragraph starting at the margin -- and an aligned
     // stop places the text AFTER it, so its arithmetic runs through the very
     // origin that slice changed. No header or footer anywhere in the corpus
     // contained a tab at all, which is the `left | centre | right` footer
@@ -5626,7 +5626,7 @@ describe('an ALIGNED stop under an indent, and a tab in a FOOTER', () => {
 
         expect(at.get('A')).toBeCloseTo(72.10, 0);
         expect(at.get('B')).toBeCloseTo(97.10, 0);
-        // Both rows draw the same word, so the map holds the LAST — which is
+        // Both rows draw the same word, so the map holds the LAST -- which is
         // the indented one, and its equality with the print is the point.
         expect(at.get('MMMM')).toBeCloseTo(252.55, 0);
     });
@@ -5634,7 +5634,7 @@ describe('an ALIGNED stop under an indent, and a tab in a FOOTER', () => {
     it('ends a right-aligned run on the stop and puts a decimal separator ON it', async () => {
         // Right: `MMMM` is 35.56pt wide and printed at 252.55, ending at
         // 288.11. Decimal: the print splits `12.34` into `12` at 278.10 and
-        // `.34` at 288.10 — the SEPARATOR sits on the stop, not the string.
+        // `.34` at 288.10 -- the SEPARATOR sits on the stop, not the string.
         const at = await drawn();
         const opened = await openWordFile(file('tab-aligned.docx'), FONTS);
         const page = layoutSections(opened.document.sections)[0]!;
@@ -5649,7 +5649,7 @@ describe('an ALIGNED stop under an indent, and a tab in a FOOTER', () => {
     it('collapses a tab whose text cannot fit before the stop', async () => {
         // Forty `M`s are 355.60pt and the stop is 216 along, so there is no
         // room to range them against it. The print gives the tab NO width at
-        // all — the text follows the `E` directly, at 103.25 — rather than
+        // all -- the text follows the `E` directly, at 103.25 -- rather than
         // pulling it back to before the line's own start.
         const at = await drawn();
 
@@ -5660,7 +5660,7 @@ describe('an ALIGNED stop under an indent, and a tab in a FOOTER', () => {
         // The three-column footer: a centre stop at half the text width and a
         // right stop at the right margin put MIDDLE at 278.35 and RIGHT at
         // 492.85. The paragraph under it declares no stops at all and falls to
-        // the defaults, 36pt apart from the margin — so a footer has no
+        // the defaults, 36pt apart from the margin -- so a footer has no
         // implicit centre or right stop of its own, whatever Word's own
         // template puts in its style.
         const at = await drawn();
@@ -5680,8 +5680,8 @@ describe('a whole contract, against the page LibreOffice printed', () => {
      * AUTHORED, not found, and the reason is measurable: of the fifteen
      * documents this platform has ever generated, not one contains a tab, a
      * `w:ind` or a contents list. So the rules measured for markers and for
-     * indents — a list marker and the tab after it, a stop inside an indented
-     * paragraph, an aligned stop with a leader — had never met in one file,
+     * indents -- a list marker and the tab after it, a stop inside an indented
+     * paragraph, an aligned stop with a leader -- had never met in one file,
      * and no real file in this repo could make them meet.
      *
      * It is the weaker kind of whole-document guard, since its author knew
@@ -5762,8 +5762,8 @@ describe('how many glyphs a tab leader draws', () => {
     // `tab-leader-fill.docx`, printed by LibreOffice. Each row is an
     // empty run and one tab to a right-aligned stop, so the span the leader
     // fills IS the stop's position and the arithmetic is exact. The spans are
-    // chosen to land just over, halfway, just under and EXACTLY on a glyph —
-    // only the exact one tells `ceil` from "one more than fits" — and one
+    // chosen to land just over, halfway, just under and EXACTLY on a glyph --
+    // only the exact one tells `ceil` from "one more than fits" -- and one
     // under a single glyph, which turned out to matter most.
     const drawn = async (): Promise<{ glyph: string; count: number }[]> => {
         const opened = await openWordFile(file('tab-leader-fill.docx'), FONTS);
@@ -5776,7 +5776,7 @@ describe('how many glyphs a tab leader draws', () => {
 
     it('never overshoots with dots', async () => {
         // 140.109, 140.509, 140.909 and 140.982 of them fit, and the print
-        // drew 140 every time — so not `round`, which would have given 141 for
+        // drew 140 every time -- so not `round`, which would have given 141 for
         // three of those. An exact 141.000 drew 141.
         const runs = await drawn();
         const dots = runs.filter((run) => '.' === run.glyph).map((run) => run.count);
@@ -5786,7 +5786,7 @@ describe('how many glyphs a tab leader draws', () => {
 
     it('always passes the stop with a rule, by exactly one glyph', async () => {
         // The finding. A span of EXACTLY 36 underscores drew 37, which is what
-        // rules out `ceil` and leaves "one more than fits" — a rule to sign on
+        // rules out `ceil` and leaves "one more than fits" -- a rule to sign on
         // reaches its stop rather than stopping 5.50pt short of it.
         //
         // The last of these is a span half a glyph wide, which drew its one
@@ -5798,7 +5798,7 @@ describe('how many glyphs a tab leader draws', () => {
     });
 
     it('goes to the nearer for a hyphen or a middle dot, and draws none under one', async () => {
-        // 54.804 drew 55 and 54.053 drew 54 — nearest, for both glyphs, which
+        // 54.804 drew 55 and 54.053 drew 54 -- nearest, for both glyphs, which
         // have the same advance. But 0.546 drew NOTHING, where rounding alone
         // would have made it one: not one whole glyph, not one glyph.
         const runs = await drawn();
@@ -5809,7 +5809,7 @@ describe('how many glyphs a tab leader draws', () => {
     });
 
     it('draws no dot leader where a whole dot does not fit', async () => {
-        // 0.727 of a dot printed nothing, which floor already gives — the case
+        // 0.727 of a dot printed nothing, which floor already gives -- the case
         // is here because the same span drew one UNDERSCORE, and a rule that
         // treated all leaders alike would have to be wrong about one of them.
         const runs = await drawn();
@@ -5871,8 +5871,8 @@ describe('what a tab stop is measured FROM', () => {
     it('does not let a first-line indent shift them either', async () => {
         // P4's first line starts 18pt further in than its own paragraph, and
         // its tab still lands in the column's 80pt stop. This half was already
-        // right — the origin allowed for the first line but not for the indent
-        // under it — which is why the two are asserted apart.
+        // right -- the origin allowed for the first line but not for the indent
+        // under it -- which is why the two are asserted apart.
         //
         // P7 is the same paragraph with a line BREAK before its tab, so the
         // tabbed text is on line two. That line starts back at the plain
@@ -5888,7 +5888,7 @@ describe('what a tab stop is measured FROM', () => {
 
     it('skips a stop the indent puts behind the line, and falls to the defaults', async () => {
         // P5's stop at 30pt is past the 25pt indent, so it is reachable and the
-        // tab barely moves — 102.10, just clear of the `a`. P6's at 15pt is
+        // tab barely moves -- 102.10, just clear of the `a`. P6's at 15pt is
         // BEHIND where its line even starts, so nothing can land on it and the
         // default stops take over at 36pt. That is the same rule the breaker
         // already followed past the last explicit stop; this is the case where
@@ -5923,7 +5923,7 @@ describe('w:kern, which decides whether a string is kerned at all', () => {
     it('does not kern a run that never asked to be kerned', async () => {
         // The finding, and the whole reason this fixture exists: the row with
         // no `w:kern` printed 11.60pt WIDER than the row with one. The wider
-        // number is the plain sum of advances — so a page kerns only where the
+        // number is the plain sum of advances -- so a page kerns only where the
         // document says so, and every string here was being kerned.
         const ops = await drawn();
 
@@ -5935,7 +5935,7 @@ describe('w:kern, which decides whether a string is kerned at all', () => {
     it('reads w:kern as a switch and ignores the size it states', async () => {
         // `w:kern="40"` asks for kerning above 20pt over 10pt text, so by the
         // format's own reading it should do nothing. The print puts it at the
-        // same 462.85 as `w:kern="16"`, kerned — LibreOffice reads only whether
+        // same 462.85 as `w:kern="16"`, kerned -- LibreOffice reads only whether
         // the element is THERE. Honouring the threshold would put us at odds
         // with the page for exactly the files that state one.
         const ops = await drawn();
@@ -5957,7 +5957,7 @@ describe('w:kern, which decides whether a string is kerned at all', () => {
 
     it('tells the SVG which, rather than leaving it to the viewer', async () => {
         // A renderer draws a piece as a string and the drawing engine steps
-        // between the glyphs itself — kerning by default, in every browser. An
+        // between the glyphs itself -- kerning by default, in every browser. An
         // unkerned run has to say so or its later glyphs land left of where
         // the line breaker put them.
         const opened = await openWordFile(file('kerning.docx'), FONTS);
@@ -5971,18 +5971,18 @@ describe('w:kern, which decides whether a string is kerned at all', () => {
 describe('where a list marker sits, and where the text after it starts', () => {
     // `list-marker-justified.docx`, printed by LibreOffice. Eleven
     // lists of three items each, numbered from 9 so a one-digit and a two-digit
-    // marker stand side by side — that difference is what reports the
+    // marker stand side by side -- that difference is what reports the
     // justification. Every item's text names its own row.
     //
     //   A-C  hanging 360, roomy:      left / right / center
     //   D-F  hanging 120, too small:  left / right / center
     //   G    like A, but the paragraph states no `w:ind` of its own
-    //   H    indent 500, hanging 120  — an indent that is NOT a multiple of the
+    //   H    indent 500, hanging 120  -- an indent that is NOT a multiple of the
     //                                   default tab, so a stop measured from the
     //                                   margin and one measured from the indent
     //                                   give different answers
     //   I    like D, plus an explicit `w:tabs` stop at 1600
-    //   J    indent 500, hanging 360  — the marker ends BEFORE the indent
+    //   J    indent 500, hanging 360  -- the marker ends BEFORE the indent
     //   K    level says 720/360, the PARAGRAPH says 1000/200
     const pt = (px: number): number => Math.round(px * 72 / 96 * 100) / 100;
 
@@ -6020,13 +6020,13 @@ describe('where a list marker sits, and where the text after it starts', () => {
 
     it('sends the text to the first tab stop past the marker, not snugly clear of it', async () => {
         // Group D's marker overruns its 6pt hanging space by 6.50pt. A snug
-        // push would start the text at 114.60; the print has 144.10 — the next
+        // push would start the text at 114.60; the print has 144.10 -- the next
         // default stop. The rule is the SUFFIX: `w:suff` is a tab by default,
         // and a tab goes to a stop.
         //
         // Group F is the same rule caught mid-step: a centred `9.` ends before
-        // the indent and its text starts at 108.10, while `10.` — wider by one
-        // digit — ends past it and its text jumps the whole way to 144.10.
+        // the indent and its text starts at 108.10, while `10.` -- wider by one
+        // digit -- ends past it and its text jumps the whole way to 144.10.
         const at = await rows();
 
         expect(at.get('d9')!.text).toBeCloseTo(144.10, 0);
@@ -6039,7 +6039,7 @@ describe('where a list marker sits, and where the text after it starts', () => {
     });
 
     it('counts the indent as a stop, and explicit stops before the defaults', async () => {
-        // J: the marker ends at 91.60 and the indent is 97.10 — the text starts
+        // J: the marker ends at 91.60 and the indent is 97.10 -- the text starts
         // AT the indent, so the indent is itself a stop.
         //
         // H: the same 25pt indent with a marker that runs past it. The text
@@ -6047,7 +6047,7 @@ describe('where a list marker sits, and where the text after it starts', () => {
         // stop measured from the indent would be 133.10, which is the number
         // this file was built to be able to disagree with.
         //
-        // I: an explicit stop at 80pt takes the text to 152.10 — past the
+        // I: an explicit stop at 80pt takes the text to 152.10 -- past the
         // default stop at 144.10 that would otherwise have caught it.
         const at = await rows();
 
@@ -6082,8 +6082,8 @@ describe('where a list marker sits, and where the text after it starts', () => {
         // reports the width directly: LibreOffice put `10.` and `11.` at the
         // SAME 77.60, and a centred `10.` and `11.` at the same 83.85.
         //
-        // This was 0.37pt out at first — exactly the GPOS kern for `1`+`1`
-        // — because every string was measured kerned whether the document
+        // This was 0.37pt out at first -- exactly the GPOS kern for `1`+`1`
+        // -- because every string was measured kerned whether the document
         // asked or not. Kept as a DIFFERENCE rather than an absolute, because
         // half a point of tolerance is wider than that gap was and would have
         // hidden both the defect and its fix.
@@ -6112,13 +6112,13 @@ describe('w:sym in a font nobody here has', () => {
         // MEASURED, NOT BUILT. Word writes bullets and dingbats as
         // `w:sym`, naming a font by name. This engine ships Liberation, Carlito
         // and Caladea and no others, so EVERY such character names a font that
-        // is absent — and the reader drops it rather than print whatever
+        // is absent -- and the reader drops it rather than print whatever
         // happens to live at that code point in a substitute, which would put
         // an `a` where the document wanted an arrow.
         //
         // LibreOffice prints something instead: the same paragraphs put `after`
         // at 104.55 for a Symbol bullet and 110.45 for a Wingdings square,
-        // against 100.45 where the mark begins — so it gave them 4.10 and 10.00
+        // against 100.45 where the mark begins -- so it gave them 4.10 and 10.00
         // points of room out of some substitute face.
         //
         // Here they take NO room: the symbol paragraphs lay out exactly like
@@ -6133,7 +6133,7 @@ describe('w:sym in a font nobody here has', () => {
 
     it('says so, once per font it could not find', async () => {
         // The loss is reported rather than silent, which is the least a reader
-        // can do about a character it will not draw — the same rule that
+        // can do about a character it will not draw -- the same rule that
         // covers a text box. A literal bullet needs no such notice: U+2022 is
         // in the face already, and the third paragraph draws it at 100.35.
         const opened = await openWordFile(file('symbol-font.docx'), FONTS);
@@ -6163,7 +6163,7 @@ describe('w:noBreakHyphen, end to end', () => {
     it('refuses the break an ordinary hyphen offers', async () => {
         // Printed by LibreOffice, the same word twice in a column
         // too narrow for it: joined by an ordinary hyphen it broke AFTER the
-        // hyphen — `wwwwwwww-` then `wwwwwwww` — and joined by a
+        // hyphen -- `wwwwwwww-` then `wwwwwwww` -- and joined by a
         // `w:noBreakHyphen` it did not break there at all.
         const lines = await linesOf();
 
@@ -6174,9 +6174,9 @@ describe('w:noBreakHyphen, end to end', () => {
 
     it('measures the hyphen the font does not HAVE at a hyphen’s width', async () => {
         // Where the fixture earns its keep. No face this engine ships carries
-        // U+2011, so it was measured as `.notdef` — 0.7778 em against a
-        // hyphen's 0.3330 — and the line broke a character early: `‑www` where
-        // the print has `‑wwww`.
+        // U+2011, so it was measured as `.notdef` -- 0.7778 em against a
+        // hyphen's 0.3330 -- and the line broke a character early: `-www` where
+        // the print has `-wwww`.
         //
         // The third paragraph is the control: the same letters with NO hyphen
         // broke identically in both, which is what says the column width was
@@ -6191,8 +6191,8 @@ describe('w:noBreakHyphen, end to end', () => {
 
     it('allows a break BEFORE it, whatever Unicode says', async () => {
         // The tables forbade one, on the strength of the class Unicode gives
-        // the character — and nothing had ever printed it. Measured:
-        // `www ‑www`, too long for its column, broke at the SPACE and carried
+        // the character -- and nothing had ever printed it. Measured:
+        // `www -www`, too long for its column, broke at the SPACE and carried
         // the hyphen to the head of the next line.
         //
         // Forbidding it moved the whole fragment and then chopped it mid-word,
@@ -6226,12 +6226,12 @@ describe('w:tblHeader, the row a long table repeats', () => {
 
     it('repeats EVERY leading header row, in order', async () => {
         // The layout has repeated headers since long before this, and no
-        // fixture ever carried a `w:tblHeader` — so a feature every long table
+        // fixture ever carried a `w:tblHeader` -- so a feature every long table
         // in every contract leans on was built against nothing.
         //
         // Printed by LibreOffice: a 64-row table with rows one and two marked
         // opened its second page with `A01`, `A02`, then `A64`, and the first
-        // of them sat at 760.94 — the top of the writing area, where the same
+        // of them sat at 760.94 -- the top of the writing area, where the same
         // table's first page starts 750.59 because a paragraph precedes it.
         const pages = await pagesOf();
 
@@ -6242,11 +6242,11 @@ describe('w:tblHeader, the row a long table repeats', () => {
 
     it('stands above the continuation of a row it SPLIT', async () => {
         // A table breaks between its rows, so single-line rows never reach the
-        // path that repeats a header above a row broken in half — which is how
+        // path that repeats a header above a row broken in half -- which is how
         // a mutation gutting that path survived the first battery.
         //
         // A row of forty lines, started low on the page, is too tall to fit
-        // whole. Printed by LibreOffice: it SPLITS — page one ends at
+        // whole. Printed by LibreOffice: it SPLITS -- page one ends at
         // `T21` and page two opens with the repeated `HEAD` at 760.94, then
         // `T22` directly under it. So the row carries on rather than moving
         // over, and the header stands above the half of it that continues.
@@ -6269,8 +6269,8 @@ describe('w:tblHeader, the row a long table repeats', () => {
     it('splits a row AGAIN where its remainder still overflows', async () => {
         // Two defects, both found by a mutation that would not die.
         //
-        // A row of 150 lines, started low: LibreOffice filled three pages —
-        // `U001`..`U021`, then `U022`..`U087`, then `U088`..`U150` — repeating
+        // A row of 150 lines, started low: LibreOffice filled three pages --
+        // `U001`..`U021`, then `U022`..`U087`, then `U088`..`U150` -- repeating
         // `HEAD` above BOTH continuations. We put the whole 129-line remainder
         // on page two, running it off the bottom, and repeated no header at
         // all, because the guard weighed the header against the remainder
@@ -6291,8 +6291,8 @@ describe('w:tblHeader, the row a long table repeats', () => {
 
     it('moves a row that cannot be SPLIT, header and all', async () => {
         // `w:cantSplit` refuses the break. Printed by LibreOffice:
-        // a 40-line row so marked put NOTHING on the page it could not fit —
-        // not even the header it would have had room for — and opened the next
+        // a 40-line row so marked put NOTHING on the page it could not fit --
+        // not even the header it would have had room for -- and opened the next
         // with `AHEAD` and the whole row beneath it.
         //
         // A header is never the last thing on a page, so it asks for room for
@@ -6360,7 +6360,7 @@ describe('wholeTable, the ninth condition', () => {
         // MEASURED AS A NULL, which is a result rather than a gap.
         // `wholeTable` is the ninth conditional format and the one Word's own
         // built-in styles lean on: many put their borders there rather than in
-        // the style's `w:tblPr`. LibreOffice draws none of it — a style whose
+        // the style's `w:tblPr`. LibreOffice draws none of it -- a style whose
         // only rules are inside a `wholeTable` printed a table with no rules at
         // all, whether the rules sat in its `w:tcPr` or its `w:tblPr`, and its
         // shading never appeared either.
@@ -6381,7 +6381,7 @@ describe('wholeTable, the ninth condition', () => {
         // The control, and the reason the null can be trusted: the third table
         // names a style carrying BOTH a `wholeTable` shading and a `firstRow`
         // one, over borders in the style's own `w:tblPr`. LibreOffice drew the
-        // half-point rules and the first row's fill and nothing else — so the
+        // half-point rules and the first row's fill and nothing else -- so the
         // machinery works on this very file, and only `wholeTable` goes unread.
         const tables = await tablesOf();
         const mixed = tables[2]!;
@@ -6414,7 +6414,7 @@ describe('the bands that run down the columns', () => {
     it('beats the bands that run the other way', async () => {
         // A table defining both kinds, every cell in one of each, came out
         // ENTIRELY the vertical band's colour. That is the opposite of the
-        // order ECMA-376 lists — which is why it is measured here rather than
+        // order ECMA-376 lists -- which is why it is measured here rather than
         // read off the specification.
         const grids = await gridsOf();
 
@@ -6424,7 +6424,7 @@ describe('the bands that run down the columns', () => {
     it('leaves the first column off the banding, and restarts after it', async () => {
         // The row rule mirrored, and measured rather than assumed:
         // with `firstColumn` on, the columns came out first-column, band1,
-        // band2, band1 — so the column is off the count and the count begins
+        // band2, band1 -- so the column is off the count and the count begins
         // again beside it.
         const grids = await gridsOf();
 
@@ -6432,7 +6432,7 @@ describe('the bands that run down the columns', () => {
         // And the same style with the column dressing only its TEXT leaves
         // column one unshaded: a band reaching under it is invisible while the
         // column carries a fill of its own, which is how a mutation removing
-        // the exclusion survived its first battery — the same trap the row
+        // the exclusion survived its first battery -- the same trap the row
         // rule hit one dimension over.
         expect(grids[6]![0]).toEqual(['.', '#C0C0C0', '#909090', '#C0C0C0']);
     });
@@ -6490,12 +6490,12 @@ describe('w:tblStylePr, which cells each condition dresses', () => {
         // A style dressing its first row's TEXT only, over a band dressing the
         // cell: LibreOffice left row one unshaded and shaded row two. So a
         // header row is off the banding altogether, rather than merely having
-        // the header painted over the band — which is invisible while the
+        // the header painted over the band -- which is invisible while the
         // header carries a fill of its own, and is why this table gives it none.
         //
         // BOTH bands are defined, and that matters: with only one, a band
         // reaching under the header is invisible whenever the count puts the
-        // header on the other parity — which is exactly how a mutation
+        // header on the other parity -- which is exactly how a mutation
         // removing this guard survived its first battery.
         const grids = await gridsOf();
 
@@ -6508,7 +6508,7 @@ describe('w:tblStylePr, which cells each condition dresses', () => {
 
     it('turns everything on where there is NO w:tblLook at all', async () => {
         // Measured, not assumed: a table with no such element, over a style
-        // dressing its first row and its odd bands, came out with both — the
+        // dressing its first row and its odd bands, came out with both -- the
         // header's 404040 on row one and the band's C0C0C0 on row two.
         // Reading an absent mask as nought, which is the tempting answer,
         // would have dressed neither.
@@ -6524,7 +6524,7 @@ describe('w:tblStylePr, which cells each condition dresses', () => {
     it('carries BORDERS as well as shading, under the cell’s own', async () => {
         // The commonest table look there is: a heavy rule under the header.
         // Printed by LibreOffice, a style lending its first row a 3pt
-        // bottom over a table drawing half a point everywhere — the rule under
+        // bottom over a table drawing half a point everywhere -- the rule under
         // row one came out 3.000 and every other 0.500.
         //
         // And a cell saying `none` still wins: the same style over such a cell
@@ -6535,7 +6535,7 @@ describe('w:tblStylePr, which cells each condition dresses', () => {
         // table, and the model would report only the refusal.
         const opened = await openWordFile(file('table-conditional-borders.docx'), FONTS);
         const page = layoutSections(opened.document.sections)[0]!;
-        // Widest per HEIGHT, because both cells of a shared edge draw it —
+        // Widest per HEIGHT, because both cells of a shared edge draw it --
         // the row above its bottom and the row below its top, at the same y.
         // Taking them in order finds the thin one as readily as the thick.
         const widest = new Map<number, number>();
@@ -6559,7 +6559,7 @@ describe('w:tblStylePr, which cells each condition dresses', () => {
     it('settles which one wins where they MEET', async () => {
         // A seventh table with a header, a first column and a band together,
         // each shaded differently. Row one came out the header's 404040 in
-        // EVERY column — so a row condition beats a column one — and row two
+        // EVERY column -- so a row condition beats a column one -- and row two
         // came out the column's 808080 in the first cell and the band's
         // C0C0C0 in the rest, so a column condition beats a band.
         //
@@ -6595,7 +6595,7 @@ describe('what else a table style carries, end to end', () => {
     it('dresses the text in the style’s own w:rPr', async () => {
         // Printed by LibreOffice: a style whose `w:rPr` says fourteen
         // points stepped its rows 16.60, where the same table naming no style
-        // stepped 12.05 — a 14pt line against a 10pt one, plus the half point
+        // stepped 12.05 -- a 14pt line against a 10pt one, plus the half point
         // of rule between them. The cells themselves say nothing about size.
         //
         // It changes the geometry, not just the look: a table whose text is
@@ -6618,7 +6618,7 @@ describe('what else a table style carries, end to end', () => {
 
     it('lets a style BASED ON another climb down from it', async () => {
         // A leaf restating the size at eleven points over a root saying
-        // fourteen stepped its rows 13.15 — the eleven — so the chain answers
+        // fourteen stepped its rows 13.15 -- the eleven -- so the chain answers
         // leaf-first here exactly as it does for a table style's borders.
         const word = await wordsOf();
 
@@ -6626,7 +6626,7 @@ describe('what else a table style carries, end to end', () => {
     });
 
     it('leaves the dress INSIDE the table it belongs to', async () => {
-        // The paragraph after every table, printed at 72.10 — left-aligned and
+        // The paragraph after every table, printed at 72.10 -- left-aligned and
         // plain, where the centred table above would have put it at 183.05 if
         // what a table lends outlived it. A table nested in another cell is the
         // same question one level down, which is why the lend is saved and put
@@ -6644,7 +6644,7 @@ describe('what else a table style carries, end to end', () => {
         // Measured and pinned unbuilt earlier; this is the build.
         //
         // Printed by LibreOffice: the header table's first row came out 16.55
-        // TALL — the fill drawn behind it — for a 14pt bold line where the
+        // TALL -- the fill drawn behind it -- for a 14pt bold line where the
         // body is 10pt, and its baselines sat 12.85 apart. The height and the
         // step are different quantities, and asserting the first against the
         // second is how this test failed at 12.87 while the engine was right.
@@ -6665,7 +6665,7 @@ describe('what else a table style carries, end to end', () => {
 
     it('shades the first row from the conditional format, and only it', async () => {
         // The fill LibreOffice drew behind that row, C0C0C0, 233.95 wide and
-        // 16.55 tall — and nothing behind the same table with the mask cleared.
+        // 16.55 tall -- and nothing behind the same table with the mask cleared.
         const opened = await openWordFile(file('table-style-text.docx'), FONTS);
         const tables = opened.document.paragraphs.filter(isTable);
         const fillOf = (index: number, row: number): string | undefined =>
@@ -6694,8 +6694,8 @@ describe('a paragraph split by a page break, end to end', () => {
     it('gives an EMPTY piece of the split no line at all', async () => {
         // Printed by LibreOffice, four arrangements of one break:
         // alone in its paragraph, after text, before text, and between two
-        // runs of text. Every page after a break opened at the same 760.49 —
-        // 81.40 from the top — so an empty piece takes no room on either side.
+        // runs of text. Every page after a break opened at the same 760.49 --
+        // 81.40 from the top -- so an empty piece takes no room on either side.
         //
         // The first arrangement is how PHPWord writes `addPageBreak()`, so it
         // is in every document this platform generates: each opened with a
@@ -6731,7 +6731,7 @@ describe('a REAL document this platform generated, against its print', () => {
      * `docProps/app.xml` says so outright.
      *
      * Small, and it earns its place by being nothing like the other real
-     * fixture — LANDSCAPE, Cyrillic headings, bookmarks, and its pages
+     * fixture -- LANDSCAPE, Cyrillic headings, bookmarks, and its pages
      * separated by a break-alone paragraph. It matched to a hundredth of a
      * point once that was read the way LibreOffice reads it,
      * so it is held to a tenth rather than the point and a half the longer
@@ -6767,10 +6767,10 @@ describe('a REAL document, against the page LibreOffice printed', () => {
      * Not a probe of one rule: a whole document, printed and compared.
      *
      * 160 paragraphs and four tables, laid out here and put beside the
-     * baselines LibreOffice printed from the same file — every line of them,
+     * baselines LibreOffice printed from the same file -- every line of them,
      * vendored beside the fixture. Four fixes came out of this one comparison
-     * — the default family, the room a table keeps for its rules, the default
-     * size, a bare heading's spacing — each uncovered only once the one before
+     * -- the default family, the room a table keeps for its rules, the default
+     * size, a bare heading's spacing -- each uncovered only once the one before
      * it stopped masking it.
      *
      * It guards what a probe cannot: that the rules hold TOGETHER, on a file
@@ -6783,7 +6783,7 @@ describe('a REAL document, against the page LibreOffice printed', () => {
         join(FIXTURES, 'real-adr.libreoffice.json'), 'utf8')) as {
             pageHeightPt: number;
             pages: number[][];
-            /** Where each of those lines BEGINS — see the x test below. */
+            /** Where each of those lines BEGINS -- see the x test below. */
             left: number[][];
         };
 
@@ -6808,8 +6808,8 @@ describe('a REAL document, against the page LibreOffice printed', () => {
      * EMPTY text is skipped and BLANK text is not, which is not a detail: a
      * code line here begins with four spaces, and this engine draws them as a
      * piece of their own where the print keeps them inside the line's one
-     * operation. Skipping ours reported the line 21.50pt to the right — four
-     * monospace spaces at 9pt — and it was the instrument that was wrong.
+     * operation. Skipping ours reported the line 21.50pt to the right -- four
+     * monospace spaces at 9pt -- and it was the instrument that was wrong.
      */
     const oursLeft = async (inkOnly = false): Promise<number[][]> => {
         const opened = await openWordFile(file('real-adr.docx'), FONTS);
@@ -6841,7 +6841,7 @@ describe('a REAL document, against the page LibreOffice printed', () => {
      *
      * Half a point because that is the tolerance the row-by-row comparison
      * uses, and because the print runs a constant 0.05 to 0.10 right of this
-     * engine — a whole-page offset, not a layout difference, and one that must
+     * engine -- a whole-page offset, not a layout difference, and one that must
      * not split a column in two.
      */
     const census = (values: readonly number[]): Map<number, number> => {
@@ -6860,7 +6860,7 @@ describe('a REAL document, against the page LibreOffice printed', () => {
     });
 
     it('places every line of page one within a point and a half of the print', async () => {
-        // The drift is cumulative and one-directional — 0.08 at the title,
+        // The drift is cumulative and one-directional -- 0.08 at the title,
         // 1.34 by the last line, about 0.045 a line. That is LibreOffice's own
         // line rounding: it steps 11.55 for a 10pt Liberation Serif line where
         // the font's metrics give 11.4990, and 10.20 for a 9pt one where they
@@ -6881,7 +6881,7 @@ describe('a REAL document, against the page LibreOffice printed', () => {
     it('starts every line of pages one and two where the print starts it', async () => {
         // The other axis, and the one this comparison was blind to for its
         // whole life. Baselines cannot see a horizontal defect at
-        // all — not a tab in the wrong column, not an indent applied
+        // all -- not a tab in the wrong column, not an indent applied
         // twice. Two slices in a row moved x on every document in the
         // corpus, and this file, the strictest guard the engine has, could not
         // have failed either time.
@@ -6891,8 +6891,8 @@ describe('a REAL document, against the page LibreOffice printed', () => {
         // the right column or does not.
         //
         // Pages one and two only, and ordinally, which works for one reason:
-        // each of them holds exactly one line more than the print — the
-        // difference pinned below — and on both it is the LAST. Page three
+        // each of them holds exactly one line more than the print -- the
+        // difference pinned below -- and on both it is the LAST. Page three
         // therefore starts two lines further into the document than the print's
         // does and cannot be lined up row by row; the census below is what
         // covers it, and its four table columns.
@@ -6915,8 +6915,8 @@ describe('a REAL document, against the page LibreOffice printed', () => {
         // does not care which page they landed on, so the page-break difference
         // stops mattering and the tables are covered.
         //
-        // Every column matches exactly — the body margin, the two list indents,
-        // and the five columns the tables put text in — except the margin
+        // Every column matches exactly -- the body margin, the two list indents,
+        // and the five columns the tables put text in -- except the margin
         // itself, where this engine draws one line more. That is the same
         // difference as below: a line the print holds over, drawn here.
         const ours = census((await oursLeft(true)).flat());
@@ -6935,8 +6935,8 @@ describe('a REAL document, against the page LibreOffice printed', () => {
         // rule of its own: by the foot of the page LibreOffice is 1.34 lower,
         // which is enough to push its last code line over. Ours keeps it.
         //
-        // So this is what the rounding costs — a page break in a different
-        // place — and the day the line height matches, this test fails and the
+        // So this is what the rounding costs -- a page break in a different
+        // place -- and the day the line height matches, this test fails and the
         // number becomes zero.
         const pages = await ours();
 
@@ -6950,7 +6950,7 @@ describe('a built-in heading that states no spacing, end to end', () => {
     /**
      * The gap above and below the paragraph whose text starts with `text`.
      *
-     * Baseline to baseline on either side, which is what the probe reads —
+     * Baseline to baseline on either side, which is what the probe reads --
      * and the heading's own size cancels out of the comparison, since every
      * pair below is between two paragraphs of the SAME size.
      */
@@ -6983,7 +6983,7 @@ describe('a built-in heading that states no spacing, end to end', () => {
         //   silent   24.50 above, 17.70 below
         //   zero     12.50 above, 11.70 below
         //
-        // The difference is the whole of it — 12.00 and 6.00 — and it is what
+        // The difference is the whole of it -- 12.00 and 6.00 -- and it is what
         // put every heading in an under-specified document 12pt high and every
         // paragraph after one 6pt high.
         const around = await aroundIn('heading-defaults.docx');
@@ -7016,7 +7016,7 @@ describe('a built-in heading that states no spacing, end to end', () => {
         // The half that makes this safe. The same file with a real `Normal`
         // stating 20pt above and 10pt below: LibreOffice printed the style
         // named `heading 8`, the one named `Custom Thing` and the one named
-        // `heading 6` at EXACTLY the same distances — 32.45 and 31.75 — so the
+        // `heading 6` at EXACTLY the same distances -- 32.45 and 31.75 -- so the
         // built-in does not fire when anything else answers.
         //
         // An ordinary Word document, whose Normal always carries spacing, never
@@ -7064,7 +7064,7 @@ describe('the room a table keeps for its rules, end to end', () => {
 
     it('keeps room for the rule the CELL declares, not the one the table does', async () => {
         // Printed by LibreOffice, five tables of three rows, each row
-        // one 9pt line — a 10.35 box — so the pitch IS the line plus the rule:
+        // one 9pt line -- a 10.35 box -- so the pitch IS the line plus the rule:
         //
         //   A  table 1/2pt, cells 1/8pt   10.45   the cell's, thinner
         //   B  table 1/2pt, cells silent  10.85   the table's, nothing overrides
@@ -7080,9 +7080,9 @@ describe('the room a table keeps for its rules, end to end', () => {
         // 0.025 is LibreOffice quantising a hairline: its own stroke widths
         // report 0.100 for a rule the file declares as `w:sz="1"`, an eighth of
         // a point. We keep the eighth the document states, as everywhere else a
-        // renderer rounds what a file says. Every case where the RULE differs —
+        // renderer rounds what a file says. Every case where the RULE differs --
         // half a point, three points, the widest of two, the widest across an
-        // edge — lands exactly.
+        // edge -- lands exactly.
         expect(await pitchesOf()).toEqual([
             [10.47, 10.47],
             [10.85, 10.85],
@@ -7094,8 +7094,8 @@ describe('the room a table keeps for its rules, end to end', () => {
 
     it('keeps the same room BELOW the last row, where the text starts again', async () => {
         // The outer edges follow the cell too, which the stroke widths show
-        // outright: table A declares half a point and its printed rules — top
-        // and bottom included — came out at the cells' hairline. So the
+        // outright: table A declares half a point and its printed rules -- top
+        // and bottom included -- came out at the cells' hairline. So the
         // paragraph after a table starts a cell's rule below it, not a table's.
         //
         // Measured from the last row's baseline to the next paragraph's:
@@ -7134,12 +7134,12 @@ describe('the font a document that names none gets, end to end', () => {
         // Measured with the FONT'S OWN NAME, read out of the printed PDF rather
         // than inferred from a step: a `.docx` whose `styles.xml`
         // carries an empty `w:rPrDefault` embedded `LiberationSerif`, and
-        // nothing else. Its 20pt paragraphs stepped 23.00 — the 1.15 em of that
+        // nothing else. Its 20pt paragraphs stepped 23.00 -- the 1.15 em of that
         // face, where Carlito's 1.2207 would have given 24.41.
         //
         // Not a corner case: an empty `docDefaults` is what an uploaded
         // template that states nothing looks like, and the fill path copies its
-        // `styles.xml` verbatim — so answering Calibri here made such a
+        // `styles.xml` verbatim -- so answering Calibri here made such a
         // document paginate one way in the preview and another in the renderer
         // that prints it.
         const { page } = await linesOf('no-font-stated.docx');
@@ -7156,7 +7156,7 @@ describe('the font a document that names none gets, end to end', () => {
         // rather than about fonts in general: the same probe with no
         // `styles.xml` in the package embedded `Carlito-Regular`. LibreOffice
         // treats a missing styles part and an empty one differently, and so
-        // does this — the manifest's own default answers the first.
+        // does this -- the manifest's own default answers the first.
         const { opened } = await linesOf('cell-text-turned-wrapped.docx');
         const table = opened.document.paragraphs.filter(isTable)[0]!;
         const cell = table.rows[0]!.cells[0]!;
@@ -7183,7 +7183,7 @@ describe('the font a document that names none gets, end to end', () => {
         // The control that decides where the fallback belongs, printed by
         // LibreOffice from the same probe as a bare package: it
         // stepped 13.45 between its unstated paragraphs and 12.20 between its
-        // 10pt ones — eleven points and ten points of Carlito's 1.2207 em. So
+        // 10pt ones -- eleven points and ten points of Carlito's 1.2207 em. So
         // the manifest's `defaults` are right as they stand, and the ten-point
         // answer belongs beside the Times New Roman one rather than in place
         // of them.
@@ -7196,9 +7196,9 @@ describe('the font a document that names none gets, end to end', () => {
     });
 
     it('says nothing about a substitution it made up itself', async () => {
-        // A document that never named a font did not ask for Times New Roman —
+        // A document that never named a font did not ask for Times New Roman --
         // this engine did. Routing the fallback through the substitution path
-        // would put a "not available, using the metric-compatible…" notice on
+        // would put a "not available, using the metric-compatible..." notice on
         // every under-specified document, and a diagnostic that fires on
         // everything is worse than none.
         const { opened } = await linesOf('no-font-stated.docx');
@@ -7213,8 +7213,8 @@ describe('w:gutter, end to end', () => {
     /**
      * One entry per page: where its text starts, and what its lines hold.
      *
-     * The fixture's first four sections are one page each, and the fifth — the
-     * two-column one — runs on past them, so the tests below take the four
+     * The fixture's first four sections are one page each, and the fifth -- the
+     * two-column one -- runs on past them, so the tests below take the four
      * they are about rather than counting pages.
      */
     const pagesOf = async () => {
@@ -7235,8 +7235,8 @@ describe('w:gutter, end to end', () => {
     it('adds the binding margin to the LEFT margin, and takes it off the width', async () => {
         // Printed by LibreOffice, four sections of one page each: no
         // gutter, half an inch, half an inch in an RTL section, and a whole
-        // inch. The text began at 72.10, 108.10, 107.90 and 144.10 — the shift
-        // following the value — and the same paragraph broke at a different
+        // inch. The text began at 72.10, 108.10, 107.90 and 144.10 -- the shift
+        // following the value -- and the same paragraph broke at a different
         // word each time: its section tag plus 22 words of `mm` on the first
         // page, then 20, 20 and 18. Counted WITH the tag here, which is what
         // the printed line holds.
@@ -7264,8 +7264,8 @@ describe('w:gutter, end to end', () => {
 
     it('keeps the gutter on the LEFT of an RTL section, as LibreOffice does', async () => {
         // Word puts the binding edge on the right for a `w:bidi` section.
-        // LibreOffice does not — it printed the third page at 107.90, within a
-        // fifth of a point of the second — and neither do we. Pinned rather
+        // LibreOffice does not -- it printed the third page at 107.90, within a
+        // fifth of a point of the second -- and neither do we. Pinned rather
         // than argued: this engine does not lay out right-to-left text at all,
         // so a gutter that changed sides would be the only bidi-aware thing in
         // it, and would move the text of a document it cannot otherwise read.
@@ -7328,8 +7328,8 @@ describe('content controls around a table, end to end', () => {
     });
 
     it('draws a cell inside a control, which LIBREOFFICE leaves blank', async () => {
-        // A DELIBERATE divergence. LibreOffice keeps the cell — its inside
-        // vertical rule runs the full height of all three rows — and prints
+        // A DELIBERATE divergence. LibreOffice keeps the cell -- its inside
+        // vertical rule runs the full height of all three rows -- and prints
         // nothing in it, so `CC2` is missing from its page. The document says
         // the cell holds that text, and losing a cell's words is the fault
         // already closed for the text box; it is not reopened here.
@@ -7348,14 +7348,14 @@ describe('content controls around a table, end to end', () => {
         // The property that made this a defect rather than a preference: two
         // walks over one table have to agree. `readTable` flattened controls
         // and `columnWidths` did not, so a table whose only row was wrapped
-        // kept the NOMINAL grid its file declares — 100 twips, six pixels to a
-        // column — while the identical table without the wrapper recovered
+        // kept the NOMINAL grid its file declares -- 100 twips, six pixels to a
+        // column -- while the identical table without the wrapper recovered
         // 4680 twips from its cells.
         //
         // The two tables here differ by the wrapper and by nothing else, which
         // is what makes this answerable without asking LibreOffice: it renders
         // BOTH at the nominal grid, because it trusts a grid where this engine
-        // recomputes it from the cells — a divergence that predates this slice.
+        // recomputes it from the cells -- a divergence that predates this slice.
         const tables = (await opened()).document.paragraphs.filter(isTable);
         const [, wrapped, unwrapped] = tables;
 
@@ -7374,7 +7374,7 @@ describe('content controls around a table, end to end', () => {
         // the column counter never advances, so every cell after the control
         // is credited to the column before its own. Here the second cell is
         // the only thing that states the second column's width, and the two
-        // are deliberately far apart — 7020 and 2340 twips — so a cell
+        // are deliberately far apart -- 7020 and 2340 twips -- so a cell
         // credited to the wrong column cannot look like a rounding difference.
         const table = (await opened()).document.paragraphs.filter(isTable)[3]!;
 
@@ -7395,7 +7395,7 @@ describe('w:lvlOverride, end to end', () => {
     it('counts three numIds on ONE abstract straight through', async () => {
         // Printed by LibreOffice: 1. 2. 3. for the plain list, 7. 8.
         // 9. for the one told to start at seven, and (J) (K) (L) for the one
-        // whose override replaces the level — the tenth, eleventh and twelfth
+        // whose override replaces the level -- the tenth, eleventh and twelfth
         // letters, because the count carried on from the 9 above it.
         //
         // We used to print 1. 2. 3. three times over: a counter per numId, and
@@ -7460,13 +7460,13 @@ describe('text boxes, end to end', () => {
         // An earlier pass measured this file and reported the loss rather than
         // fixing it. This is the fix: the words inside `w:txbxContent` are
         // read as blocks, stacked at the frame's width and drawn at the frame's
-        // corner — so what was silently missing is now on the page.
+        // corner -- so what was silently missing is now on the page.
         //
         // LibreOffice printed `DMLBOX` at 279.30, 702.39. The frame is 200pt
         // across the column and 20pt down the paragraph, and the 279.30 is the
         // column's own left plus that 200, plus the 7.20 default inset; the
         // 0.10 we are under it is the glyph side bearing the probe reads and
-        // the display list does not — the same 0.1pt every measured line in
+        // the display list does not -- the same 0.1pt every measured line in
         // this file allows for, which is what `toBeCloseTo(x, 0)` is here
         // for. A box placed against the wrong origin would be out by 200.
         const lines = await linesOf('text-box.docx');
@@ -7490,7 +7490,7 @@ describe('text boxes, end to end', () => {
         // The measurement that decided the model: the same fourteen
         // words in two 120pt boxes, one silent about its inset and one stating
         // zero on all four sides. LibreOffice broke the silent one five words
-        // to a line and the zero one six, which is the 7.20 either side of it —
+        // to a line and the zero one six, which is the 7.20 either side of it --
         // so a box's width is what breaks its text, and the inset comes off it
         // before anything is measured.
         const lines = await linesOf('text-box-inside.docx');
@@ -7512,7 +7512,7 @@ describe('text boxes, end to end', () => {
 
         // Both corners where LibreOffice put them: 279.30/736.89 for the box
         // that takes the default inset, and 272.10/628.99 for the one that
-        // waives it — the frame's own edge, 200pt from the column.
+        // waives it -- the frame's own edge, 200pt from the column.
         expect(inset[0]!.xPt).toBeCloseTo(279.30, 0);
         expect(inset[0]!.yPt).toBeCloseTo(736.89, 0);
         expect(flush[0]!.xPt).toBeCloseTo(272.10, 0);
@@ -7526,7 +7526,7 @@ describe('text boxes, end to end', () => {
         // A DELIBERATE divergence, and the one place this file disagrees with
         // the renderer it is measured against.
         //
-        // LibreOffice printed both VML boxes at 276.35 — the one silent about
+        // LibreOffice printed both VML boxes at 276.35 -- the one silent about
         // its inset AND the one stating `inset="0,0,0,0"`. Stating zero changed
         // nothing, so that 4.25 is LibreOffice's own default rather than
         // anything the document asked for. We read what the file says: the
@@ -7534,7 +7534,7 @@ describe('text boxes, end to end', () => {
         //
         // The evidence that this is right is in LibreOffice's own print of the
         // DrawingML pair, where `lIns="0"` DID move the text to the frame's
-        // edge at 272.10 — the same edge our zero-inset VML box lands on.
+        // edge at 272.10 -- the same edge our zero-inset VML box lands on.
         const lines = await linesOf('text-box-inside.docx');
         const silent = lines.find((line) => line.text.startsWith('VA'))!;
         const zero = lines.find((line) => line.text.startsWith('VZ'))!;
@@ -7582,10 +7582,10 @@ describe('w:shd behind text, end to end', () => {
     it('paints a RUN’s shading as the line’s height by the run’s own advance', async () => {
         // `w:rPr/w:shd` is the other way a document says "colour behind this
         // text", beside `w:highlight`, and the reader has folded it onto the
-        // same field all along — untested against a printed page until now.
+        // same field all along -- untested against a printed page until now.
         //
         // Printed: `re 85.900 712.439 41.650 11.450` for a yellow run
-        // and `re 84.800 689.439 27.650 11.450` for a red one — the LINE's
+        // and `re 84.800 689.439 27.650 11.450` for a red one -- the LINE's
         // height by the RUN's advance, starting 0.10 before the glyphs, which
         // is the same shape measured for a highlight in a turned cell.
         const rects = await rectsOf('paragraph-run-shading.docx');
@@ -7600,7 +7600,7 @@ describe('w:shd behind text, end to end', () => {
     });
 
     it('paints NO shading for a PARAGRAPH’s w:shd, which is what LibreOffice does', async () => {
-        // Not a gap — parity, and a null result with its control in the same
+        // Not a gap -- parity, and a null result with its control in the same
         // conversion, which is the rule for a null. The fixture's first
         // paragraph asks for grey and its third for green, both with `w:shd`
         // in schema order before `w:ind`; LibreOffice paints neither. What it
@@ -7611,7 +7611,7 @@ describe('w:shd behind text, end to end', () => {
         //
         // Word paints one. This engine follows the reference it can measure,
         // and there is nothing to measure a box against while the reference
-        // draws none — not its width, not where it starts.
+        // draws none -- not its width, not where it starts.
         const rects = await rectsOf('paragraph-run-shading.docx');
 
         expect(rects.map((rect) => rect.fill).sort()).toEqual(['#ff0000', '#ffff00']);
@@ -7640,10 +7640,10 @@ describe('w:ruby, end to end', () => {
 
     it('draws the gloss above the base, on a line grown to hold it', async () => {
         // The gloss was READ and dropped for a while, on the reasoning that
-        // it "needs a second line inside one line's height" — which is exactly
+        // it "needs a second line inside one line's height" -- which is exactly
         // what LibreOffice gives it. Printed: a 5pt gloss over a 10pt base put
         // the base's baseline at 708.74 where the paragraph above it sits at
-        // 725.99, so the line is 17.25 rather than 11.50 — the base's own line
+        // 725.99, so the line is 17.25 rather than 11.50 -- the base's own line
         // plus the GLOSS's 5.75, all of it above the baseline.
         //
         // The gloss then sits at the top of that room on a baseline of its own,
@@ -7672,7 +7672,7 @@ describe('w:ruby, end to end', () => {
     });
 
     it('lets a gloss WIDER than its base decide the advance, and centres the base', async () => {
-        // Printed: a gloss of eight `w` at 5pt over an `xy` base — the gloss
+        // Printed: a gloss of eight `w` at 5pt over an `xy` base -- the gloss
         // from x=86.00, the base at 95.45 centred under it, and the text after
         // the group at 114.85, which is the gloss's own width along rather than
         // the base's. A group measured by its base alone would have drawn the

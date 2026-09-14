@@ -11,7 +11,7 @@ import type { ImageContent } from '../layout/image.js';
 import type { FontCatalogue } from './font-catalogue.js';
 
 /**
- * Opening a `.docx` FILE — the last link in the chain.
+ * Opening a `.docx` FILE -- the last link in the chain.
  *
  * Bytes in, a paginated document out, and the package still open so the same
  * file can be written back with everything untouched preserved.
@@ -85,7 +85,7 @@ export async function openWordFile(
  * Every header and footer part in the package, keyed by relationship id.
  *
  * Not by variant, and not per section: a `w:headerReference` names an `r:id`,
- * and only the reader — which is already walking the section properties — knows
+ * and only the reader -- which is already walking the section properties -- knows
  * which section names which. Working it out here would mean splitting the body a
  * second time, and the two would eventually disagree.
  */
@@ -118,7 +118,7 @@ async function readFurniture(
  * Every picture the main document points at, keyed by relationship id.
  *
  * Read eagerly, because a drawing names its picture by `r:embed` and the reader
- * is synchronous — fetching a part while walking the body would make the whole
+ * is synchronous -- fetching a part while walking the body would make the whole
  * read asynchronous for the sake of one element type.
  *
  * An EXTERNAL relationship is skipped: its target is a URL, and fetching it
@@ -186,8 +186,8 @@ const IMAGE_TYPES: Record<string, string> = {
 /**
  * A part the main document points at, by relationship type.
  *
- * A document without styles or without numbering is legal — it simply has
- * none — so this returns null rather than throwing.
+ * A document without styles or without numbering is legal -- it simply has
+ * none -- so this returns null rather than throwing.
  */
 async function related(opc: OpcPackage, documentPart: string, type: string): Promise<string | null> {
     const xml = await opc.textIfPresent(relationshipPartFor(documentPart));

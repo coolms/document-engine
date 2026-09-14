@@ -23,7 +23,7 @@ import type { Paragraph, ParagraphStyle, PlacedLine } from './page-layout.js';
  */
 
 /**
- * `w:vAlign` — where a cell's content sits when the row is TALLER than it.
+ * `w:vAlign` -- where a cell's content sits when the row is TALLER than it.
  *
  * Invisible in a row that fits its own text, which is why it only ever shows
  * beside a taller neighbour or under a `w:trHeight`.
@@ -31,7 +31,7 @@ import type { Paragraph, ParagraphStyle, PlacedLine } from './page-layout.js';
 export type CellVerticalAlign = 'top' | 'center' | 'bottom';
 
 /**
- * `w:hRule` — how to read the height a row asks for.
+ * `w:hRule` -- how to read the height a row asks for.
  *
  * `exact` is the only one that can make a row SMALLER than its text. Word's
  * `auto` is not listed: measured against LibreOffice, a row that states a
@@ -40,18 +40,18 @@ export type CellVerticalAlign = 'top' | 'center' | 'bottom';
 export type RowHeightRule = 'atLeast' | 'exact';
 
 /**
- * `w:vMerge` — a cell joined to the one above it in the same grid column.
+ * `w:vMerge` -- a cell joined to the one above it in the same grid column.
  *
  * `restart` opens a merge and holds the content; `continue` is swallowed by it.
  * A swallowed cell keeps its place in the row so the grid columns still line
- * up, but it draws nothing and its own text is ignored — which is Word's rule,
+ * up, but it draws nothing and its own text is ignored -- which is Word's rule,
  * confirmed against LibreOffice, where text in a continued cell vanished.
  */
 export type VerticalMerge = 'restart' | 'continue';
 
 /**
  * What a document is made of. A paragraph has runs; a table has rows, and that
- * is how the two are told apart — a discriminator field would have to be added
+ * is how the two are told apart -- a discriminator field would have to be added
  * to every paragraph ever constructed to say something the shape already says.
  *
  * Here rather than beside the page flow because a CELL holds blocks too, and
@@ -65,7 +65,7 @@ export function isTable(block: Block): block is Table {
 }
 
 /**
- * `w:tcMar` — one cell's padding, each side standing in for the table's.
+ * `w:tcMar` -- one cell's padding, each side standing in for the table's.
  *
  * Side by side rather than all four at once: `w:tcMar` may declare any subset,
  * and the sides it leaves out keep the table's `w:tblCellMar`.
@@ -89,12 +89,12 @@ export interface TableCell {
     /**
      * What the cell holds: paragraphs, and tables nested inside it.
      *
-     * Named `paragraphs` for the same reason `WordDocument.paragraphs` is —
+     * Named `paragraphs` for the same reason `WordDocument.paragraphs` is --
      * the type says what is in it, and renaming would touch every caller to
      * say nothing new.
      */
     readonly paragraphs: readonly Block[];
-    /** How many grid columns this cell covers — `w:gridSpan`. */
+    /** How many grid columns this cell covers -- `w:gridSpan`. */
     readonly gridSpan: number;
     /** `w:tcBorders`. Every side declared here beats the table's. */
     readonly borders?: BoxBorders;
@@ -105,11 +105,11 @@ export interface TableCell {
     /** Absent means an ordinary cell, standing in one row. */
     readonly verticalMerge?: VerticalMerge;
     /**
-     * `w:textDirection` — this cell's text turned a quarter turn.
+     * `w:textDirection` -- this cell's text turned a quarter turn.
      *
      * Read and carried; NOT yet laid out or drawn. The measurement that
      * decides the layout is this: a turned line's length is the ROW's height,
-     * and that height comes from the cells that are NOT turned — so it is a
+     * and that height comes from the cells that are NOT turned -- so it is a
      * second measuring pass, not a circle. A cell turned with no neighbour to
      * set the height has no answer to copy: LibreOffice drops such a table
      * entirely, so this engine leaves it upright, which is what it does today.
@@ -130,13 +130,13 @@ export interface TableCell {
 export interface TableRow {
     readonly cells: readonly TableCell[];
     /**
-     * `w:tblHeader` — repeat this row at the top of every page the table
+     * `w:tblHeader` -- repeat this row at the top of every page the table
      * continues onto. Only leading rows can be headers; a header in the middle
      * of a table is not one.
      */
     readonly isHeader: boolean;
     /**
-     * `w:cantSplit` — this row moves whole rather than breaking across a page.
+     * `w:cantSplit` -- this row moves whole rather than breaking across a page.
      *
      * Measured: a 40-line row so marked left the page it could not
      * fit entirely empty of the table, header and all. A row that fits on NO
@@ -151,16 +151,16 @@ export interface TableRow {
 }
 
 /**
- * `w:textDirection` — a cell whose text is turned on its side.
+ * `w:textDirection` -- a cell whose text is turned on its side.
  *
  * `btLr` reads bottom-to-top and `tbRl` top-to-bottom; measured off the
- * PDF's text matrix, they are `[0 1 -1 0]` and `[0 -1 1 0]` — a quarter
+ * PDF's text matrix, they are `[0 1 -1 0]` and `[0 -1 1 0]` -- a quarter
  * turn anticlockwise and clockwise. Absent means upright, which is every
  * cell this engine has drawn until now.
  */
 export type CellTextDirection = 'btLr' | 'tbRl';
 
-/** Where a table sits in the column it lands in — `w:tblPr/w:jc`. */
+/** Where a table sits in the column it lands in -- `w:tblPr/w:jc`. */
 export type TableAlignment = 'left' | 'center' | 'right';
 
 export interface Table {
@@ -175,7 +175,7 @@ export interface Table {
      * `w:tblW` as a fraction of the column the table lands in.
      *
      * Carried unresolved because the reader does not know what it will land in
-     * — the same table is one width on the page and another inside a cell.
+     * -- the same table is one width on the page and another inside a cell.
      * Measured against LibreOffice: fifty percent of an A4 text column came
      * out at 269.29pt, which is half of 538.58 exactly.
      */
@@ -188,7 +188,7 @@ export interface Table {
      * `w:tblInd`, which counts to the CELL'S TEXT and not the table's edge.
      *
      * So the table's own left edge lands a cell margin further LEFT than the
-     * number says — measured off LibreOffice, where half an inch of indent
+     * number says -- measured off LibreOffice, where half an inch of indent
      * moved a table's border 31.1pt and its text the full 36. Present but
      * unresolvable (a percentage) is nought rather than absent: LibreOffice
      * still pulled the table left by the cell margin.
@@ -211,7 +211,7 @@ export interface PlacedCell {
      * The four edges this cell draws, already resolved against the table.
      *
      * Resolved here rather than by a renderer, because the answer depends on
-     * where the cell sits in the grid — and a renderer holding a placed cell no
+     * where the cell sits in the grid -- and a renderer holding a placed cell no
      * longer knows that.
      */
     readonly borders?: BoxBorders;
@@ -219,13 +219,13 @@ export interface PlacedCell {
     /**
      * How tall the cell's own box is.
      *
-     * Its row's height, unless a `w:vMerge` made it span several — which is why
+     * Its row's height, unless a `w:vMerge` made it span several -- which is why
      * a renderer must take it from HERE and not from the row it was drawn with.
      */
     readonly heightPx: number;
     /**
      * The cell's text. `paragraphIndex` and `lineIndex` are relative to the
-     * CELL, not to the document — a line in a cell has no top-level paragraph.
+     * CELL, not to the document -- a line in a cell has no top-level paragraph.
      */
     readonly lines: readonly PlacedLine[];
     /** Tables nested inside the cell, already placed. */
@@ -238,7 +238,7 @@ export interface PlacedCell {
      */
     readonly turn?: 'ccw' | 'cw';
     /**
-     * Boxes round the bordered paragraphs the cell holds — `w:pBdr` INSIDE a
+     * Boxes round the bordered paragraphs the cell holds -- `w:pBdr` INSIDE a
      * cell, which draws just as it does on the page.
      *
      * Measured against LibreOffice: a bordered paragraph in a cell drew its
@@ -283,7 +283,7 @@ export interface MeasuredRow {
         margins: ResolvedCellMargins;
         /**
          * Set where this cell's text is TURNED, and only where the turn could
-         * be laid out — a cell with no upright neighbour to set the row's
+         * be laid out -- a cell with no upright neighbour to set the row's
          * height keeps its text upright and carries nothing here.
          */
         turn?: 'ccw' | 'cw';
@@ -332,7 +332,7 @@ export function fitTable(table: Table, availableWidthPx: number): FittedTable {
     }
 
     // A table that simply starts at the margin hangs its left border half
-    // outside it — measured at two widths, a 2pt border shifted the table 1pt
+    // outside it -- measured at two widths, a 2pt border shifted the table 1pt
     // and a 6pt border 3. A table given a `w:tblInd` does NOT: that indent is
     // measured to the CELL'S TEXT, so the border lands a cell margin left of
     // the number and the hang is gone. Half an inch of indent against a 5.75pt
@@ -340,7 +340,7 @@ export function fitTable(table: Table, availableWidthPx: number): FittedTable {
     //
     // And it is the LEADING CELL'S margin, not the table's: with the first
     // cell overriding its own to 25pt, the same indent put the border at 39.4
-    // rather than 58.6 — and the text still landed on margin plus indent.
+    // rather than 58.6 -- and the text still landed on margin plus indent.
     const leadingPx = table.rows[0]?.cells[0]?.margins?.leftPx ?? table.cellMarginLeftPx;
 
     return {
@@ -371,12 +371,12 @@ export function resolveCellMargins(table: Table, cell: TableCell): ResolvedCellM
  * Measured against LibreOffice: the rule is CENTRED in a gap of its own width,
  * so the content above it and the content below are a whole width apart.
  *
- * ## The room is the rule that is DRAWN — so a cell's own beats the table's
+ * ## The room is the rule that is DRAWN -- so a cell's own beats the table's
  *
  * This asked the table first and took the widest of it and the cells, and a
  * cell cannot declare `insideH` at all, so the table's number always won. A
  * document whose cells state a hairline inside a table declaring half a point
- * therefore drew an eighth of a point and reserved half of one — every row, all
+ * therefore drew an eighth of a point and reserved half of one -- every row, all
  * the way down. Found by printing a real document and diffing it
  * against ourselves: its rows stepped 10.85 where LibreOffice stepped 10.45.
  *
@@ -390,7 +390,7 @@ export function resolveCellMargins(table: Table, cell: TableCell): ResolvedCellM
  *   * cells 1/8pt and 3pt        -> 3.00   the widest of the two
  *
  * Both SIDES of the edge count. A row stating 3pt under itself above a row
- * stating an eighth over itself took 3.00 — the fifth table, which is the only
+ * stating an eighth over itself took 3.00 -- the fifth table, which is the only
  * pair the other four cannot separate, since their cells state four equal
  * sides. That is the same widest-wins the renderer resolves the shared edge
  * with, which is what keeps the room and the rule in step.
@@ -410,12 +410,12 @@ export function ruleAbove(table: Table, index: number): number {
 
 /**
  * The rule down the table's LEFT edge, which is how far it hangs into the
- * margin — see {@link fitTable}.
+ * margin -- see {@link fitTable}.
  *
  * A cell's own border beats the table's, as it does for {@link ruleAbove}: a
  * table whose CELLS declare the border and which itself declares none still
  * hangs. Measured with the border stated only on the cells, at two
- * widths — a 1pt rule printed centred on 71.50 and a 3pt one on 70.50, each
+ * widths -- a 1pt rule printed centred on 71.50 and a 3pt one on 70.50, each
  * putting its outer edge on the 72pt margin.
  *
  * But NOT the widest, which is where `ruleAbove`'s rule stops applying and
@@ -446,7 +446,7 @@ export function ruleBelow(table: Table): number {
         .map((cell) => cell.borders?.bottom?.widthPx ?? fallbackPx));
 }
 
-/** Which row this is within its table — what picks outer borders from inside ones. */
+/** Which row this is within its table -- what picks outer borders from inside ones. */
 export interface RowPosition {
     readonly firstRow: boolean;
     readonly lastRow: boolean;
@@ -474,7 +474,7 @@ export function columnOffsets(widths: readonly number[]): number[] {
  * Measure one row: lay every cell out in its own column and take the tallest.
  *
  * The tallest rather than the first, because a row is as tall as its fullest
- * cell — sizing it from one cell puts the row's own bottom border through the
+ * cell -- sizing it from one cell puts the row's own bottom border through the
  * text of another.
  */
 /**
@@ -486,7 +486,7 @@ export function columnOffsets(widths: readonly number[]): number[] {
  * one grid column to the left.
  *
  * A merge is matched by the grid COLUMN it starts in, not by its position
- * among the row's cells — a `w:gridSpan` earlier in one row and not the next
+ * among the row's cells -- a `w:gridSpan` earlier in one row and not the next
  * would otherwise pair up cells that are nowhere near each other.
  */
 export function verticalSpans(table: Table): number[][] {
@@ -539,7 +539,7 @@ const ALIGNMENT_SHARE: Record<CellVerticalAlign, number> = {
  * The same blocks, with every inline picture turned into its line's frame.
  *
  * Measured over five sizes: ALONG a turned line a picture reserves
- * its HEIGHT — 18x9 and 36x9 both reserved 9.00, 18x18 and 9x18 both 18.00, so
+ * its HEIGHT -- 18x9 and 36x9 both reserved 9.00, 18x18 and 9x18 both 18.00, so
  * doubling the width moved nothing. In the line's own frame its sides are the
  * other way round, and exchanging them here is what lets the line breaker
  * measure a turned line exactly as it measures an upright one.
@@ -548,7 +548,7 @@ const ALIGNMENT_SHARE: Record<CellVerticalAlign, number> = {
  * and the one the exchange alone cannot say. A picture that fits is
  * CENTRED on the line's ascent; one too long for its line takes a line of its
  * own and the text hangs below it. Both are placements of the picture within
- * its line BOX, so the picture is only labelled here — the arithmetic wants the
+ * its line BOX, so the picture is only labelled here -- the arithmetic wants the
  * paragraph's own ascent and belongs where the box is built.
  */
 function turnPictures(blocks: readonly Block[], availablePx: number): readonly Block[] {
@@ -564,7 +564,7 @@ function turnPictures(blocks: readonly Block[], availablePx: number): readonly B
                 // A drawn shape turns with the line the same way a picture
                 // does, at least along it: measured, a 36x18 shape in
                 // a turned cell started the text after it 18.05 above the row's
-                // foot — its HEIGHT, where we charged the whole 36.00 of its
+                // foot -- its HEIGHT, where we charged the whole 36.00 of its
                 // width. ACROSS the line it printed 31.70 from the cell's edge,
                 // which is neither the 36.00 of standing on the baseline nor
                 // the 22.69 of a picture's centring, and one measurement is not
@@ -599,7 +599,7 @@ function turnPictures(blocks: readonly Block[], availablePx: number): readonly B
                 // and it is not on the text's line either. Measured: 36x36 in
                 // a 35.5pt row started its text 0.60 above the foot, exactly
                 // like a line with no picture, and 45.40 across from the
-                // cell's edge — the whole picture, then the text's own ascent
+                // cell's edge -- the whole picture, then the text's own ascent
                 // under it. LibreOffice gives a picture that cannot fit a line
                 // of its own rather than reserving what it has, and reserving
                 // the whole 36.00 along puts the text outside its own row.
@@ -641,7 +641,7 @@ export function measureRow(
      * How tall this row is before any TURNED cell is measured.
      *
      * A turned cell's lines run along the row's HEIGHT, so it cannot be
-     * measured until the height is known — and the height comes from the cells
+     * measured until the height is known -- and the height comes from the cells
      * that are NOT turned. Measured against LibreOffice: a turned
      * cell beside a neighbour of three paragraphs put all six of its glyphs on
      * ONE line 35.5pt long, which is the neighbour's height exactly. So the
@@ -649,7 +649,7 @@ export function measureRow(
      *
      * A turned cell with no upright neighbour has nothing to take a height
      * from. LibreOffice declines to lay such a table out at all, so
-     * there is no answer to copy and this leaves the cell upright — which is
+     * there is no answer to copy and this leaves the cell upright -- which is
      * what it did before `w:textDirection` was read.
      */
     const uprightHeightPx = Math.max(
@@ -681,15 +681,15 @@ export function measureRow(
         }
 
         const margins = resolveCellMargins(table, cell);
-        // A TURNED cell's lines run along the row's height, so that — and not
-        // the column's width — is the length they break at. With no upright
+        // A TURNED cell's lines run along the row's height, so that -- and not
+        // the column's width -- is the length they break at. With no upright
         // neighbour the height is nought and the cell stays upright.
         const turned = undefined !== cell.textDirection && uprightHeightPx > 0;
         const inner = turned
             ? uprightHeightPx - margins.topPx - margins.bottomPx
             : widthPx - margins.leftPx - margins.rightPx;
         // Measured against LibreOffice, text in a continued cell was not drawn
-        // at all — so there is no reason to break it into lines. Skipping the
+        // at all -- so there is no reason to break it into lines. Skipping the
         // work is all this does: the cell is left out of the placed row, and
         // its box is nil, either of which would drop the lines anyway.
         const laid: StackedBlocks = 0 === rowSpan
@@ -772,7 +772,7 @@ function rowHeight(row: TableRow, contentPx: number): number {
  *
  * Vertical merging is why this cannot happen a row at a time. A merged cell is
  * measured against the SPAN it covers, so its own row does not know how tall it
- * has to be — and neither does any row until every merge has had its say.
+ * has to be -- and neither does any row until every merge has had its say.
  *
  * Measured against LibreOffice: the rows a merge covers keep their own natural
  * heights, and where the merged content is taller than all of them together the
@@ -803,7 +803,7 @@ export function resolveTableGeometry(
      *
      * The rows it covers AND the rules between them: measured against
      * LibreOffice, a cell merged over three 11.5pt rows drew a box 37.5pt tall
-     * — 34.5 of text, the two one-point inside rules its span crosses, and
+     * -- 34.5 of text, the two one-point inside rules its span crosses, and
      * half a rule outside at each end. Summing the rows alone leaves it short
      * by one rule per row it swallows, and the box stops above its own foot.
      */
@@ -851,14 +851,14 @@ function alignCells(table: Table, measured: readonly MeasuredRow[]): void {
             // A line is drawn when its TOP edge is still inside the box, which
             // is how LibreOffice decided: an exact row 15px tall drew the
             // second line of three, whose top was inside it, and dropped the
-            // third. Only an `exact` row can lose a line this way — every other
+            // third. Only an `exact` row can lose a line this way -- every other
             // rule leaves the box at least as tall as the cell, so the filter
             // passes everything.
             //
             // A TURNED cell stacks its lines ACROSS the cell, so the room they
             // run out of is the WIDTH. Measured: LibreOffice ran a
             // turned cell to seventeen lines over a 200pt column and off its
-            // right edge, in a row 13.2pt tall — asking the row's height about
+            // right edge, in a row 13.2pt tall -- asking the row's height about
             // the cross axis dropped all but the first two, and text vanished
             // from cells that had the room for it.
             const roomPx = undefined === cell.turn
@@ -876,7 +876,7 @@ function alignCells(table: Table, measured: readonly MeasuredRow[]): void {
  * The box ONE line got.
  *
  * Per line rather than per paragraph because a picture makes its own line
- * taller and no other — measured against LibreOffice.
+ * taller and no other -- measured against LibreOffice.
  */
 export interface LineMetrics {
     readonly heightPx: number;
@@ -916,7 +916,7 @@ export interface StackedBlocks {
  * what keeps a cell's line breaking identical to the same text outside a table.
  *
  * A table among the blocks is laid out here too, which is what makes nesting
- * work — a cell stacks its blocks with this, and one of those blocks may be a
+ * work -- a cell stacks its blocks with this, and one of those blocks may be a
  * table whose cells stack theirs with it in turn.
  */
 export function stackBlocks(
@@ -939,7 +939,7 @@ export function stackBlocks(
     let open: { box: PlacedParagraphBorder; style: ParagraphStyle } | null = null;
 
     /**
-     * What the block above already spent below itself — see the page flow,
+     * What the block above already spent below itself -- see the page flow,
      * where the same rule is measured. A cell stacks paragraphs the
      * same way the page does, and two of them collapse their spacing here too.
      */
@@ -989,13 +989,13 @@ export function stackBlocks(
         // opened; one carrying the same border extends it. Measured against
         // LibreOffice, a bordered paragraph in a cell drew its box across the
         // cell's TEXT column and made the row two points taller for a
-        // one-point rule — the same room a paragraph takes on the page.
+        // one-point rule -- the same room a paragraph takes on the page.
         if (undefined === style.borders
             || null === open
             || !sameBorders(open.box.borders, style.borders)) {
             closeBox();
         } else if (undefined !== style.borders.insideH) {
-            // The box goes on, with a `w:between` rule across it — half the
+            // The box goes on, with a `w:between` rule across it -- half the
             // rule below the text above, with the whole of its width out of
             // the flow. Measured in a cell as on the page: the pair stepped
             // 14.5pt for a three-point rule where an unruled pair steps 11.5.
@@ -1111,7 +1111,7 @@ function isStructuralTail(blocks: readonly Block[], index: number): boolean {
  * Every row of a table measured, with the heights its merges settled on.
  *
  * Shared by the page flow and by a cell, which need the same answer and would
- * otherwise each work it out — the page flow going on to break the rows across
+ * otherwise each work it out -- the page flow going on to break the rows across
  * pages, and a cell simply stacking them.
  */
 export function measureTable(
@@ -1129,7 +1129,7 @@ export function measureTable(
     const heights = resolveTableGeometry(table, measured, spans);
 
     // The edge between two rows belongs to both of them, and a merged cell
-    // meets the row below its SPAN rather than the one below its own — so the
+    // meets the row below its SPAN rather than the one below its own -- so the
     // cells are gathered by where their boxes END.
     for (let index = 1; index < measured.length; index++) {
         shareRowEdge(
@@ -1152,7 +1152,7 @@ export function measureTable(
  * table would open with no line above it.
  *
  * Cells are paired by their x and width. A row whose cells do not line up with
- * the row above — different `w:gridSpan` on one of them — has no shared edge
+ * the row above -- different `w:gridSpan` on one of them -- has no shared edge
  * this can identify, and both rows keep what they were given rather than having
  * a neighbour guessed for them.
  */
@@ -1178,7 +1178,7 @@ function shareRowEdge(
  * A measured row cut in two at `atPx`, measured from the row's own top.
  *
  * What fits stays; what does not becomes a row of its own for the next page.
- * The cut falls between LINES — measured against LibreOffice, a six-line row
+ * The cut falls between LINES -- measured against LibreOffice, a six-line row
  * with four lines of room kept four and carried two over, rather than clipping
  * the fifth or moving the whole of it.
  *
@@ -1281,13 +1281,13 @@ export function placeRow(
                     ...(undefined === cell.shadingFill ? {} : { shadingFill: cell.shadingFill }),
                     // A quarter turn leaves a rectangle axis-aligned, so a
                     // paragraph's box is the same box with its axes exchanged
-                    // — the sides it keeps clear are the ones the upright case
+                    // -- the sides it keeps clear are the ones the upright case
                     // already worked out. Measured: a boxed line in a
                     // turned cell printed 20.45 across by 44.45 along, which is
                     // the line's own 11.50 and the row's 35.50 with `w:space`
                     // 4pt and half a point of rule at every edge. Handed back
                     // EMPTY until this row, so the box was placed and never
-                    // drawn — this arc's commonest defect.
+                    // drawn -- this arc's commonest defect.
                     paragraphBorders: cell.paragraphBorders.map((box) => ({
                         ...box,
                         leftPx: anticlockwise
@@ -1300,8 +1300,8 @@ export function placeRow(
                         bottomPx: anticlockwise ? footPx - box.leftPx : headPx + box.rightPx,
                         // `w:between` rules run ACROSS a turned box, where the
                         // renderer draws them along. No measurement covers one
-                        // — the fixture that found the box holds a single
-                        // paragraph — so they are dropped rather than drawn the
+                        // -- the fixture that found the box holds a single
+                        // paragraph -- so they are dropped rather than drawn the
                         // wrong way round.
                         innerYPx: [],
                     })),
@@ -1309,14 +1309,14 @@ export function placeRow(
                     // text and rules both: measured, its `N1` printed
                     // turned at x=87.65 inside a box 13.50 across by 36.50
                     // along. We drop it, because turning a row means turning
-                    // every cell, line and rule it holds — a tree, where a
+                    // every cell, line and rule it holds -- a tree, where a
                     // paragraph's box is one rectangle. Pinned in a test.
                     rows: [],
                     lines: cell.lines.map((line) => ({
                         ...line,
-                        // The line's cross-axis offset becomes an x — always
+                        // The line's cross-axis offset becomes an x -- always
                         // the LEFT edge of its box, so the renderer can find
-                        // either baseline from it — and its start along the
+                        // either baseline from it -- and its start along the
                         // row's height becomes a y from the foot or the head.
                         xPx: anticlockwise
                             ? leftPx + line.yPx
@@ -1407,7 +1407,7 @@ export function withSide(
     return out;
 }
 
-/** The leading rows marked as headers — the ones that repeat. */
+/** The leading rows marked as headers -- the ones that repeat. */
 export function headerRows(table: Table): TableRow[] {
     const out: TableRow[] = [];
     for (const row of table.rows) {

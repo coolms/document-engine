@@ -54,13 +54,13 @@ const BREAK_AFTER = new Set([
  *
  * The NON-BREAKING HYPHEN is NOT among them, though Unicode gives it a class
  * that forbids a break on either side. Measured: a line reading
- * `www ‑www`, too long for its column, broke at the SPACE and carried the
+ * `www -www`, too long for its column, broke at the SPACE and carried the
  * hyphen to the head of the next line. Forbidding that break made the whole
  * fragment move and then chopped it mid-word, which is worse and is not what
  * the page shows.
  *
- * So the character refuses a break AFTER itself — it is absent from
- * {@link BREAK_AFTER}, which is the whole of its job — and says nothing about
+ * So the character refuses a break AFTER itself -- it is absent from
+ * {@link BREAK_AFTER}, which is the whole of its job -- and says nothing about
  * what comes before.
  */
 const NO_BREAK_BEFORE = new Set([
@@ -78,7 +78,7 @@ export function isSpace(codePoint: number): boolean {
  * Measured against LibreOffice: a word split by one broke AT it and
  * printed a `-` at the end of that line, where the same word without one broke
  * where the width ran out and printed nothing. So it costs nothing mid-line and
- * costs a hyphen at the end of one — which is the difference between a
+ * costs a hyphen at the end of one -- which is the difference between a
  * segment's `full` width and its `content` width, and why it needs no new
  * notion in the breaker.
  */
@@ -91,7 +91,7 @@ export const SOFT_HYPHEN = 0x00ad;
  * line is cut wherever the width runs out, mid-letter and against every
  * ordinary rule, because the alternative is text running off the page. These
  * two are the cases where the author said "not here" in so many words, and a
- * chop has to go round them the way an ordinary break does — `10 kg` is
+ * chop has to go round them the way an ordinary break does -- `10 kg` is
  * kept whole by U+00A0 whether the line is short of room or not.
  */
 export function forbidsBreakBetween(before: number, after: number): boolean {
@@ -118,7 +118,7 @@ export function isMandatoryBreak(codePoint: number): boolean {
  * Ideographs and kana, which break between almost any two characters.
  *
  * Included because a CJK paragraph with no break opportunities at all would be
- * measured as one enormous unbreakable word and overflow the page — a failure
+ * measured as one enormous unbreakable word and overflow the page -- a failure
  * severe enough to be worth the small table even before the language layer
  * exists.
  */
@@ -134,7 +134,7 @@ export function isIdeographic(codePoint: number): boolean {
  *
  * `before` is the character ending the current line, `after` the one starting
  * the next. Both are needed: a break is a property of the pair, not of either
- * character — `-` allows one after it, but not when a word joiner follows.
+ * character -- `-` allows one after it, but not when a word joiner follows.
  */
 export function allowsBreakBetween(before: number, after: number): boolean {
     if (NO_BREAK_BEFORE.has(after)) {
@@ -142,8 +142,8 @@ export function allowsBreakBetween(before: number, after: number): boolean {
     }
 
     // NOTE: there is deliberately no `NO_BREAK_SPACE.has(before)` check here.
-    // A non-breaking space is protected by ABSENCE — it is in no set that
-    // grants a break — so an explicit rejection would be dead code that reads
+    // A non-breaking space is protected by ABSENCE -- it is in no set that
+    // grants a break -- so an explicit rejection would be dead code that reads
     // as load-bearing. Mutation testing caught exactly that: disabling such a
     // check changed no behaviour and broke no test.
     if (isBreakableSpace(before)) {

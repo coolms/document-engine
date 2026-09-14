@@ -9,7 +9,7 @@ describe('roman', () => {
     });
 
     it('subtracts rather than repeating four times', () => {
-        // iv, not iiii — and the same at every power.
+        // iv, not iiii -- and the same at every power.
         expect([4, 9, 40, 90, 400, 900].map((n) => roman(n, false)))
             .toEqual(['iv', 'ix', 'xl', 'xc', 'cd', 'cm']);
     });
@@ -31,7 +31,7 @@ describe('letters', () => {
     });
 
     it('REPEATS the letter past z, as Word does', () => {
-        // Word's sequence is aa, bb, cc — not the spreadsheet's aa, ab, ac.
+        // Word's sequence is aa, bb, cc -- not the spreadsheet's aa, ab, ac.
         expect([27, 28, 53].map((n) => letters(n, false))).toEqual(['aa', 'bb', 'aaa']);
     });
 

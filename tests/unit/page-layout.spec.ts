@@ -75,7 +75,7 @@ describe('layoutPages', () => {
             // the next one. Five lines fit; the sixth starts page two.
             //
             // Widow control is off HERE so this states reflow and nothing else
-            // — with it on the split is [4, 2], which is correct but is a
+            // -- with it on the split is [4, 2], which is correct but is a
             // different rule, asserted separately below.
             expect(shape(layoutPages([para(lines(5))], PAGE))).toEqual([5]);
             expect(shape(layoutPages([para(lines(6))], PAGE, { widowOrphanControl: false })))
@@ -121,7 +121,7 @@ describe('layoutPages', () => {
     describe('paragraph spacing', () => {
         it('COLLAPSES space after against space before, taking the larger', () => {
             // This said "Word ADDS them; CSS collapses adjacent margins and
-            // Word does not" — reasoned, never measured, and wrong about the
+            // Word does not" -- reasoned, never measured, and wrong about the
             // engine's own reference. Printed by LibreOffice with the
             // two set differently in BOTH orders, which is what tells `max`
             // from `sum`, from `after` alone, and from `before` alone:
@@ -133,7 +133,7 @@ describe('layoutPages', () => {
             // spaced paragraph further down its page than the file asks.
             //
             // OPEN: whether WORD agrees with LibreOffice here is not something
-            // this repo can measure — there is no Word in the loop — and the
+            // this repo can measure -- there is no Word in the loop -- and the
             // claim that it adds them is the one being overturned, so it should
             // not be taken on trust either. Anyone with Word to hand can settle
             // it with the same two pairs.
@@ -176,9 +176,9 @@ describe('layoutPages', () => {
             // A DECISION, not a measurement: a table's own spacing and a
             // paragraph's are separate quantities in the file, so the space
             // below a table is not spent against the space above the next
-            // paragraph. Nothing printed says so — the fixture the collapsing
+            // paragraph. Nothing printed says so -- the fixture the collapsing
             // rule was measured from has no table between two spaced
-            // paragraphs — and it is asserted here so that changing it is a
+            // paragraphs -- and it is asserted here so that changing it is a
             // choice somebody makes rather than a side effect they do not
             // notice.
             const table = {
@@ -301,7 +301,7 @@ describe('layoutPages', () => {
         });
 
         it('keeps a marked paragraph whole', () => {
-            // "Keep lines together" — what a heading or caption uses.
+            // "Keep lines together" -- what a heading or caption uses.
             const pages = layoutPages(
                 [para(lines(3)), para(lines(3), { keepLinesTogether: true })],
                 PAGE,
@@ -356,7 +356,7 @@ describe('layoutPages', () => {
 
         it('honours an EXACT line height, overriding the font', () => {
             // Word's "Exactly" line spacing. The font's own height here is
-            // 18.125px and the paragraph asks for 20 — but both fit five lines
+            // 18.125px and the paragraph asks for 20 -- but both fit five lines
             // on this page, so only the measured height and the distance
             // between baselines can tell them apart.
             expect(MONO.naturalLineHeight(16)).not.toBeCloseTo(LINE, 3);
@@ -376,7 +376,7 @@ describe('layoutPages', () => {
             // 'ab ' is three cells at 16px and 'BIG' six at 32, which fits the
             // ten this page is wide. The fixture said 'small ' at first and
             // spilled 'BIG' onto a second line, so what it really measured was
-            // the paragraph — the one thing its name says it is not.
+            // the paragraph -- the one thing its name says it is not.
             const runs: StyledRun[] = [
                 { text: 'ab ', font: MONO, sizePx: 16 },
                 { text: 'BIG', font: MONO, sizePx: 32 },
@@ -503,7 +503,7 @@ describe('layoutPages', () => {
         });
 
         it('measures stops from the paragraph, not from an indented first line', () => {
-            // The first line starts 100px in, so the stop at 300 is 200 away —
+            // The first line starts 100px in, so the stop at 300 is 200 away --
             // and the tabbed text lands in the same column as it would on any
             // other line of the paragraph.
             const indented = widthOf({ tabStops: [{ positionPx: 300, align: 'left' }], indentFirstLinePx: 100 });
@@ -606,7 +606,7 @@ describe('layoutPages', () => {
 
         it('measures the FIRST line against its own narrower box', () => {
             // A first-line indent takes room away from that line only, so a
-            // centred first line is centred in what is left — not in the column.
+            // centred first line is centred in what is left -- not in the column.
             const [page] = layoutPages(
                 [para('xxxx yyyy', { alignment: 'center', indentFirstLinePx: CELL * 2 })],
                 PAGE,
@@ -617,7 +617,7 @@ describe('layoutPages', () => {
             // Line one has 2 cells of indent and 8 cells left; 4 are used, so it
             // is offset by 2 ON TOP of the indent.
             expect(first!.xPx).toBeCloseTo(10 + CELL * 2 + CELL * 2, 6);
-            // Line two has the whole 10 cells and 4 used, so it is offset by 3 —
+            // Line two has the whole 10 cells and 4 used, so it is offset by 3 --
             // and ends up further LEFT than the line above it, which is what
             // centring in a narrower box means.
             expect(second!.xPx).toBeCloseTo(10 + CELL * 3, 6);
@@ -742,7 +742,7 @@ describe('layoutPages', () => {
         it('aligns within what the float LEFT, not within the column', () => {
             // A centred line beside a float is centred in the six cells it
             // actually has. Centring it in the ten the column has would put it
-            // two cells left of where it belongs — under the float.
+            // two cells left of where it belongs -- under the float.
             const centred: Paragraph = {
                 ...para('xx', { alignment: 'center' }),
                 floats: [anchored()],
@@ -755,7 +755,7 @@ describe('layoutPages', () => {
         });
 
         it('keeps the clear space on the LEFT of a float too', () => {
-            // The float sits at the right, so the text stays left of it — and
+            // The float sits at the right, so the text stays left of it -- and
             // has to stop short of the space it keeps clear.
             const spaced = anchored({
                 horizontal: { relativeTo: 'column', offsetPx: CELL * 6 },
@@ -786,7 +786,7 @@ describe('layoutPages', () => {
 
         it('breaks the narrowed lines SHORTER, not just moves them', () => {
             // A line beside the float has six cells rather than ten, so it holds
-            // fewer words — moving it without re-breaking would run it off the
+            // fewer words -- moving it without re-breaking would run it off the
             // page.
             const [page] = layoutPages([withFloat(anchored(), 'aa bb cc dd ee ff gg hh')], PAGE, {
                 widowOrphanControl: false,
@@ -1034,7 +1034,7 @@ describe('layoutPages', () => {
 
             it('resolves a field before the line is measured, not after', () => {
                 // "10" is wider than "1". Resolving after the break would leave
-                // the text a digit wider than the line it was fitted to — so the
+                // the text a digit wider than the line it was fitted to -- so the
                 // measured height and width have to come from the RESOLVED text.
                 const wide = { ...PAGE, widthPx: CELL * 4 + 20 };
                 const [page] = layoutPages([para('body')], wide, {
@@ -1199,7 +1199,7 @@ describe('layoutPages', () => {
                 { blocks: [para('c')], geometry: PAGE, startsOn: 'oddPage' },
             ]);
 
-            // Section one ends on page 1, so the next page would be number 2 —
+            // Section one ends on page 1, so the next page would be number 2 --
             // even. A blank page takes that slot and the section opens on 3.
             expect(pages.length).toBe(3);
             expect(pages[1]!.lines).toEqual([]);
@@ -1213,7 +1213,7 @@ describe('layoutPages', () => {
                 { blocks: [para('b')], geometry: PAGE, startsOn: 'evenPage' },
             ]);
 
-            // One page used, so the next is number two — already even.
+            // One page used, so the next is number two -- already even.
             expect(pages.length).toBe(2);
             expect(pages[1]!.lines.length).toBe(1);
         });
@@ -1320,11 +1320,11 @@ describe('keep with next', () => {
         // A kept paragraph whose lines differ in height: 'small' at 16px is
         // 18.125 tall and 'BIG' at 32px is 36.25, so it needs 54.375 and its
         // group needs 74.375 with the follower's first line. There is 80 left
-        // on this page, so it stays — and the whole group with it.
+        // on this page, so it stays -- and the whole group with it.
         //
-        // Measuring the group at the paragraph's NOMINAL height instead — its
+        // Measuring the group at the paragraph's NOMINAL height instead -- its
         // tallest run for every line, which is what a per-paragraph box
-        // gives — makes the same group 92.5 and pushes it onto a page of
+        // gives -- makes the same group 92.5 and pushes it onto a page of
         // its own for room it never needed. No printed page decides this one:
         // the flow places lines at their own heights, so the keep has to ask
         // about the same heights or it is answering a different question.
@@ -1353,7 +1353,7 @@ describe('keep with next', () => {
 
     it('still keeps a CHAIN that reaches the end of the document', () => {
         // The last one has nothing to keep it with, but the one above it is
-        // kept with the last — and that keep is as real as any other.
+        // kept with the last -- and that keep is as real as any other.
         const pages = layoutPages(
             [para('a'), para('b'), para('c'), para('d'), para('H', KEEP), para('T', KEEP)],
             PAGE,
@@ -1425,7 +1425,7 @@ describe('keep with next', () => {
     it('places a group too tall for any page rather than looping', () => {
         // Six bound paragraphs do not fit on a five-line page. LibreOffice
         // starts them on a fresh page and breaks inside the group, which is as
-        // much of the keep as can survive — and it must not go on breaking.
+        // much of the keep as can survive -- and it must not go on breaking.
         const pages = layoutPages(
             [
                 para('a'), para('b'),
@@ -1580,7 +1580,7 @@ describe('columns', () => {
 
     /**
      * A paragraph of SEVERAL runs, long enough to fill the wide column and
-     * carry on into the narrow one — so the split falls inside a run that is
+     * carry on into the narrow one -- so the split falls inside a run that is
      * not the first, which is the only place the arithmetic can go wrong.
      */
     const spanning = (): Paragraph => ({
@@ -1679,7 +1679,7 @@ describe('columns', () => {
     it('carries ONE paragraph on into the next column', () => {
         // Seven three-letter words in a four-character column is seven lines,
         // and a column holds five. The two that overflow are drawn where the
-        // next column is — a paragraph measured in one column and drawn at its
+        // next column is -- a paragraph measured in one column and drawn at its
         // left edge throughout would print the tail of it over the first
         // column's own text.
         const [page] = layoutPages([para('aaa aaa aaa aaa aaa aaa aaa')], TWO);
@@ -1730,7 +1730,7 @@ describe('character spacing', () => {
         const [wide] = layoutPages([trailing(CELL)], { ...PAGE, widthPx: CELL * 40 });
         const line = wide!.lines[0]!.line;
 
-        // Four characters tracked by a cell each, less the last two — which
+        // Four characters tracked by a cell each, less the last two -- which
         // are spaces, and are tracked too. Measuring those bare would leave
         // their tracking inside the width and range every centred line left.
         expect(line.widthPx).toBeCloseTo(CELL * 4, 6);
@@ -1800,7 +1800,7 @@ describe('footnotes', () => {
 
     it('gives the note a line AND the rule a line of its own', () => {
         // Five lines fit a bare page. One note costs the note's line and the
-        // line its rule stands on, so three body lines are left — measured
+        // line its rule stands on, so three body lines are left -- measured
         // against LibreOffice, where fourteen became twelve.
         const notes = new Map([[1, NOTE('n')]]);
         const pages = withNotes(
@@ -1917,7 +1917,7 @@ describe('footnotes', () => {
         };
 
         // A line ahead of it, because a row is only ever cut to fill a page
-        // that already has something on it — one alone is placed whole.
+        // that already has something on it -- one alone is placed whole.
         const pages = layoutPages([para('ahead'), padded], PAGE);
 
         expect(pages.length).toBeGreaterThan(1);
@@ -1931,7 +1931,7 @@ describe('footnotes', () => {
         expect(upper.cells[1]!.lines[0]!.yPx - upper.yPx).toBe(0);
 
         // The padded cell fits one line fewer in the same room, and what is
-        // left of it lands below its own padding on the next page — not at the
+        // left of it lands below its own padding on the next page -- not at the
         // top of the row, and not overlapping what stayed behind.
         expect(upper.cells[0]!.lines.length).toBe(upper.cells[1]!.lines.length - 1);
         expect(lower.cells[0]!.lines[0]!.yPx - lower.yPx).toBe(LINE);
@@ -1944,7 +1944,7 @@ describe('footnotes', () => {
     it('measures the upper half of a split row INCLUDING the margin above it', () => {
         // The test above cannot see this: with an unpadded cell beside it, the
         // unpadded one is the taller half and decides the cut on its own. One
-        // padded cell alone is what makes the margin part of the answer — and
+        // padded cell alone is what makes the margin part of the answer -- and
         // getting it wrong slides every carried line down by a margin, because
         // the padding is added again when the row is drawn.
         const alone = {
@@ -2221,7 +2221,7 @@ describe('footnotes', () => {
         // nought: printed without being re-based they would sit on top of one
         // another at the foot of the page.
         // The FIRST note is two lines, so the second note's own line begins at
-        // nought while the line above it does not — which is the only shape
+        // nought while the line above it does not -- which is the only shape
         // that can tell a re-based stack from one left where it lay.
         const notes = new Map([[1, bigNote(2)], [2, NOTE('two')]]);
         const [page] = layoutPages(
@@ -2239,8 +2239,8 @@ describe('footnotes', () => {
     it('rules a CONTINUED note the same two inches as any other', () => {
         // Word has a `continuationSeparator` for this, and its absence here
         // read as though something were missing. LibreOffice drew the same
-        // 144pt rule on the continuation page as on the first — measured off
-        // both streams of the same PDF — so there is nothing else to draw.
+        // 144pt rule on the continuation page as on the first -- measured off
+        // both streams of the same PDF -- so there is nothing else to draw.
         const pages = layoutPages(
             [para('a'), marked('b', 1), para('c')],
             PAGE,
@@ -2352,7 +2352,7 @@ describe('a section that restarts its page numbering', () => {
         // Every number here was read off a PDF LibreOffice printed from a
         // one-point (`w:sz="8"`) box on A4 with a one-centimetre margin. The
         // text sat at x=28.45 and the side rules at 27.9 and 567.45, against a
-        // content edge of 28.35 and 566.93 — half a width outside, both sides.
+        // content edge of 28.35 and 566.93 -- half a width outside, both sides.
         const side = (widthPx: number, spacePx = 0): BorderSide => ({
             widthPx,
             style: 'single' as BorderStyle,
@@ -2393,7 +2393,7 @@ describe('a section that restarts its page numbering', () => {
 
         it('pushes every edge outward by `w:space`, the text staying put', () => {
             // LibreOffice moved the sides of a six-point-spaced box from 27.9
-            // and 567.45 out to 21.9 and 573.45 — six points each — and left
+            // and 567.45 out to 21.9 and 573.45 -- six points each -- and left
             // the text at x=28.45 where it was. The box grows, not the column.
             const [page] = layoutPages([para('xx', { borders: boxOf(2, 6) })], PAGE);
             const [box] = page!.paragraphBorders;
@@ -2408,9 +2408,9 @@ describe('a section that restarts its page numbering', () => {
 
         it('takes the WHOLE width of a rule out of the flow, not half of it', () => {
             // The step from an ordinary paragraph to a bordered one measured
-            // 12.5pt where an unbordered pair stepped 11.5 — the rule's whole
+            // 12.5pt where an unbordered pair stepped 11.5 -- the rule's whole
             // width, because it is the OUTER edge the text above has to clear
-            // — and 18.5 once six points of space were added.
+            // -- and 18.5 once six points of space were added.
             const step = plainStep();
             const bordered = layoutPages(
                 [para('a'), para('b', { borders: boxOf(2) })], PAGE)[0]!;
@@ -2431,7 +2431,7 @@ describe('a section that restarts its page numbering', () => {
         it('draws ONE box round adjacent paragraphs carrying the same border', () => {
             // The find that decided the shape of all this: LibreOffice printed
             // two identically bordered paragraphs as a single outline, with the
-            // side rules meeting and NO rule between them — so the pair stepped
+            // side rules meeting and NO rule between them -- so the pair stepped
             // 11.5pt, exactly as an unbordered pair does.
             const borders = boxOf(2);
             const page = layoutPages(
@@ -2474,7 +2474,7 @@ describe('a section that restarts its page numbering', () => {
 
         it('closes a split box on BOTH pages, complete either side', () => {
             // Measured, where this used to be assumed: a bordered paragraph
-            // split over two pages drew FOUR rules on each of them — a whole
+            // split over two pages drew FOUR rules on each of them -- a whole
             // box either side, not one outline left open at the foot and
             // picked up at the head. A table ROW splits the other way, and the
             // analogy with one is what gets this wrong.

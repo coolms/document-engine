@@ -1,7 +1,7 @@
 /**
  * The corpus the engine's arithmetic is checked against a REAL text engine.
  *
- * The engine deliberately never asks the DOM how wide text is — it reads the
+ * The engine deliberately never asks the DOM how wide text is -- it reads the
  * font. That removes browser-vs-renderer divergence by construction, but it
  * moves the risk somewhere else: if our reading of the font is wrong, every
  * page boundary is wrong and nothing else in the system would notice.
@@ -19,7 +19,7 @@ export interface ParityCase {
     readonly sizePx: number;
     /**
      * Whether the two engines are expected to agree today. `false` marks a
-     * measured, deliberate divergence — not a failure.
+     * measured, deliberate divergence -- not a failure.
      */
     readonly kerningFree: boolean;
     readonly note: string;

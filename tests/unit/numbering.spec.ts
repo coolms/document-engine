@@ -40,7 +40,7 @@ describe('Numbering', () => {
             // Measured against LibreOffice, and the opposite of what
             // this test asserted before it was: three numIds on one abstract,
             // used in turn, counted straight through it. A change of numId is
-            // not a new list — an OVERRIDE is, which is why Word writes one
+            // not a new list -- an OVERRIDE is, which is why Word writes one
             // whenever a list is asked to begin again.
             const sheet = numbering(level(0, 'decimal', '%1.'), [['1', '7'], ['2', '7']]);
 
@@ -83,7 +83,7 @@ describe('Numbering', () => {
 
         it('does not COUNT, which a deeper level\'s pattern would reveal', () => {
             // Level one is bullets and level two names it with %1. However many
-            // bullets have gone by, the pattern shows the level's start — a
+            // bullets have gone by, the pattern shows the level's start -- a
             // bullet has no number for anything to refer to.
             const sheet = numbering(
                 level(0, 'bullet', '\u25cf') + level(1, 'decimal', '%1.%2'),
@@ -155,7 +155,7 @@ describe('Numbering', () => {
         };
 
         it('counts in lower and upper letters, REPEATING past z', () => {
-            // Word's sequence is a…z then aa, bb, cc — not the spreadsheet's
+            // Word's sequence is a...z then aa, bb, cc -- not the spreadsheet's
             // aa, ab, ac.
             const lower = of('lowerLetter', 28);
 
@@ -260,7 +260,7 @@ describe('Numbering', () => {
 
         it('restarts the count at w:startOverride', () => {
             // Measured: a plain list ran 1. 2. 3. and the next numId,
-            // on the SAME abstract, printed 7. 8. 9. — so the override reaches
+            // on the SAME abstract, printed 7. 8. 9. -- so the override reaches
             // a counter that is already running and sets it.
             const sheet = overridden('', START_AT_SEVEN);
 
@@ -284,7 +284,7 @@ describe('Numbering', () => {
         });
 
         it('replaces the level outright where the override states a w:lvl', () => {
-            // Format and pattern both come from the replacement — measured as
+            // Format and pattern both come from the replacement -- measured as
             // `(C)` where the abstract would have said `3.`.
             const sheet = overridden(AS_LETTERS);
 
@@ -295,8 +295,8 @@ describe('Numbering', () => {
 
         it('reads a replacement level\'s w:start as a value, not a restart', () => {
             // The sharpest number in the probe. The same instance printed `(C)`
-            // from a `w:start` of 3 with the counter fresh, and `(J)` — the
-            // tenth letter — when the list before it had run to 9. A `w:lvl`
+            // from a `w:start` of 3 with the counter fresh, and `(J)` -- the
+            // tenth letter -- when the list before it had run to 9. A `w:lvl`
             // inside an override says what the level IS; only `w:startOverride`
             // says where the count begins again.
             const sheet = overridden('', START_AT_SEVEN, AS_LETTERS);
@@ -311,7 +311,7 @@ describe('Numbering', () => {
         it('ignores an override that does not say WHICH level it is for', () => {
             // `w:ilvl` is required on `w:lvlOverride`, so a file without it is
             // malformed and there is nothing measured to follow. Reading it as
-            // level zero — the tempting guess — would restart a list the
+            // level zero -- the tempting guess -- would restart a list the
             // document never asked to restart, so the definition's own
             // numbering stands and nothing is invented.
             const sheet = overridden('<w:lvlOverride><w:startOverride w:val="7"/></w:lvlOverride>');

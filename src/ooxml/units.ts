@@ -7,7 +7,7 @@
  * and indents in TWIPS, font size in HALF-POINTS, border widths in
  * EIGHTH-POINTS, drawing geometry in EMU, and line spacing in twips again but
  * with a mode flag that changes what the number means. Nothing in the file says
- * which is which — `w:sz` is half-points on `w:rPr` and eighth-points on
+ * which is which -- `w:sz` is half-points on `w:rPr` and eighth-points on
  * `w:tcBorders`, spelled identically. Getting one wrong does not throw; it
  * produces a document that is subtly the wrong size, which is the hardest kind
  * of bug to see.
@@ -28,17 +28,17 @@
  * binary representation, and the two disagree for 7186 of the first 20 000 twip
  * values. Every function here divides.
  *
- * The difference is NOT visible when writing back — the rounding below absorbs
- * it — which is exactly why the rule is easy to break and hard to notice. It is
+ * The difference is NOT visible when writing back -- the rounding below absorbs
+ * it -- which is exactly why the rule is easy to break and hard to notice. It is
  * visible in COMPARISONS: line breaking asks `width <= available`, and an
  * epsilon on the wrong side of that ends the line one word early.
  */
 
-/** 1440 twips to the inch — a twip is 1/20 of a point, as OOXML defines it. */
+/** 1440 twips to the inch -- a twip is 1/20 of a point, as OOXML defines it. */
 export const TWIPS_PER_INCH = 1440;
 export const POINTS_PER_INCH = 72;
 /**
- * English Metric Units: 914400 to the inch, as the OOXML spec defines them —
+ * English Metric Units: 914400 to the inch, as the OOXML spec defines them --
  * chosen there to divide evenly by both 72 and 25.4.
  */
 export const EMU_PER_INCH = 914400;
@@ -80,7 +80,7 @@ export function halfPointsToPx(halfPoints: number): number {
 
 /**
  * `w:sz` on a BORDER: width in EIGHTH-points. The same attribute name as a font
- * size and a different unit — 8 is 1pt here and 4pt there.
+ * size and a different unit -- 8 is 1pt here and 4pt there.
  */
 export function eighthPointsToPoints(eighthPoints: number): number {
     return eighthPoints / 8;
@@ -101,7 +101,7 @@ export function emuToPx(emu: number): number {
 /**
  * Back to twips for writing.
  *
- * ROUNDS, because OOXML attribute values are integers — a round trip through
+ * ROUNDS, because OOXML attribute values are integers -- a round trip through
  * pixels leaves about 1.5e-11 of error, and emitting `w:w="12240.000000000002"`
  * produces a file Word refuses to open. Rounding here rather than at each call
  * site means there is one place where the format's integer requirement is

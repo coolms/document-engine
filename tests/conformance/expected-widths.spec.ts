@@ -16,7 +16,7 @@ const OUT_DIR = join(HERE, '../../.conformance');
  *
  * Emitting a file rather than hard-coding numbers into the browser check keeps
  * one source of truth: the fonts. A recorded constant would drift the moment a
- * font is re-vendored, and it would drift silently — the check would keep
+ * font is re-vendored, and it would drift silently -- the check would keep
  * passing against a stale expectation, which is worse than no check.
  */
 describe('parity expectations', () => {

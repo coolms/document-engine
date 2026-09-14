@@ -16,7 +16,7 @@
  * How a border is drawn.
  *
  * OOXML has around thirty `w:val` styles, most of them decorative Word 6
- * survivals — wavy, three-dimensional, and several kinds of art border. They
+ * survivals -- wavy, three-dimensional, and several kinds of art border. They
  * are folded onto these four: the WIDTH and the presence of a border move the
  * text and the eye, and the difference between `thinThickSmallGap` and
  * `thickThinSmallGap` does not.
@@ -26,7 +26,7 @@ export type BorderStyle = 'solid' | 'dashed' | 'dotted' | 'double';
 export interface BorderSide {
     readonly widthPx: number;
     /**
-     * `w:space` — how far the rule stands OUTSIDE what it surrounds.
+     * `w:space` -- how far the rule stands OUTSIDE what it surrounds.
      *
      * A paragraph's border is what needs it: measured against LibreOffice, six
      * points of space moved the box six points further out on every side and
@@ -42,7 +42,7 @@ export interface BorderSide {
 /**
  * The borders declared on one table or one cell.
  *
- * `insideH` and `insideV` are meaningful on a TABLE only — a cell has no
+ * `insideH` and `insideV` are meaningful on a TABLE only -- a cell has no
  * inside. They are kept in the same shape because both are read from the same
  * `w:*Borders` element, and a second type would only differ by two fields.
  */
@@ -75,7 +75,7 @@ export interface CellPosition {
  * ## Shared edges are drawn twice, but they now AGREE
  *
  * Two cells side by side both draw the boundary between them. The pair is
- * resolved first — see {@link strongerBorder} — and both are given the winner,
+ * resolved first -- see {@link strongerBorder} -- and both are given the winner,
  * so the second lands exactly on the first and nothing shows.
  *
  * Both rather than one, because a table that breaks across a page has an upper
@@ -106,15 +106,15 @@ export function resolveCellBorders(
 /**
  * Which of two borders meeting on one edge is drawn.
  *
- * The HEAVIER wins. On a tie the LATER one does — the right-hand cell's left
+ * The HEAVIER wins. On a tie the LATER one does -- the right-hand cell's left
  * border, the lower row's top border.
  *
  * Measured out of LibreOffice rather than reasoned about: a 4pt rule beats a
  * 1pt one whichever side declares it, and two 2pt rules of different colours
- * resolve to the right-hand cell's — the same pair with the colours SWAPPED
+ * resolve to the right-hand cell's -- the same pair with the colours SWAPPED
  * resolves the other way, which is what rules out a rule about colour.
  *
- * Word documents a longer chain — weight, then style, then colour — and only
+ * Word documents a longer chain -- weight, then style, then colour -- and only
  * the weight and the tie-break are implemented. Two borders of equal weight and
  * different STYLE therefore resolve by position where Word would rank the
  * style; stated rather than guessed at.
@@ -159,8 +159,8 @@ export function borderStandoff(side: BorderSide | undefined): number {
 /**
  * The room a side takes outside the text: its space plus its whole width.
  *
- * The rule is centred half a width outside the box, so its OUTER edge — what
- * the text above or below has to clear — is a full width out. An 11.5pt line
+ * The rule is centred half a width outside the box, so its OUTER edge -- what
+ * the text above or below has to clear -- is a full width out. An 11.5pt line
  * stepped 12.5 under a one-point border and 18.5 with six points of space.
  */
 export function borderRoom(side: BorderSide | undefined): number {
@@ -211,7 +211,7 @@ export interface PlacedParagraphBorder {
      * Where `w:between` puts a rule inside the box, one y per join.
      *
      * A merged run is ONE outline, so a rule between its paragraphs is inside
-     * the box rather than a pair of edges — and LibreOffice drew it half a
+     * the box rather than a pair of edges -- and LibreOffice drew it half a
      * width below the text above it, with the whole `w:space` beneath.
      */
     readonly innerYPx: readonly number[];

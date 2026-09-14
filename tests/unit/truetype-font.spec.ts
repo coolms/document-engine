@@ -15,7 +15,7 @@ function load(file: string): TrueTypeFont {
  * These assert INVARIANTS, not recorded numbers.
  *
  * A test that pins "this string is 123.45pt" only proves the code still does
- * what it did — including if what it did was wrong. Each case below is
+ * what it did -- including if what it did was wrong. Each case below is
  * checkable against something independent: the definition of a monospaced font,
  * the arithmetic of scaling, the metric-compatibility promise these families
  * are chosen for.
@@ -23,9 +23,9 @@ function load(file: string): TrueTypeFont {
 describe('TrueTypeFont', () => {
     describe('parsing', () => {
         it('reads unitsPerEm per FILE rather than assuming a constant', () => {
-            // Caladea is 1000 and everything else is 2048. Hard-coding 2048 —
+            // Caladea is 1000 and everything else is 2048. Hard-coding 2048 --
             // the obvious assumption, since it is what most TrueType fonts use
-            // — would have made every Caladea measurement 2.048x too wide.
+            // -- would have made every Caladea measurement 2.048x too wide.
             expect(load('Caladea-Regular.ttf').unitsPerEm).toBe(1000);
             expect(load('Carlito-Regular.ttf').unitsPerEm).toBe(2048);
             expect(load('LiberationSerif-Regular.ttf').unitsPerEm).toBe(2048);
@@ -134,7 +134,7 @@ describe('TrueTypeFont', () => {
             // The whole reason for choosing these five: a document asking for
             // Arial must not repaginate when it gets Liberation Sans. The
             // families are metric-compatible by design, so a Latin string has
-            // to occupy the same width in the substitute as the original — we
+            // to occupy the same width in the substitute as the original -- we
             // cannot test against Arial itself, but we CAN pin that our two
             // sans faces do not drift apart from each other over time.
             const sans = load('LiberationSans-Regular.ttf');
@@ -199,7 +199,7 @@ describe('TrueTypeFont', () => {
      * These are checkable against the definition rather than a recorded number:
      * a character Unicode declares ignorable occupies nothing, so the string
      * with one in it must measure EXACTLY what the string without it does. No
-     * tolerance — the two are the same sum.
+     * tolerance -- the two are the same sum.
      */
     describe('characters that take no room', () => {
         /** One from each shape of entry: joiner, bidi mark, selector, the BOM. */
@@ -278,7 +278,7 @@ describe('TrueTypeFont', () => {
         it('keeps the descender NEGATIVE, as the font stores it', () => {
             // Below the baseline is below zero. Flipping the sign to "make it a
             // height" is the classic mistake here, and it does not throw or look
-            // broken — it just makes every line height short by twice the
+            // broken -- it just makes every line height short by twice the
             // descender, which reads as slightly tight leading rather than as a
             // bug, and moves page breaks in long documents.
             for (const file of ['LiberationSerif-Regular.ttf', 'Carlito-Regular.ttf', 'Caladea-Regular.ttf']) {
@@ -304,7 +304,7 @@ describe('TrueTypeFont', () => {
         // Read out of the FONT FILE's own `head` and `hhea` tables, which
         // is the measurement: nothing here is a choice of ours.
             // Caladea is 1000 units per em. Assuming 2048 would halve its line
-            // height — 9.2px instead of 18.4px — and silently overlap every
+            // height -- 9.2px instead of 18.4px -- and silently overlap every
             // line of a Cambria-substituted document.
             const caladea = load('Caladea-Regular.ttf');
 

@@ -5,20 +5,20 @@
  * like a very large character: it takes width from the line it is on, it makes
  * that line taller, and text can follow it on the same line. Modelling it as a
  * paragraph of its own would be right for the common case of an image alone in
- * a paragraph and wrong for every icon in a sentence — and the common case
+ * a paragraph and wrong for every icon in a sentence -- and the common case
  * falls out of the general one for free.
  */
 
 // Type-only, so nothing is imported at run time and the cycle with
-// `page-layout` — which imports the shapes below — never forms.
+// `page-layout` -- which imports the shapes below -- never forms.
 import type { PlacedLine, PlacedRow } from './page-layout.js';
 
 /** The bytes of a picture, and enough to hand them to a renderer. */
 export interface ImageContent {
     readonly bytes: Uint8Array;
-    /** `image/png`, `image/jpeg`, … taken from the package's content types. */
+    /** `image/png`, `image/jpeg`, ... taken from the package's content types. */
     readonly contentType: string;
-    /** `wp:docPr/@descr` — the alternative text, when the document supplies one. */
+    /** `wp:docPr/@descr` -- the alternative text, when the document supplies one. */
     readonly description?: string;
 }
 
@@ -41,11 +41,11 @@ export interface InlineImage {
      * TURNED cell is different, and measured against LibreOffice it
      * is different in two ways, both set by `turnPictures`:
      *
-     * - `centred` — the picture is centred on the line's ASCENT, so the
+     * - `centred` -- the picture is centred on the line's ASCENT, so the
      *   baseline lands half way between the ascender edge and the picture's
      *   foot. Printed baselines 13.70 and 22.70 from the cell's inner edge for
      *   pictures 18 and 36 across, against 9.40 for the ascent alone.
-     * - `stacked` — the text hangs entirely BELOW the picture. What LibreOffice
+     * - `stacked` -- the text hangs entirely BELOW the picture. What LibreOffice
      *   does with a picture too long for its line is give it a line of its own;
      *   kept on the text's line, that is the same geometry.
      */
@@ -53,7 +53,7 @@ export interface InlineImage {
 }
 
 /**
- * A drawn box standing in a run's place — a VML shape with no picture in it.
+ * A drawn box standing in a run's place -- a VML shape with no picture in it.
  *
  * A rule, a border, a coloured panel: furniture rather than content, and the
  * thing a `w:pict` is when it holds no `v:imagedata`. It occupies a run the
@@ -71,7 +71,7 @@ export interface InlineShape {
      * How far INTO its room the shape is drawn, where that is not nought.
      *
      * The room a VML shape keeps is wrap distance either side of it, so the
-     * box itself begins a wrap distance in — 9pt by default. Left unbuilt
+     * box itself begins a wrap distance in -- 9pt by default. Left unbuilt
      * while only the room was measured; forced by the interior, where the
      * words print 13.2 from the shape's origin and that only decomposes as
      * this 9.0 plus the box's own 4.25 inset. Draw the box at the origin and
@@ -82,7 +82,7 @@ export interface InlineShape {
      * The room the shape takes in the LINE, where that differs from its size.
      *
      * A VML shape is drawn at the width it states and then keeps 18.0pt more
-     * of the line than it draws — measured at 30, 60, 90, 150 and 180pt, on
+     * of the line than it draws -- measured at 30, 60, 90, 150 and 180pt, on
      * `v:shape` and `v:rect` alike, with and without a text box inside. Two
      * numbers, so two fields: widen the one the renderer paints and the box
      * grows, which the print does not.
@@ -93,7 +93,7 @@ export interface InlineShape {
     /**
      * The words inside it, when the shape is a TEXT BOX sitting in the line.
      *
-     * Already stacked, and offset by the box's own inset — so a renderer adds
+     * Already stacked, and offset by the box's own inset -- so a renderer adds
      * the piece's origin and nothing else. They can be laid out this early
      * because an inline box's inner width is settled by its `wp:extent` before
      * anything knows where the box lands, which is not true of a float: that

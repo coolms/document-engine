@@ -58,7 +58,7 @@ const imageOps = (paragraph: Paragraph): ImageOp[] =>
 describe('an inline picture', () => {
     it('takes its width from the DOCUMENT, not from measuring its stand-in glyph', () => {
         // The run's text is one object-replacement character, which has no
-        // glyph worth the name — measuring it would give whatever the font
+        // glyph worth the name -- measuring it would give whatever the font
         // keeps at .notdef.
         const [line] = breakIntoLines(
             [{ text: OBJECT_REPLACEMENT, font: MONO, sizePx: 16, image: image(120, 60) }],
@@ -121,7 +121,7 @@ describe('an inline picture', () => {
             const href = element?.attribute('href') ?? '';
 
             expect(href.startsWith('data:image/png;base64,')).toBe(true);
-            // Decoded back, byte for byte — a truncated tail would still look
+            // Decoded back, byte for byte -- a truncated tail would still look
             // like a plausible data URI.
             const decoded = Buffer.from(href.slice('data:image/png;base64,'.length), 'base64');
             expect(new Uint8Array(decoded)).toEqual(BYTES);

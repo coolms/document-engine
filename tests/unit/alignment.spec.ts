@@ -50,7 +50,7 @@ describe('alignLine', () => {
 
         it('never moves an OVERFLOWING line further out', () => {
             // A long URL is wider than its column, so the slack is negative.
-            // Centring on that would put the text LEFT of the indent — Word lets
+            // Centring on that would put the text LEFT of the indent -- Word lets
             // it overflow to the right instead.
             expect(alignLine(line(140), 100, 'center').offsetPx).toBe(0);
             expect(alignLine(line(140), 100, 'right').offsetPx).toBe(0);
@@ -70,7 +70,7 @@ describe('alignLine', () => {
         });
 
         it('leaves a line the AUTHOR ended alone too', () => {
-            // A `w:br` ends the line for the same reason a paragraph end does —
+            // A `w:br` ends the line for the same reason a paragraph end does --
             // there is no more text coming to fill it.
             expect(alignLine(line(40, 3, true), 100, 'justify').wordSpacingPx).toBe(0);
         });

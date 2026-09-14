@@ -1,12 +1,12 @@
 import type { Line } from './line-breaker.js';
 
 /**
- * `w:jc` — where a line sits in the space available to it.
+ * `w:jc` -- where a line sits in the space available to it.
  *
  * Its own module rather than part of `page-layout`, because the page flow and
  * table cells both need it and `table-layout` imports `page-layout` for TYPES
  * ONLY: pulling a function across that boundary would make the two a runtime
- * import cycle. One shared implementation is the point — a heading centred one
+ * import cycle. One shared implementation is the point -- a heading centred one
  * way outside a table and another way inside it is the bug this prevents.
  */
 
@@ -30,7 +30,7 @@ export type Alignment = 'left' | 'center' | 'right' | 'justify';
  *
  * ## An overflowing line is never pushed further out
  *
- * A line wider than its column — a long URL — has negative slack. Centring or
+ * A line wider than its column -- a long URL -- has negative slack. Centring or
  * right-aligning on that would move it LEFT of the indent, so the offset is
  * clamped and the line overflows to the right, as Word lets it.
  */

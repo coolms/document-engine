@@ -45,7 +45,7 @@ const svgOf = (paragraph: Paragraph, options = {}): string =>
  * All the line's text, joined.
  *
  * A line is one `<text>` per PIECE, and a piece is a word with the spaces that
- * follow it — so "a  b" is two elements, not one.
+ * follow it -- so "a  b" is two elements, not one.
  */
 const drawnText = (svg: string): string =>
     XmlDocument.parse(svg).root.elements('text').map((element) => element.text).join('');
@@ -53,7 +53,7 @@ const drawnText = (svg: string): string =>
 describe('renderPageToSvg', () => {
     it('produces XML this package can parse back', () => {
         // The engine has an XML parser, so the SVG is checked by READING it
-        // rather than by matching a string — a serialiser tested against its
+        // rather than by matching a string -- a serialiser tested against its
         // own expected output only proves it did not change.
         const document = XmlDocument.parse(svgOf(para('hello')));
 
@@ -70,7 +70,7 @@ describe('renderPageToSvg', () => {
     });
 
     it('reads weight and slant off the FILE, since they are separate files here', () => {
-        // A run cannot say it is bold — boldness is which font was chosen. A
+        // A run cannot say it is bold -- boldness is which font was chosen. A
         // renderer that ignored this would draw a bold heading in the regular
         // face while the layout measured the bold one.
         const attributes = (font: TrueTypeFont) => {
@@ -196,7 +196,7 @@ describe('renderPageToSvg', () => {
 describe('a run turned on its side', () => {
     // `w:textDirection`. The layout that decides WHICH runs turn is a second
     // measuring pass and is not built; this is the renderer's half, so
-    // that when the layout lands there is nowhere for it to be dropped — which
+    // that when the layout lands there is nowhere for it to be dropped -- which
     // is precisely what happened to the line numbers, the page border and the
     // cell's own box before anyone went looking.
     const turned = (turn: 'ccw' | 'cw' | undefined, xPx: number, yPx: number): TextOp => ({
@@ -211,8 +211,8 @@ describe('a run turned on its side', () => {
 
     it('turns anticlockwise for `ccw` and clockwise for `cw`', () => {
         // Measured off the PDF's text matrix: LibreOffice writes `btLr` as
-        // `[0 1 -1 0]` and `tbRl` as `[0 -1 1 0]` — a quarter turn each way
-        // about the run's own baseline origin, which is what `rotate(±90 x y)`
+        // `[0 1 -1 0]` and `tbRl` as `[0 -1 1 0]` -- a quarter turn each way
+        // about the run's own baseline origin, which is what `rotate(+/-90 x y)`
         // does in SVG.
         const svg = serialise({
             widthPx: 100,
@@ -236,7 +236,7 @@ describe('a run turned on its side', () => {
 
 describe('what reaches the SVG', () => {
     // Every slice of this arc verified the engine's own model and its draw
-    // operations. None checked the LAST hop — the SVG the preview and the
+    // operations. None checked the LAST hop -- the SVG the preview and the
     // artifact are actually made of. A feature read, laid out, and dropped by
     // the serialiser looks exactly like one that was never built: the same
     // shape as the walker that collected nothing and the placement

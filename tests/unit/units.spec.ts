@@ -43,7 +43,7 @@ describe('units', () => {
         });
 
         it('knows w:sz means HALF-points on a run and EIGHTH-points on a border', () => {
-        // Defined by the OOXML schema, not measured — the two units share
+        // Defined by the OOXML schema, not measured -- the two units share
         // an attribute name and nothing else.
             // The same attribute name, two units. The Word fixture's heading
             // carries w:sz="28", which is 14pt and not 28pt or 3.5pt.
@@ -63,8 +63,8 @@ describe('units', () => {
         it('converts twips by DIVIDING, which the rounding above would hide', () => {
             // `twips * 0.05` and `twips / 20` disagree for 7186 of these values
             // because 0.05 has no exact binary form. The round trip above
-            // cannot see it — pointsToTwips rounds, and rounding absorbs the
-            // error — so this states the property WITHOUT any rounding.
+            // cannot see it -- pointsToTwips rounds, and rounding absorbs the
+            // error -- so this states the property WITHOUT any rounding.
             //
             // It matters because layout compares rather than rounds: line
             // breaking asks `width <= available`, and an epsilon on the wrong

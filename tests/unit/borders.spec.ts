@@ -85,7 +85,7 @@ describe('strongerBorder', () => {
         // The right-hand cell's left border, the lower row's top border.
         // Measured: two 2pt rules of different colours resolve to the later
         // cell's, and the same pair with the colours swapped resolves the other
-        // way — which is what rules out a rule about colour.
+        // way -- which is what rules out a rule about colour.
         const earlier: BorderSide = { widthPx: 2, colorHex: '#FF0000', style: 'solid' };
         const later: BorderSide = { widthPx: 2, colorHex: '#0000FF', style: 'solid' };
 

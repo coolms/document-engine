@@ -8,7 +8,7 @@ import { renderPage, type ImageOp, type LineOp, type RectOp, type RenderedPage, 
  *
  * SVG because it is a STRING: it can be asserted on in a test, diffed between
  * runs, printed, and handed to a browser without a canvas or a DOM. The display
- * list beside it holds the geometry, so this file only serialises — anything
+ * list beside it holds the geometry, so this file only serialises -- anything
  * here that had to calculate a position would be a second layout engine.
  *
  * ## Fonts are referenced, not embedded
@@ -21,7 +21,7 @@ import { renderPage, type ImageOp, type LineOp, type RectOp, type RenderedPage, 
 
 export interface SvgOptions {
     /**
-     * Extra CSS for the page — `@font-face` rules, most usefully.
+     * Extra CSS for the page -- `@font-face` rules, most usefully.
      *
      * Emitted inside a CDATA section, so it may contain the `&` and `<` that a
      * `url(...)` or a media query brings with it.
@@ -107,7 +107,7 @@ const BASE64_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
  * Base64, written out rather than taken from the platform.
  *
  * `Buffer` is Node's and `btoa` is the browser's, and this package runs in
- * both — an editor in the browser, a renderer on the server. Reaching for
+ * both -- an editor in the browser, a renderer on the server. Reaching for
  * either would fail at RUN time in the other rather than at build time.
  */
 function base64(bytes: Uint8Array): string {
@@ -161,14 +161,14 @@ function text(op: TextOp, colour: string): string {
     const subfamily = op.font.subfamilyName.toLowerCase();
 
     // Weight and slant live in separate FILES here, so they cannot be read off
-    // the run — only off the face that was chosen for it.
+    // the run -- only off the face that was chosen for it.
     const weight = subfamily.includes('bold') ? ' font-weight="bold"' : '';
     const slant = subfamily.includes('italic') || subfamily.includes('oblique')
         ? ' font-style="italic"'
         : '';
 
     // A quarter turn about the operation's OWN origin, which is its baseline
-    // start — the same point the PDF's text matrix turns about, so the two
+    // start -- the same point the PDF's text matrix turns about, so the two
     // renderers put a turned run in the same place.
     const turn = undefined === op.turn
         ? ''
