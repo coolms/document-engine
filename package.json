@@ -2,6 +2,13 @@
   "name": "@coolms/document-engine",
   "version": "0.1.0-alpha.3",
   "description": "Framework-agnostic vanilla TypeScript document layout engine: OOXML model, deterministic text measurement from font files, and pagination with reflow. Zero runtime dependencies \u2014 the arithmetic is ours, so the browser and the server agree by construction.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolms/document-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coolms/document-engine/issues"
+  },
   "license": "MIT",
   "author": {
     "name": "Dmitry Popov",
