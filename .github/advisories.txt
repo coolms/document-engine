@@ -1,0 +1,20 @@
+# Advisories known in this repository's committed lockfile and not yet cleared.
+# The advisories job (coolms/.github, npm-advisories.yml) fails on an advisory that is not here, and on a line here
+# whose advisory is no longer reported, so this list only shrinks: take a line off when an update clears it.
+#
+#   <package> <advisory id> <severity> <why it stays>
+#
+# Started 2026-10-07 with what `npm audit` reported then: 11 advisory(ies) over 8 package(s). Each stays until an
+# update clears it; an update is a change of its own, made and reviewed as one.
+
+@vitest/mocker  GHSA-82fw-gwwq-j7x9  moderate  present when the list was started; awaiting an update
+esbuild         GHSA-67mh-4wv8-2f99  moderate  present when the list was started; awaiting an update
+nanoid          GHSA-2v37-7h3g-55p8  high      present when the list was started; awaiting an update
+source-map-js   GHSA-68fv-2mgg-jv7q  high      present when the list was started; awaiting an update
+tinypool        GHSA-5gmw-xhrv-c9v3  critical  present when the list was started; awaiting an update
+tinypool        GHSA-85c8-ppgw-ccpr  critical  present when the list was started; awaiting an update
+vite            GHSA-4w7w-66w2-5vf9  moderate  present when the list was started; awaiting an update
+vite            GHSA-fx2h-pf6j-xcff  high      present when the list was started; awaiting an update
+vite            GHSA-v6wh-96g9-6wx3  moderate  present when the list was started; awaiting an update
+vitest          GHSA-5xrq-8626-4rwp  critical  present when the list was started; awaiting an update
+vitest          GHSA-82fw-gwwq-j7x9  moderate  present when the list was started; awaiting an update
