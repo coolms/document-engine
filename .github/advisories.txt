@@ -1,20 +1,22 @@
 # Advisories known in this repository's committed lockfile and not yet cleared.
-# The advisories job (coolms/.github, npm-advisories.yml) fails on an advisory that is not here, and on a line here
-# whose advisory is no longer reported, so this list only shrinks: take a line off when an update clears it.
+# The advisories job (coolms/.github, npm-advisories.yml) fails on an advisory that is not here, on a line here whose
+# advisory is no longer reported (so the list only shrinks), and on a line past its review date.
 #
-#   <package> <advisory id> <severity> <why it stays>
+#   <package> <advisory id> <severity> <review by> <why it stays>
 #
-# Started 2026-10-07 with what `npm audit` reported then: 11 advisory(ies) over 8 package(s). Each stays until an
-# update clears it; an update is a change of its own, made and reviewed as one.
+# Every line is reviewed again by its date: at most 30 days out for critical and high, 90 for the rest. A review writes
+# a new date and the reason as it stands then; an update that clears the advisory takes the line off instead. The
+# reasons below were measured on 2026-10-07 from this lockfile: which direct dependencies bring the package in, whether
+# it ships, and what npm offers to clear it.
 
-@vitest/mocker  GHSA-82fw-gwwq-j7x9  moderate  present when the list was started; awaiting an update
-esbuild         GHSA-67mh-4wv8-2f99  moderate  present when the list was started; awaiting an update
-nanoid          GHSA-2v37-7h3g-55p8  high      present when the list was started; awaiting an update
-source-map-js   GHSA-68fv-2mgg-jv7q  high      present when the list was started; awaiting an update
-tinypool        GHSA-5gmw-xhrv-c9v3  critical  present when the list was started; awaiting an update
-tinypool        GHSA-85c8-ppgw-ccpr  critical  present when the list was started; awaiting an update
-vite            GHSA-4w7w-66w2-5vf9  moderate  present when the list was started; awaiting an update
-vite            GHSA-fx2h-pf6j-xcff  high      present when the list was started; awaiting an update
-vite            GHSA-v6wh-96g9-6wx3  moderate  present when the list was started; awaiting an update
-vitest          GHSA-5xrq-8626-4rwp  critical  present when the list was started; awaiting an update
-vitest          GHSA-82fw-gwwq-j7x9  moderate  present when the list was started; awaiting an update
+@vitest/mocker  GHSA-82fw-gwwq-j7x9  moderate  2027-01-05  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+esbuild         GHSA-67mh-4wv8-2f99  moderate  2027-01-05  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+nanoid          GHSA-2v37-7h3g-55p8  high      2026-11-06  Build and test tooling only, not in the published package (through vitest); a lockfile update within the declared ranges clears it.
+source-map-js   GHSA-68fv-2mgg-jv7q  high      2026-11-06  Build and test tooling only, not in the published package (through vitest); a lockfile update within the declared ranges clears it.
+tinypool        GHSA-5gmw-xhrv-c9v3  critical  2026-11-06  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+tinypool        GHSA-85c8-ppgw-ccpr  critical  2026-11-06  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+vite            GHSA-4w7w-66w2-5vf9  moderate  2027-01-05  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+vite            GHSA-fx2h-pf6j-xcff  high      2026-11-06  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+vite            GHSA-v6wh-96g9-6wx3  moderate  2027-01-05  Build and test tooling only, not in the published package (through vitest); cleared by vitest 5.0.3, a major upgrade.
+vitest          GHSA-5xrq-8626-4rwp  critical  2026-11-06  Build and test tooling only, not in the published package (a direct dependency); cleared by vitest 5.0.3, a major upgrade.
+vitest          GHSA-82fw-gwwq-j7x9  moderate  2027-01-05  Build and test tooling only, not in the published package (a direct dependency); cleared by vitest 5.0.3, a major upgrade.
