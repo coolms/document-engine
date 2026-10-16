@@ -2,8 +2,9 @@
 
 > **Reading this from Packagist?** This repository publishes twice. The
 > TypeScript engine below is the npm package. What Composer installs is
-> `coolms/document-fonts`: the 24 font files in `assets/fonts` and the
-> manifest that names them, with no PHP and no autoloader. It exists so a
+> `coolms/document-fonts`: the 24 font files in `assets/fonts/`, each
+> family's licence beside them, and `assets/fonts/fonts.manifest.json`, which
+> names them -- with no PHP and no autoloader. It exists so a
 > PHP application can reach the same fonts, from the same version, without
 > a Node toolchain. If you are looking for a document layout library for
 > PHP, this is not one.
@@ -43,8 +44,9 @@ npm install @coolms/document-engine
 composer require coolms/document-fonts
 ```
 
-That gives you `vendor/coolms/document-fonts/assets/fonts/` -- the 24 faces
-and `fonts.manifest.json`. Serve them at whatever URL your application uses;
+That gives you `vendor/coolms/document-fonts/assets/fonts/` -- the 24 faces,
+each family's licence (`assets/fonts/OFL-*.txt`) and
+`assets/fonts/fonts.manifest.json`. Serve them at whatever URL your application uses;
 CoolMS serves them under the admin at `assets/document-fonts/`.
 
 ```ts
@@ -78,8 +80,20 @@ runtime it never invokes would refuse installations for no reason.
 
 MIT — see [LICENSE](LICENSE), which covers this package's own code.
 
-The font files under `assets/fonts` are third-party and carry their own terms.
-`assets/fonts/fonts.manifest.json` records where each one came from: Liberation,
+The font files under `assets/fonts/` are third-party, and MIT does not cover
+them. Every one is licensed under the SIL Open Font License 1.1, which says so in
+the font itself, and each family's licence text travels beside its files:
+
+| Family | Faces | Licence text |
+|---|---|---|
+| Liberation Serif, Sans and Mono 2.1.5 | 12 | `assets/fonts/OFL-Liberation.txt` |
+| Carlito 1.104 | 4 | `assets/fonts/OFL-Carlito.txt` |
+| Caladea 1.001 | 4 | `assets/fonts/OFL-Caladea.txt` |
+| Gelasio 1.008 | 4 | `assets/fonts/OFL-Gelasio.txt` |
+
+Each text is the one its authors publish, copied byte for byte, copyright and
+Reserved Font Names included. `assets/fonts/fonts.manifest.json` records where
+each font came from: Liberation,
 Carlito and Caladea were extracted from the `gotenberg/gotenberg:8` image
 (Debian packages `fonts-liberation`, `fonts-crosextra-carlito`,
 `fonts-crosextra-caladea`), and Gelasio came from the designer's own repository
