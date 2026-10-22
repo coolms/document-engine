@@ -13,9 +13,12 @@ predate this file would be a worse record than not having them.
 
 ### Changed
 
-- **Breaking: requires Node 22.12 or later.** `engines.node` moves from
-  `>=20` to `>=22.12`. Node 20 is past its end of life, and CI now runs on
-  Node 22 and 24. The tests run on vitest 5 with vite 8.3.4, which clears every
+- **Breaking: requires Node 22.12, 24 or 26.** `engines.node` moves from
+  `>=20` to `^22.12.0 || ^24.0.0 || ^26.0.0`: exactly the Node lines CI runs,
+  each from the highest floor any package in the lockfile declares. Node 20 is
+  past its end of life; the odd lines and Node 27 and later are not declared
+  until CI runs them, and CI checks the range against its matrix and the
+  lockfile. The tests run on vitest 5 with vite 8.3.4, which clears every
   advisory `.github/advisories.txt` listed for the old test toolchain. The
   list is empty now. The published code does not change.
 
