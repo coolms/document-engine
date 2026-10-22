@@ -28,7 +28,7 @@ jobs:
         # package.json claims engines.node >=20. A claim nothing installs
         # against is not a claim, so 20 is in the matrix rather than only the
         # versions the rest of the fleet happens to run.
-        node: ['20', '22', '24']
+        node: ['22', '24']
 
     steps:
       - uses: actions/checkout@v4

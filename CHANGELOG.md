@@ -11,6 +11,14 @@ predate this file would be a worse record than not having them.
 
 ## Unreleased
 
+### Changed
+
+- **Breaking: requires Node 22.12 or later.** `engines.node` moves from
+  `>=20` to `>=22.12`. Node 20 is past its end of life, and CI now runs on
+  Node 22 and 24. The tests run on vitest 5 with vite 8.3.4, which clears every
+  advisory `.github/advisories.txt` listed for the old test toolchain. The
+  list is empty now. The published code does not change.
+
 ### Added
 
 - Declares `support` (`issues`, `source`) in composer.json and `repository`
