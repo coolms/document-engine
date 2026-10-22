@@ -25,9 +25,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # package.json claims engines.node >=20. A claim nothing installs
-        # against is not a claim, so 20 is in the matrix rather than only the
-        # versions the rest of the fleet happens to run.
+        # engines.node names exactly these lines, each from the lockfile's floor (the
+        # engines step below checks both), so the matrix is the claim.
         node: ['22', '24', '26']
 
     steps:
@@ -40,6 +39,12 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      # engines.node names exactly the Node lines this matrix runs (no open
+      # ">=22"), and within each the highest floor any package in the lockfile
+      # declares.
+      - name: Engines, against the matrix and the lockfile
+        run: node tools/engines-check.mjs
 
       - name: Typecheck
         run: npm run typecheck
