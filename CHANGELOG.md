@@ -9,7 +9,7 @@ currently serves. Earlier alphas are deliberately not reconstructed: entries are
 in the same commit as the work they describe, and inventing the ones that
 predate this file would be a worse record than not having them.
 
-## Unreleased
+## 0.1.0-alpha.4 -- 2026-10-22
 
 ### Changed
 
@@ -21,14 +21,32 @@ predate this file would be a worse record than not having them.
   lockfile. The tests run on vitest 5 with vite 8.3.4, which clears every
   advisory `.github/advisories.txt` listed for the old test toolchain. The
   list is empty now. The published code does not change.
+- The README and this changelog name a shipped file by its path from the
+  package root: `assets/fonts/fonts.manifest.json`, where they used to give the
+  manifest's file name alone, which names no file at that root.
 
 ### Added
 
+- **Each font family's licence text travels beside its files.** All 24 faces
+  are licensed under the SIL Open Font License 1.1, which requires its text to
+  go wherever the fonts go, and the package had shipped none of it:
+  `assets/fonts/OFL-Liberation.txt` (Liberation Serif, Sans and Mono),
+  `assets/fonts/OFL-Carlito.txt`, `assets/fonts/OFL-Caladea.txt` and
+  `assets/fonts/OFL-Gelasio.txt`, each the text its authors publish, copied
+  byte for byte. Both registries carry them from this version on: npm in the
+  tarball, Packagist in the `coolms/document-fonts` archive. The README's
+  Licence section lists them, and says MIT covers this package's code, not the
+  fonts.
 - Declares `support` (`issues`, `source`) in composer.json and `repository`
   and `bugs` in package.json -- so a page imported from this package, and the
   catalogue, know where a correction is filed. Packagist filled the gap from
   GitHub when the manifest was silent; the declared field is the one that holds
   on any registry.
+
+### Notes
+
+- On npm this version follows 0.1.0-alpha.2: 0.1.0-alpha.3 was published to
+  Packagist only.
 
 ## 0.1.0-alpha.3 -- 2026-09-04
 
@@ -44,7 +62,7 @@ promise the package could not keep.
 composer require coolms/document-fonts
 ```
 
-That installs `assets/fonts/` -- the 24 faces and `fonts.manifest.json` --
+That installs `assets/fonts/` -- the 24 faces and `assets/fonts/fonts.manifest.json` --
 and nothing else. No PHP, no autoloader, and **no PHP version constraint**,
 because there is no PHP in it to run: constraining a runtime the package
 never invokes would refuse installations for no reason.
