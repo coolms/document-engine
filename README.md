@@ -65,8 +65,9 @@ import { ... } from '@coolms/document-engine';
 
 ## Requirements
 
-**npm:** Node >=20. No runtime dependencies; TypeScript and vitest are
-dev-only.
+**npm:** Node 22.12 or later on the 22 line, 24 or 26 (`engines.node`:
+`^22.12.0 || ^24.0.0 || ^26.0.0`, the lines CI runs). No runtime
+dependencies; TypeScript and vitest are dev-only.
 
 **Composer:** none. The package declares no PHP constraint because it
 contains no PHP -- it is font files and a JSON manifest, and constraining a

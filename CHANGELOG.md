@@ -9,9 +9,21 @@ currently serves. Earlier alphas are deliberately not reconstructed: entries are
 in the same commit as the work they describe, and inventing the ones that
 predate this file would be a worse record than not having them.
 
-## Unreleased
+## 0.1.0-alpha.4 -- 2026-10-22
 
-## 0.1.0-alpha.4 -- 2026-10-16
+### Changed
+
+- **Breaking: requires Node 22.12, 24 or 26.** `engines.node` moves from
+  `>=20` to `^22.12.0 || ^24.0.0 || ^26.0.0`: exactly the Node lines CI runs,
+  each from the highest floor any package in the lockfile declares. Node 20 is
+  past its end of life; the odd lines and Node 27 and later are not declared
+  until CI runs them, and CI checks the range against its matrix and the
+  lockfile. The tests run on vitest 5 with vite 8.3.4, which clears every
+  advisory `.github/advisories.txt` listed for the old test toolchain. The
+  list is empty now. The published code does not change.
+- The README and this changelog name a shipped file by its path from the
+  package root: `assets/fonts/fonts.manifest.json`, where they used to give the
+  manifest's file name alone, which names no file at that root.
 
 ### Added
 
@@ -30,12 +42,6 @@ predate this file would be a worse record than not having them.
   catalogue, know where a correction is filed. Packagist filled the gap from
   GitHub when the manifest was silent; the declared field is the one that holds
   on any registry.
-
-### Changed
-
-- The README and this changelog name a shipped file by its path from the
-  package root: `assets/fonts/fonts.manifest.json`, where they used to give the
-  manifest's file name alone, which names no file at that root.
 
 ### Notes
 
