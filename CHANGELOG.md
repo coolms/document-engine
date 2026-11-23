@@ -9,6 +9,12 @@ currently serves. Earlier alphas are deliberately not reconstructed: entries are
 in the same commit as the work they describe, and inventing the ones that
 predate this file would be a worse record than not having them.
 
+## Unreleased
+
+### Changed
+
+- `"sideEffects": false`: no module of the package does anything on import (no global, no registration, no font loaded until asked), so a bundler may drop what it does not use.
+
 ## 0.1.0-alpha.4 -- 2026-10-22
 
 ### Changed
